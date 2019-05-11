@@ -1,17 +1,22 @@
 # Redux
+
 [Redux] is a centralized and predictable state container for web apps.
 Works well with frameworks like [React].
 
 ## Basics
-Redux has 3 concepts:
-* Store - Where the centralized state for the React app is housed.
-* Actions - Developer-defined actions that describe a state modification.
-* Reducers - Uses actions to modify the store.
 
-### Store
+Redux has 3 concepts:
+
+1. **Store** - Where the centralized state for the React app is housed.
+1. **Actions** - Developer-defined actions that describe a state modification.
+1. **Reducers** - Uses actions to modify the store.
+
+## Store
+
 Where the centralized state of the entire app is located.
 
-##### initialState.js
+initialState.js
+
 ```javascript
 // 'export' required to use outside the file.
 export initial_state = {
@@ -21,7 +26,8 @@ export initial_state = {
 };
 ```
 
-##### store.js
+store.js
+
 ```javascript
 import { createStore } from 'redux';
 import { initialState } from './initialState';
@@ -36,7 +42,8 @@ store.subscribe(() => {
 export default store;
 ```
 
-### Actions
+## Actions
+
 Actions are user defined, they are objects with usually 2 properties:
 
 ```javascript
@@ -45,17 +52,19 @@ var someAction = {
     value: 'some_value'
 }
 
-/*  Redux function passed in when using Redux. 
+/*  Redux function passed in when using Redux.
     It sends the action object to the Reducer. */
-dispatch(someAction); 
+dispatch(someAction);
 ```
 
 Since Actions are user defined, there are many approaches to implementing them.
-#### Method 1:
-The actions can be defined in two files: `actionTypes.js` and 
-`actions.js`.
 
-##### actionTypes.js
+### Method 1
+
+The actions can be defined in two files: **actionTypes.js** and **actions.js**.
+
+actionTypes.js
+
 ```javascript
 // Constants defining our action types.
 export const constants = {
@@ -65,7 +74,8 @@ export const constants = {
 }
 ```
 
-##### actions.js
+actions.js
+
 ```javascript
 // Functions returning objects that can be passed to the reducers.
 import { constants } from './actionTypes';
@@ -86,25 +96,31 @@ export deleteAction = deleteValue => {
 }
 ```
 
-##### example.js
+example.js
+
 ```javascript
 import { addAction } from './actions';
 
 let exampleVal = 10;
 dispatch(addAction(exampleVal));
 ```
-###### Pros:
+
+#### Method 1 Pros
+
 * Just two files.
 * Easier to understand.
 
-###### Cons:
+#### Method 1 Cons
+
 * With many actions, `actions.js` can get long and difficult to manage.
 * Can be difficult to work with multiple reducers.
 
-#### Method 2:
+### Method 2
+
 Having a `constants.js` file with multiple action files.
 
-##### constants.js
+constants.js
+
 ```javascript
 export const constants = {
     ADD_ACTION:     'ADD_ACTION',
@@ -113,7 +129,8 @@ export const constants = {
 }
 ```
 
-##### add.js
+add.js
+
 ```javascript
 import { constants } from './constants';
 
@@ -123,7 +140,8 @@ export addAction = valueToAdd => {
 }
 ```
 
-##### update.js
+update.js
+
 ```javascript
 import { constants } from './constants';
 
@@ -133,7 +151,8 @@ export updateAction = updateValue => {
 }
 ```
 
-##### delete.js
+delete.js
+
 ```javascript
 import { constants } from './constants';
 
@@ -143,20 +162,21 @@ export deleteAction = deleteValue => {
 }
 ```
 
-###### Pros:
+#### Method 2 Pros
+
 * Separates actions and logic which makes it easier to work with multiple reducers.
 * Shorter files.
 * Working with React-form is also easier.
 * Server calls and other logic can also be handled by Redux in an understandale way.
 
-###### Cons:
+#### Method 2 Cons
+
 * With more actions, there are more files to manage.
 * Potentially more difficult to understand.
 
-### Reducers
-Reducers are a JavaScript function that modifies the store based on object received 
-from `dispatch()`. They are usually writted as a single `switch` statement since 
-actions are defined by constants.
+## Reducers
+
+Reducers are a JavaScript function that modifies the store based on object received from `dispatch()`. They are usually writted as a single switch statement since actions are defined by constants.
 
 ```javascript
 import { initialState } from './initialState';
@@ -182,14 +202,18 @@ export const reducer = (state = initialState, action) => {
 ```
 
 ## React-Redux
+
 To use Redux with React, you need to install the package.
-```
+
+```bash
 npm install redux react-redux
 ```
 
-Redux provides a `Provider` component, which should be the root component
+Redux provides a `Provider` component, which should be the root component.
 in the React app. It passes the store to the whole application.
-##### app.js
+
+### app.js
+
 ```jsx
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -205,15 +229,17 @@ if(document.getElementById('root')) {
 }
 ```
 
-To access the store in a React component, Redux will connect the store to 
-the component's `props` through the use of the `connect` function.
+To access the store in a React component, Redux will connect the store to.
+the component's **props** through the use of the `connect()` function.
 
-The `connect` function takes two functions as arguments:
-* `mapStateToProps` - Allows the component to access the store's values.
-* `mapDispatchToProps` - Allows the component to access the reducer to 
+The `connect()` function takes two functions as arguments:
+
+* `mapStateToProps()` - Allows the component to access the store's values.
+* `mapDispatchToProps()` - Allows the component to access the reducer to.
 modify the store.
 
-##### Main.js
+### Main.js
+
 ```jsx
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -252,10 +278,11 @@ export default connect(mapStateToProps, mapDispatchToProps)(App);
 ```
 
 ### Multiple Reducers
+
 This approach has multiple files for multiple reducers.
 The initial state is also devided into substates (an object for each reducer file).
 
-##### initialState.js
+initialState.js
 
 ```javascript
 initialState = {
@@ -272,7 +299,8 @@ initialState = {
 }
 ```
 
-##### auth.js
+auth.js
+
 ```javascript
 import initialState from './initialState';
 
@@ -283,7 +311,8 @@ export default authReducer = (state = initialState.auth, action) => {
 }
 ```
 
-##### messages.js
+messages.js
+
 ```javascript
 import initialState from './initialState';
 
@@ -294,9 +323,11 @@ export default messagesReducer = (state = initialState.auth, action) => {
 }
 ```
 
-In `reducer.js` we combine the reducers into a single reducer and use that to create
+In **reducer.js** we combine the reducers into a single reducer and use that to create
 the store.
-##### reducer.js
+
+reducer.js
+
 ```javascript
 import { combineReducers } from 'redux'
 import authReducer from './auth';
@@ -311,6 +342,7 @@ export default reducer;
 ```
 
 This reducer is used in the creation of the store:
+
 ```javascript
 import { createStore } from 'redux';
 import reducer from './reducer';
