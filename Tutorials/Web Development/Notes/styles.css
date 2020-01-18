@@ -1,0 +1,79 @@
+/* Syntax is space sensitive. */
+
+h1 { /* Change the style of all h1 tags. */
+	color: purple;
+}
+
+/* Change various states of the a hyperlink tags.*/
+a:hover { color: blue; }
+a:active { color: red; }
+a:visited { color: #989898; }
+
+/* Reference the body tag AKA the whole webpage. */
+body {
+	background: #5D8AA8;
+}
+
+/* Reference the div using its id. */
+div#wrapper {
+	margin: auto;
+	background: white;
+	width: 800px;
+	height: 2000px;
+}
+
+
+/* HTML5 specific styles. */
+header {
+	display: block; /* Followed by a line when header is done. */
+	padding: 0px 0px 70px 0px; /* Top, right, bottom, left */
+}
+
+#websiteLogo { float: left; }
+
+#horizontalNav {
+	display: block;
+	padding: 10px 20px 10px 0px;
+	background: black;
+}
+/* Reference each link in the horizontal navigation. */
+#horizontalNav a {
+	text-decoration: none; /* Remove the underlines. */
+	padding: 0px 0px 0px 20px;
+	color: white;
+}
+
+main { padding: 10px 20px 20px 20px; }
+
+aside { background: #EFDECD; }
+
+#unorderedListTypes { /* References by the id. */
+	list-style-type: square; /* circle, disc, square, images: list-style-imaage: url(path).. */
+}
+
+#orderedListTypes {
+	/* Ordered list types have many options
+	decimal, decimal-leading-zero, lower-roman, 
+	upper-roman, lower-latin, upper-latin, lower-alpha, 
+	upper-alpha, lower-greek, armenian, georgian */
+	list-style-type: upper-roman;
+}
+
+#orderedListIndent {
+	list-style-type: lower-roman;
+}
+
+#tableData {
+	width: 600px;
+	border: 3px solid black;
+}
+
+#tableData td, th {
+	border: 1px solid black;
+}
+
+footer {
+	background: black;
+	color: white;
+	padding: 10px, 10px, 10px, 10px;
+}

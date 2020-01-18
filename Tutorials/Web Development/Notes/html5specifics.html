@@ -1,0 +1,164 @@
+<!DOCTYPE HTML>
+
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8"/>
+	<meta name="description" content="This document is used for practicing HTML 5."/>
+	<meta name="keywords" content="practice, html5, jerry"/>
+	<meta name="robots" content="index,follow"/>
+	<script src="randomcolorchange.js"></script>
+	<base href="file:///D:/Documents/Programming/Web%20Development/Notes/"/>
+	<link rel="stylesheet" type="text/css" href="styles.css"/>
+	<link rel="icon" href="favicon.ico"/>
+	<title>HTML5 Practice</title>
+</head>
+
+<body>
+
+	<div id="wrapper">
+		
+		<!-- Header section of the page. -->
+		<header>
+			<a href="http://google.com">	
+				<img id="websiteLogo" width="200" height="200" 
+				src="http://image.flaticon.com/teams/1-freepik.jpg" 
+				alt="Some random logo."/>
+			</a>
+			<h1>Googles!</h1>
+		</header>
+
+		<!-- Navigation section of the page. -->
+		<nav id="horizontalNav">
+			<p>
+				<a href="http://google.com">Google</a>
+				<a href="http://youtube.com">YouTube</a>
+				<a href="http://github.com">GitHub</a>
+			</p>
+		</nav>
+
+		<!-- Main content of the document. -->
+		<main id="content">
+			
+			<!-- Blocks of content of the document. -->
+			<section>
+				
+				<h2>Fun Fact</h2>
+				<!-- Self-contained blocks of content complete on its own.-->
+				<article>
+					
+					<h3>Tomato fact.</h3>
+					<p>Tomatos are not my favorite.</p>
+					<aside>Blah, Blah, Blah. - Anonymous</aside>
+
+				</article>
+				
+			</section>
+
+			<section>
+				
+				<h2>Fun Fact</h2>
+				<!-- Self-contained blocks of content complete on its own.-->
+				<article>
+					
+					<!-- Using lists. (unordered lists)-->
+					<h3>Types of Lists</h3>
+					<ul id="unorderedListTypes">
+						<li>Unordered</li>
+						<li>Ordered</li>
+						<li>Definition</li>
+					</ul>
+
+					<!-- Using lists inside of lists. (ordered lists) -->
+					<ol id="orderedListTypes">
+						<li>Harry Potter
+							<ol id="orderedListIndent">
+								<li>and the Sorcerer's Stone</li>
+								<li>and the Half-Blood Prince</li>
+								<li>and the Chamber of Secrets</li>
+							</ol>
+						</li>
+						<li>The Very Hungry Caterpillar</li>
+					</ol>
+
+					<!-- Definition. -->
+					<dl>
+						<!-- Italicizes -->
+						<dt><dfn>Definition</dfn></dt>
+						<!-- Indents -->
+						<dd>Some random definition.</dd>
+					</dl>
+					<aside>
+						This is some random text that I don't really know what
+						I am typing, so I will just keep on typing to test out
+						my accuracy, but all in all, this is just to type out
+						something long for HTML5 practice.
+					</aside>	
+				
+
+				</article>
+				
+			</section>
+
+
+			<section>
+
+				<article>
+
+					<h2>Fun Fact</h2>
+					<!-- Tables. -->
+					<table id="tableData">
+						<!-- Table title. -->
+						<caption>Baseball</caption>
+						
+						<thead> <!-- Table header. -->
+							<tr> <!-- Table row. -->
+								<!-- Defines the number of columns. -->	
+								<td colspan="4">Best Baseball Players</td>
+							</tr>
+						</thead>
+
+						<tfoot> <!-- Table footer. -->
+							<!-- Defines how many columns is the footer going to take. -->
+							<tr><td colspan="4">* Hall of Fame</td></tr>
+						</tfoot>
+
+						<tbody> <!-- Table body. -->
+							<tr>
+								<td></td>
+								<td>Average</td>
+								<td>RBIs</td>
+								<td>Homeruns</td>
+							</tr>
+
+							<tr>
+								<td>Barry Bonds</td>
+								<td>.298</td>
+								<td>1996</td>
+								<td>762</td>
+							</tr>
+
+						</tbody>
+
+					</table>
+
+				</article>
+
+			</section>
+
+		</main>
+
+		<!-- Footer section of the document. -->
+		<footer>
+
+			<!-- Defines a way to contact the creator of the document. -->
+			<address>jerryq27@gmail.com</address>
+			<small>copyright 2014</small>
+
+		</footer>
+
+	</div>
+
+</body>
+
+</html>

@@ -1,0 +1,3 @@
+D:/KikoBrothers/Jerry/Documents/Programming/C-C++/Tutorial/cmake-build-debug/CMakeFiles/Tutorial.dir
+D:/KikoBrothers/Jerry/Documents/Programming/C-C++/Tutorial/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/KikoBrothers/Jerry/Documents/Programming/C-C++/Tutorial/cmake-build-debug/CMakeFiles/rebuild_cache.dir

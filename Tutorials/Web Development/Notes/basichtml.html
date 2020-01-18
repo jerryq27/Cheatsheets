@@ -1,0 +1,209 @@
+<!DOCTYPE HTML>
+
+<html lang="en">
+
+<!-- Head contains the title and metadata for the site. -->
+
+<head>
+	<meta charset="UTF-8"/>
+	<!-- 3 seconds after clicking refresh, the browser is redirected to the specified URL -->
+	<!--<meta http-equiv="refresh" content="3; url=http://google.com"/>-->
+	<!-- Provides a description for your page and everything in it. --> 
+	<meta name="description" content="This document is used for practicing HTML 5."/>
+	<!-- To help search engines by detailing what data is on your site. Separate keywords with commas. -->
+	<meta name="keywords" content="practice, html5, jerry"/>
+
+	<!-- Tells the search engine how to index your site. index=search engine to index your page, follow teels it to index hyperlinks, archive will indicate whether the page should be archived. -->
+	<meta name="robots" content="index,follow"/>
+
+	<!-- To use JavaScript use script tags. -->
+	<script src="randomcolorchange.js"></script>
+
+	<!-- Defines the default location for all the links on your page. Define before creating other link tags. AKA Working directory. -->
+	<base href="file:///D:/Documents/Programming/Web%20Development/Notes/"/>
+
+	<!-- Defines the style sheet, HTML provides the structure, css provides the style. -->
+	<link rel="stylesheet" type="text/css" href="styles.css"/>
+
+	<!-- Defines the icon(16px16p) to use on your page next to the title. -->
+	<link rel="icon" href="favicon.ico"/>
+
+	<!-- Defines the title. --> 
+	<title>HTML5 Practice</title>
+</head>
+
+<!-- Body contains the data inside the browser. -->
+<!-- <body onload="alert('Hello')"> Onload displays a message to the user when they visit your site. -->
+<body>
+
+	<!-- Used to define size and position of webpage. HTML5: Should now be used for styling, not structure. -->
+	<div id="wrapper">
+		<!-- If JavaScript is not enabled, display this: -->
+		<noscript>Please enable JavaScript</noscript>
+
+		<h1>Change with a click.</h1>
+
+	
+		<!-- Paragraph tags have two breaks(<br>) after closing tags. -->
+		<p>
+			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce nunc libero, lobortis nec felis et, iaculis dignissim mauris. Morbi iaculis lacus erat, tincidunt pellentesque turpis consequat sit amet. Nunc nisi metus, vulputate eget leo ac, porta dapibus nisl. Duis facilisis dolor sed nunc fermentum, eget blandit sapien vestibulum. Vestibulum tincidunt turpis massa, id congue ante posuere id. Integer vitae metus ut erat ultrices rhoncus. Aliquam erat volutpat. Pellentesque accumsan nisi nunc, sit amet ornare dolor tempor malesuada. Aenean consectetur sit amet lorem scelerisque placerat. In tincidunt, nisi a viverra porttitor, turpis ipsum suscipit lectus, eu feugiat augue velit non est. Sed pulvinar elit ut elit posuere facilisis. Fusce sollicitudin arcu in tellus aliquam congue eu id ligula. Donec malesuada tincidunt nibh, id maximus metus fermentum eget. Curabitur commodo venenatis vestibulum.
+		</p>
+		<hr> <!-- Draws a line. -->
+		<blockquote cite="http://www.lipsum.com/"> <!-- Indents text. The Cite option defines where the quote came from. -->
+			Fusce sollicitudin arcu in tellus aliquam congue eu id ligula. Donec malesuada tincidunt nibh, id maximus metus fermentum eget. Curabitur commodo venenatis vestibulum.
+		</blockquote>
+
+		<q cite="http://www.lipsum.com/"> <!-- Surround the text with quotes. -->
+			Fusce sollicitudin arcu in tellus aliquam congue eu id ligula. Donec malesuada tincidunt nibh, id maximus metus fermentum eget. Curabitur commodo venenatis vestibulum.	
+		</q>
+
+		<!-- Use pre tags if you want to keep the white space. Ex. ASCII art. You can replace < with '&ls;' and > with '&gt;'. -->
+		<pre>
+				              _______
+				         ..-'`       ````---.
+				       .'          ___ .'````.'SS'.
+				      /        ..-SS####'.  /SSHH##'.
+				     |       .'SSSHHHH##|/#/#HH#H####'.
+				    /      .'SSHHHHH####/||#/: \SHH#####\
+				   /      /SSHHHHH#####/!||;`___|SSHH###\
+				-..__    /SSSHHH######.         \SSSHH###\
+				`.'-.''--._SHHH#####.'           '.SH####/
+				  '. ``'-  '/SH####`/_             `|H##/
+				  | '.     /SSHH###|`'==.       .=='/\H|
+				  |   `'-.|SHHHH##/\__\/        /\//|~|/
+				  |    |S#|/HHH##/             |``  |
+				  |    \H' |H#.'`              \    |
+				  |        ''`|               -     /
+				  |          /H\          .----    /
+				  |         |H#/'.           `    /
+				  |          \| | '..            /
+				  |    ^~DLF   /|    ''..______.'
+				   \          //\__    _..-. | 
+				    \         ||   ````     \ |_
+				     \    _.-|               \| |_
+				     _\_.-'   `'''''-.        |   `--.
+				 ''``    \            `''-;    \ /
+				          \      .-'|     ````.' -
+				          |    .'  `--'''''-.. |/
+				          |  .'               \|
+				          |.'
+		</pre>
+		<!-- Pre tags are also useful for code. -->
+		<pre>
+			<code>
+				function init() {
+					var <var>h1tags</var> = document.getElementsByTagName("h1");
+					<var>h1tags[0]</var>.onclick = changeColor;
+				}
+			</code>
+		</pre>
+
+		<!-- Add images/gifs to your page using img tags. -->
+		<img id="danceImg" 
+		src="https://imgaf.s3.eu-central-1.amazonaws.com/public/artwork/products/593561/poster/pic-1351-copy.jpg?1314054234"
+		width="237" height="178" alt="Bboy Picture."><br> <!-- id is used for reference in style sheets and JavaScript, src is a link to the image, height and width define the dimensions, alt defines what the image is on hover?. -->
+
+		<!-- Links that use JavaScript functions to affect elements on page. -->
+		<a href="JavaScript:toggleImg()">Toggle Image</a><br>
+
+		<!-- Picture links. -->
+		<img src="http://activenewcastle.co.uk/wp-content/uploads/Breakdancing.jpg" alt="Image Map Example." width="600" height="125" usemap="#map"/><br>
+		<map name="map">
+			<area shape="rect" coords="0,0,600,125" alt="Bboy.org" title="Go to Bboy.org" href="http://Bboy.org"/>
+		</map>
+
+		<!-- Page jumping. -->
+		<a name="pageTop">Top of Page</a> <!-- Marks a location of the page. -->
+		<a href="practice.html#pageBottom">Bottom of Page</a><br> <!-- Creats a link to a marked location. -->
+
+		<!-- Displaying Files. -->
+		<object data="practice.html" type="text/html" width="750" height="400"></object>
+		<!-- Other Formats 
+		application/msword : MS Doc Files
+		application/x-java-applet : Java Applet
+		audio/mpeg : MP3s
+		image/png : PNGs
+		image/jpeg : JPEGs
+		image/gif : GIFS
+		image/svg+xml : SVG Vector images
+		text/plain : Text
+		video/mp4 : MP4s
+		video/x-msvideo : AVIs
+		video/x-msv-wmv : WMVs
+		video/quicktime : MOVs
+		-->
+
+		<!-- External resources. -->
+		<iframe width="560" height="315" src="https://www.youtube.com/embed/GwhPyKcj9OY" frameborder="0" allowfullscreen></iframe>
+		<!-- Flash files:
+		<embed src="flashfile.swf" pluginspage="flashplugin/" 
+		type="application/x-shockwave-flash" width="300" height="120"
+		loop="false" quality="high">
+		-->
+		<!-- Audio files. -->
+		<audio controls autoplay loop preload>
+			<source src="https://www.freesound.org/data/previews/19/19118_76085-lq.mp3" type="audio/mp3">
+			Browser doesn't support audio tag.
+		</audio>
+		<!-- Video files. -->
+		<video controls autoplay loop preload>
+			<source src="http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" type="video/mp4">
+			Browser doesn't support video tag.
+		</video>
+		
+
+	</div>
+
+	<!-- Text formatting. -->
+	<b>Bold</b><br>
+	<strong>Strong</strong><br>
+	<em>Emphasis</em><br>
+	<i>Italic</i><br>
+	<small>Small</small><br>
+	<ins>Insert</ins><br>
+	<del>Delete</del><br>
+	<samp>Sample Programming Output</samp><br>
+	<abbr title="Abbreviation">Hover over for abbreviation.</abbr><br> <!-- Doesn't work? -->
+	<dfn>Definition: </dfn> I'm awesome is the definition.<br>
+	<!-- Definition with abbreviation style pop up. -->
+	<dfn title="I'm awesome is the definition.">Defnition</dfn><br>
+	<!-- Keyboard input? -->
+	<kbd>Enter something here.</kbd>
+
+	<!-- Character entities: http://dev.w3.org/html5/html-author/charref -->
+	&cent;
+	&pound;
+	&yen;
+	&copy;
+	&reg;
+	&deg;
+	&frac14;
+	&frac12;
+	&frac34;
+	<!-- To the power of notation. -->
+	&sup2;<br>
+	4<sup>2</sup><br>
+	CO<sub>2</sub><br>
+
+	<!-- Change direction of your characters. -->
+	<bdo dir="rtl">This is in reverse!</bdo><br>
+	<!-- Use for displaying the pronounciation. -->
+	<ruby>先生<rt>Sensei</rt></ruby><br>
+
+	<!-- Hyper links. -->
+	<a href="http://youtube.com" title="YouTube">YouTube</a><br>
+
+	<!-- Page jumping links. -->
+	<a href="practice.html#pageTop">Top of Page</a>
+	<!-- Name was used at the top, but is preffered. -->
+	<a id="pageBottom">Bottom of Page</a><br>
+
+	<!-- Email links. -->
+	<a href="mailto:jerryq27@gmail.com">Send an email.</a><br>
+
+
+</body>
+
+
+
+</html>

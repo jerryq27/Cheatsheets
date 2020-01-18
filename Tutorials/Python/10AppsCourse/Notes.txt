@@ -1,0 +1,7 @@
+Still unsure:
+
+repr magic method
+Duck typing
+List comprehensions
+Generator expressions
+Large data sets with generat ors

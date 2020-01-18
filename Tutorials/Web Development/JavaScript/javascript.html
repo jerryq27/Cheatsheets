@@ -1,0 +1,38 @@
+<html>
+   <body>
+   
+      <script language="javascript" type="text/javascript">
+         <!--
+
+
+            document.write("Hello World!<br/>");
+            var age = 12;
+            if(age > 10) {
+                document.write("Age is " + age + "<br/>");
+            }
+
+            function hello() {
+                alert("Hello there!");
+            }
+            function over() {
+               document.write ("Mouse Over");
+            }
+            
+            function out() {
+               document.write ("Mouse Out");
+            }
+            
+
+         //-->
+      </script>
+      
+      <form>
+          <input type="button" onclick="hello()" value="Say Hello"/>
+      </form>
+
+        <div onmouseover="over()" onmouseout="out()">
+         <h2> This is inside the division </h2>
+      </div>
+
+   </body>
+</html>
