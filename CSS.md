@@ -27,6 +27,11 @@ How the elements are displayed on the page:
     * parent can be the body or any relative positioned element
 1. `fixed` - element stays in its position relative to the website while scrolling
 
+## float & clear properties
+
+The float property is mainly used for wrapping text around an image, and clear is the inverse of float. It is recommended to only use float for wrapping text,
+other use cases are prone to problems.
+
 ---
 
 ## Centering with CSS
@@ -57,3 +62,16 @@ Size values:
     * Most least error prone value
 
 Example: 90px (90/16) = 5.625em or  ((90/16) * 100) = 562.5%
+
+## Extras
+
+Making a nice looking dotted horizontal rule:
+
+```css
+hr {
+    border: dotted 15px #EAF6F6;
+    border-bottom: none;
+    width: 5%;
+    margin: 100px auto;
+}
+```
