@@ -77,7 +77,7 @@ Permissions:
 * `addgroup $GROUP` - creates a group in the system.
 * `passwd` - change the password of the current user.
 
-> user* & group* commands (useradd, userdel, usermod, groupadd) are lower level commands used in
+> user\* & group\* commands (useradd, userdel, usermod, groupadd) are lower level commands used in
 their more user frendly commands.
 
 ## Processes
