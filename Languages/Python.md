@@ -399,4 +399,8 @@ print(list1[0:3])  # [1, 2, 3]
 
 If start isn't specified, the first index 
 
+### Generators and yield
+
+https://pythontips.com/2013/09/29/the-python-yield-keyword-explained/
+
 ## Libraries & Frameworks
