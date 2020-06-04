@@ -381,6 +381,7 @@ You can use `**` operator for a power relationship:
 ```
 
 ### Slicing
+
 Slicing can be used with collections and strings, provides alternative ways of accessing values.
 The format is usually `[start(inclusive):stop(exclusive):step]`
 
@@ -401,6 +402,30 @@ If start isn't specified, the first index
 
 ### Generators and yield
 
-https://pythontips.com/2013/09/29/the-python-yield-keyword-explained/
+Iterables can be looped through multiple times, but those values are 
+stored in memory which can cause issues in large data sets. Generators 
+help with that problem, since they can only be iterated through once. 
+Values are _generated_ on the fly. 
+
+Lists are created with `[]` and generators use `[]`.
+
+```python
+lst = [x * x for x in range(1, 11)]  # List
+
+gnr = (x * x for x in range(1, 11))  # Generator
+```
+
+The keyword `yield` is used in a function. It acts like `return`, but 
+unlike `return` where code runs until it hits a `return`/end, code with
+`yield` will not run until a value needs to be accessed. At that point 
+the next value is _generated_. 
+
+```python
+# Returns a generator with the 1-10 squared values
+def create_generator():
+    for i in range(1, 11):
+        yield i**2
+
+```
 
 ## Libraries & Frameworks
