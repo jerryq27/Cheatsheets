@@ -402,10 +402,11 @@ If start isn't specified, the first index
 
 ### Generators and yield
 
-Iterables can be looped through multiple times, but those values are 
-stored in memory which can cause issues in large data sets. Generators 
-help with that problem, since they can only be iterated through once. 
-Values are _generated_ on the fly. 
+Generators are an iterable, but while most iterables can be looped 
+through multiple times, generators can only be looped through once. 
+The values in most iterables are stored in memory which can cause issues 
+in large data sets. Generators help with that problem, since values are 
+_generated_ on the fly. 
 
 Lists are created with `[]` and generators use `[]`.
 
