@@ -382,8 +382,9 @@ You can use `**` operator for a power relationship:
 
 ### Slicing
 
-Slicing can be used with collections and strings, provides alternative ways of accessing values.
-The format is usually `[start(inclusive):stop(exclusive):step]`
+Slicing can be used with iterables such as collections and strings, 
+and provides alternative ways of accessing values.
+The format is usually `[start(inclusive):stop(exclusive):step(every n value from start to stop)]`
 
 * If start isn't specified, the first index is used
 * if stop isn't specified, the last index is used
@@ -392,13 +393,17 @@ The format is usually `[start(inclusive):stop(exclusive):step]`
 str1 = 'Python'
 print(str1[2:5])  # tho 
 print(str1[:5])  # Pytho
+print(str1[::2])  # Pto
 
 list1 = [1, 2, 3, 4, 5]
 print(list1[0:3])  # [1, 2, 3]
-
 ```
 
-If start isn't specified, the first index 
+Using negative numbers counts from the end of the iterable.
+```python
+str1 = 'Python.md'
+print(str1[:-3])  # Python
+```
 
 ### Generators and yield
 
@@ -408,7 +413,7 @@ The values in most iterables are stored in memory which can cause issues
 in large data sets. Generators help with that problem, since values are 
 _generated_ on the fly. 
 
-Lists are created with `[]` and generators use `[]`.
+Lists are created with `[]` and generators use `()`.
 
 ```python
 lst = [x * x for x in range(1, 11)]  # List
@@ -426,7 +431,11 @@ the next value is _generated_.
 def create_generator():
     for i in range(1, 11):
         yield i**2
-
 ```
 
 ## Libraries & Frameworks
+
+[Django] - a high level web framework
+
+
+[Django]: ../WebDevelopment/Django.md
