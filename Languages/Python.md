@@ -384,9 +384,31 @@ print('num={a} flt={b} name={c}'.format(a=num, b=flt, c=name))
 
 ## Functions
 
+Syntax:
+
+```python
+def function_name(param1, param2):
+    # code
+    return 1
+
+val = function_name(arg1, arg2)  # Function call
+```
+
+Python also supports default parameter values for functions:
+
+```python
+def add(x=1, y=2):
+    return "{} + {} = {}".format(x, y, x + y)
+
+print(add())
+print(add(5))
+print(add(5, 5))
+print(add(y=5))
+```
+
 ## Exceptions
 
-## Classes
+## Classes & Objects
 
 ## Language Specifics
 
