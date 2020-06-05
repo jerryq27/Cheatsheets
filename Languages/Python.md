@@ -410,6 +410,27 @@ print(add(y=5))
 
 ## Classes & Objects
 
+Syntax:
+
+```python
+class ClassName:
+
+    field1 = 'field'
+
+    def class_function(self):
+        print('Class function call.')
+
+obj = ClassName()
+print(obj.field1)
+obj.class_function()
+```
+
+Python classes have default dunder (double underscore) functions they can
+override.
+
+* `__init__` - class constructor.
+* `__repr__` - toString function. 
+
 ## Language Specifics
 
 ### Operators
