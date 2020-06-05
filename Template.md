@@ -8,7 +8,7 @@
 ## I/O
 ## Functions
 ## Exceptions
-## Classes
+## Classes & Objects
 ## Language Specifics
 ## Libraries & Frameworks
 
