@@ -7,6 +7,7 @@
 ## Loops
 ## I/O
 ## Functions
+## Exceptions
 ## Classes
 ## Language Specifics
 ## Libraries & Frameworks

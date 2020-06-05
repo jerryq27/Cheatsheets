@@ -384,6 +384,8 @@ print('num={a} flt={b} name={c}'.format(a=num, b=flt, c=name))
 
 ## Functions
 
+## Exceptions
+
 ## Classes
 
 ## Language Specifics
