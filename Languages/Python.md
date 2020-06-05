@@ -51,6 +51,12 @@ else:
     # code
 ```
 
+Conditional operators: `== != < > <= >= and or is not`
+
+* Use of these operators is similar to most languages.
+* Having `not` before a boolean expression inverts it.
+* The difference between `==` and `is` is that `==` compares the value and `is` compares the instance.
+
 ## Collections
 
 Python has 4 commonly used collection types
@@ -310,6 +316,33 @@ for m in movies:
 ```
 
 ## Loops
+
+Python uses two types of loops:
+
+* `while` loops - loop based on codition
+* `for` loops - controlled loop over a sequence
+
+Syntax:
+
+```python
+while condition:
+    # code
+
+for i in sequence:
+    # code
+```
+
+Python allows the use of `else` clauses with loops. These clauses trigger if no `break` is 
+encountered. The `continue` keyword has no effect on whether or not the clause triggers.
+
+```python
+for v in values:
+    if v == search_val:
+        print('Found it!')
+        break
+else:
+    raise Error('Value not found.')
+```
 
 ## I/O
 
