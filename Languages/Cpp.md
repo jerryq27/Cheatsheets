@@ -461,7 +461,7 @@ file. So trying to access the variable outside the file with `extern` will throw
 1. **Local scope (functions/conditionals/loops)** - ``static` essentially makes the variable
 defined in these scopes into a global variable that's only accessable **within** that scope. On
 the first call, the static variable is initialized, subsequent calls will ignore the
-initialization of the variable.
+initialization of the variable. The variable _belongs_ to the scope.
 
 ## Language Specifics
 
