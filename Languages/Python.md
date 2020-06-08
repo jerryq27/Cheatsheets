@@ -415,7 +415,15 @@ Syntax:
 ```python
 class ClassName:
 
-    field1 = 'field'
+    field1 = 'field' # public field
+
+    def __init__(self):
+        # These (except private) don't affect access
+        # Just a convention to note their uses
+        # It is up to the programmer to recognize these conventions.
+        self.pub_field = 1  # public field
+        self._pro_field = 2  # protected field
+        self.__priv_field = 3  # private field
 
     def class_function(self):
         print('Class function call.')
@@ -425,11 +433,30 @@ print(obj.field1)
 obj.class_function()
 ```
 
-Python classes have default dunder (double underscore) functions they can
-override.
+Python classes have default magic/dunder (double underscore) functions
+they can override.
 
 * `__init__` - class constructor.
 * `__repr__` - toString function. 
+
+### Inheritance
+
+Syntax:
+
+```python
+ class Child(Parent):
+
+    def __init__(self, name):
+        # Both acheive the same thing.
+        Parent.__init__(self, name)
+        super().__init__(name)
+
+    # Class body
+
+```
+
+### Modules & Packages
+
 
 ## Language Specifics
 
@@ -514,6 +541,7 @@ def create_generator():
 ## Libraries & Frameworks
 
 [Django] - a high level web framework
-
+[Numpy] - library for easier calculations with arrays
+[Pandas] - built using numpy, for tabular data
 
 [Django]: ../WebDevelopment/Django.md
