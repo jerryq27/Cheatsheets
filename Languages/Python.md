@@ -538,6 +538,10 @@ def create_generator():
         yield i**2
 ```
 
+### List Comprehension
+
+Creating lists in a single, readable line.
+
 ## Libraries & Frameworks
 
 [Django] - a high level web framework
