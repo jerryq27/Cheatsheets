@@ -7,7 +7,7 @@ Python is a interpreted, high level, general-purpose, easy to use programming la
 * Python uses spaces/tabs for code blocks
 * Newlines are allowed between pairs: ()[]{}''' ''' """ """ or with `\`
 * Semicolons are optional
-* Scripts use the `#!/usr/bin/env python3` header to set the interpreter
+* Scripts use the `#!/usr/bin/env python` header to set the interpreter
 
 * There's no main method, although this boilerplate is used to make sure some code runs first:
 
@@ -38,6 +38,34 @@ second_long_string = '''
 '''
 ```
 
+There are other types of string literals:
+
+* fstrings `f''` - used to allow string interpolation
+* rstrings `r''` - used to make raw strings for regular expressions
+* ustring `u''` - used for unicode
+
+### Numbers
+
+The following numeric literals are supported:
+
+* `0b` - used for binary
+* `0x` - used for hexadecimal
+* `0o` - used for octal
+* `e` - used for exponential notation
+* `j` - ???
+
+Numeric literals can also use `_` for readability.
+
+```python
+print(f'''
+    binary={0b10011010}
+    hex={0xCAFEBABE}
+    octal={0o310}
+    exponential={1.5e2}
+    underscores={1_000_000}
+''')
+```
+
 ## Conditionals
 
 Syntax: 
@@ -59,12 +87,13 @@ Conditional operators: `== != < > <= >= and or is not`
 
 ## Collections
 
-Python has 4 commonly used collection types
+Python has 5 commonly used collection types
 
-* Lists - list of values
-* Tupples - data values that should be grouped together
-* Dictionaries - key-value pairs
-* Sets - list of unique values
+* [Lists](###Lists) - list of values
+* [Tuples](###Tuples) - data values that should be grouped together
+* [Dictionaries](###Dictionaries) - key-value pairs
+* [Sets](###Sets) - list of unique values
+* [Generators](###Generators) - lists created on the fly
 
 ### Lists
 
@@ -315,6 +344,87 @@ for m in movies:
     print(m)
 ```
 
+### Generators
+
+Generators are an iterable, but while most iterables can be looped 
+through multiple times, generators can only be looped through once. 
+The values in most iterables are stored in memory which can cause issues 
+in large data sets. Generators help with that problem, since values are 
+_generated_ on the fly. 
+
+Using [list comprehension](###List%20Comprehension), lists are created
+with `[]` and generators use `()`.
+
+```python
+lst = [x * x for x in range(1, 11)]  # List
+
+gnr = (x * x for x in range(1, 11))  # Generator
+```
+
+The keyword `yield` is used in a function. It acts like `return`, but 
+unlike `return` where code runs until it hits a `return`/end, code with
+`yield` will not run until a value needs to be accessed. At that point 
+the next value is _generated_. 
+
+```python
+# Returns a generator with the 1-10 squared values
+def create_generator():
+    for i in range(1, 11):
+        yield i**2
+```
+
+### Map, Filter, Reduce & Zip
+
+These methods allow you to apply functions to iterables without the need
+for loops and conditionals.
+
+#### Map
+
+`map(function, args*)`
+
+Map returns a map object that's basically a generator. It can be converted
+into a list with the `list()` function.
+
+The number of `args` must match the number of arguments the function
+needs.
+
+If the iterables for multiple arguments don't match, map keeps going until
+it can't find enough arguments for the function and returns without
+raising an exception.
+
+Simple example using `round(number, number of places)`
+
+```python
+floats = [2.134567, 3.1453678, 7.2317943, 5.1423613]
+
+rounded = map(round, floats, range(1, 5))
+print(list(rounded))  # output: [2.1, 3.15, 7.232, 5.1424]
+
+rounded = map(round, floats, range(1, 5_000_000))
+print(list(rounded))  # output: [2.1, 3.15, 7.232, 5.1424]
+
+rounded = map(round, floats, range(1, 3))
+print(list(rounded))  # output: [2.1, 3.15]
+```
+
+#### Zip
+
+`zip(args*)`
+
+Zip returns a zip object generator of tuples using the passed in
+iterables. If the number of iterables don't match, it will pair the values
+until it can't find enough arguments for the tuple then returns without
+raising an exception.
+
+```python
+l1 = [1, 2, 3]
+l2 = ['a', 'b', 'c']
+l3 = ['+', '-', '*', '/', '%']
+
+print(list(zip(l1, l2)))  # output: [(1, 'a'), (2, 'b'), (3, 'c')]
+print(list(zip(l1, l2, l3)))  # output: [(1, 'a', '+'), (2, 'b', '-'), (3, 'c', '*')]
+```
+
 ## Loops
 
 Python uses two types of loops:
@@ -353,6 +463,8 @@ name = input('What is your name: ')
 print('Your name is ' + name)
 ```
 
+### String Formatting
+
 There are a few ways to format a print statement
 
 1. Using the `%` operator:
@@ -378,6 +490,19 @@ name = "Jerry"
 print('num={} flt={} name={}'.format(num, flt, name))
 print('num={2} flt={1} name={0}'.format(name, flt, num))
 print('num={a} flt={b} name={c}'.format(a=num, b=flt, c=name))
+```
+
+3. Using string interpolation with f strings:
+
+```python
+num = 2
+flt = 3.14
+name = "Jerry"
+
+# Using string interpolation, code can be specified within the {}
+print(f'num={num} flt={flt} name={name}')
+print(F'num={num} flt={flt} name={name}')
+print(f'expression={num * flt}')
 ```
 
 ### File input and output
@@ -406,7 +531,127 @@ print(add(5, 5))
 print(add(y=5))
 ```
 
+### Type Hinting
+
+You can use type hints to specify what the type of the parameters and the 
+return type of the function is:
+
+```python
+def get_string(name: str='Jerry', age: int) -> str:
+    # Optionally you can specify types with a type comment:
+    # type: (str, int) -> str
+    return 'Hello, World!'
+```
+
+Interpretation-wise, type hints have no effect whatsoever. They are used
+to help the programmer document their code. This also helps improve IDEs
+and linters to give suggestions when they know specified types functions
+are asking for.
+
+### Nested Functions
+
+With nested functions, the inner function has read only access to
+variables within the scope of the outer function.
+
+```python
+def outer_function(message):
+    def inner_function():
+        print(message)
+    inner_function()
+    print(message)
+
+outer_function('Hello, World!')
+```
+
+To modify outer function variables within the inner function, you must use
+the `nonlocal` keyword. Without it, a new variable will be created instead
+of modifying the existing one.
+
+```python
+def outer_function(message):
+    def inner_function():
+        nonlocal message
+        message = 'Goodbye, World!'
+        print(message)
+    inner_function()
+    print(message)
+
+outer_function('Hello, World!')
+```
+
+### Anonymous Functions
+
+Anonymous functions (or lambda functions) are used for simple functions
+that don't need reusabiliy like defined functions. These functions are
+created using the `lambda` keyword.
+
+`lambda <bound_var>: <body>`
+
+Example:
+
+```python
+# Unnamed lambda
+(lambda x: x ** 2)(5)  # 25
+
+# Named lambda
+sqr = lambda x: x ** 2
+sqr(5)  # 25
+
+# Multiple lines
+odd_or_even = (lambda x:
+(x % 2 and 'odd' or 'even'))
+odd_or_even(3)
+```
+
+Lambdas are commonly used with higher order functions (take functions as
+arguments to produce another function, in this case, the lambda)
+
+```python
+hof = lambda x, function: x + function(x)
+hof(2, lambda x: x * x)
+```
+
+Anonymouse functions cannot contain any statements involving `return`
+`pass`, `assert` or `raise`, otherwise a `SyntaxError` will be raised.
+
+### *args & **kwargs
+
+Python functions support parameters that allow for any number of arguments to be passed in by 
+prepending the parameter with `*`.
+
+```python
+def additional_args(arg1, arg1, *args):
+    print('first arg: {}\nsecond arg: {}\nthe rest{}'.format(arg1, arg2, list(args)))
+
+additional_args(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+```
+
+or any number of keyword args with `**`.
+
+```python
+def additional_kwargs(arg1, arg2, **kwargs):
+    print('first arg: {}\nsecond arg: {}\nkey word args{}'.format(arg1, arg2, dict(kwargs)))
+
+additional_kwargs(1, 2, name='Jerry', color='blue', languages='English|Spanish|Japanese|Korean')
+
+```
+
 ## Exceptions
+
+Exceptions in Python are handled using the `try/except` block.
+
+Syntax:
+
+```python
+try:
+    # code
+except Exception:
+    # exception occured code
+else:
+    # no exception occured code
+finally:
+    # always run code
+```
 
 ## Classes & Objects
 
@@ -438,6 +683,7 @@ they can override.
 
 * `__init__` - class constructor.
 * `__repr__` - toString function. 
+* `__call__` - make object callable.
 
 ### Inheritance
 
@@ -457,8 +703,46 @@ Syntax:
 
 ### Modules & Packages
 
-
 ## Language Specifics
+
+### Underscores
+
+Underscores have various meanings and uses in Python:
+
+* `_private` - private member, meant for internal use
+    * Nothing prevents programmers from accessing private members
+    * However, private members are ignored by Python with `from example import *`
+* `class_` - used to avoid naming conflicts with Python keywords
+* `__example` - used to protect variables from being overridden in subclasses
+    * Python will actaully do _name mangling_ when encountering these members
+    * `dir()` will show how the variable gets altered: (`_SubClass__member`)
+    * You will need to specify the altered name to access the correct value
+    * Within the class however, you can specify the member with `self.__member`
+* `__example__` - functions reserved for special use in Python.
+    * These dunder functions are a convention used by the core Python team
+    * It is not recommended to adopt this convention in your code
+* `_` - used to indicate a variable that is temporary, or insignificant.
+    * Has no special meaning, just a convention
+    * Interpreter session uses `_` to store the result of a previous calculation
+    * Also useful for unpacking tuples
+
+```python
+# Loop
+for _ in range(101):
+    print('Hello, World!')
+
+# Tuple return
+def just_food():
+    return ('water', 'chicken')
+
+_, food = just_food()
+print(food)
+
+# Unpacking tuple:
+info = ('water', 'chicken', 'cake', 'bread')
+_, food, dessert, _ = info 
+```
+
 
 ### Operators
 
@@ -485,6 +769,28 @@ You can use `**` operator for a power relationship:
     cubed = 5 ** 3  # 5^3
 ```
 
+### Code Introspection
+
+Python has some built in utilities to examine classes, functions and 
+keywords.
+
+* `help(function)` - used to find out what other functions do
+* `dir(class/obj)` - returns a list of attributesa and functions in a 
+class/object
+* `hasattr(obj, attr)` - returns whether the object has the given 
+attribute
+* `id(obj)` - returns the unique id of the object (cpython uses the 
+memory address)
+* `type(arg)` - returns the type of the argument
+* `repr(obj)` - returns the string represention of the object (default 
+contains the memory address in hex == decimal from `id()`) 
+* `callable(arg)` - returns whether the argument is callable
+* `issubclass(subclass, superclass)` - returns whether a is subclass of b 
+* `isinstance(obj, class)` - returns whether the object is an instance of 
+the class
+* `__doc__` -
+* `__name__` -
+
 ### Slicing
 
 Slicing can be used with iterables such as collections and strings, 
@@ -510,37 +816,20 @@ str1 = 'Python.md'
 print(str1[:-3])  # Python
 ```
 
-### Generators and yield
-
-Generators are an iterable, but while most iterables can be looped 
-through multiple times, generators can only be looped through once. 
-The values in most iterables are stored in memory which can cause issues 
-in large data sets. Generators help with that problem, since values are 
-_generated_ on the fly. 
-
-Lists are created with `[]` and generators use `()`.
-
-```python
-lst = [x * x for x in range(1, 11)]  # List
-
-gnr = (x * x for x in range(1, 11))  # Generator
-```
-
-The keyword `yield` is used in a function. It acts like `return`, but 
-unlike `return` where code runs until it hits a `return`/end, code with
-`yield` will not run until a value needs to be accessed. At that point 
-the next value is _generated_. 
-
-```python
-# Returns a generator with the 1-10 squared values
-def create_generator():
-    for i in range(1, 11):
-        yield i**2
-```
-
 ### List Comprehension
 
 Creating lists in a single, readable line.
+
+Syntax: `[<var> for <var> in <iterable> if <condition>]`
+
+Simple example:
+
+```python
+numbers = [34.6, -203.4, 44.9, 68.3, -12.2, 44.6, 12.7]
+
+postive_numbers = [x for x in numbers if x > 0]
+print(positive_numbers)
+```
 
 ## Libraries & Frameworks
 
