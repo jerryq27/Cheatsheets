@@ -364,66 +364,197 @@ those features. It's important to keep in mind that anything you can do with cla
 without classes. Hence why C is still a usable language. Classes just make code easier to
 organize and maintain.
 
-Syntax:
-
-```c++
-class ClassName {
-
-    static int s_StaticVar = 10; // This variable is shared across all instances.
-
-    int field1 = 0
-    // Fields are private by default, but can be specified.
-    private:
-        int num1 = 1;
-        int num2 = 2;
-    public:
-        int pNum1 = 3;
-        int pNum2 = 4;
-
-    // These access modifiers can be specified multiple times. Style is programmer preference.
-    private:
-        void methodOne() {
-            // code
-        }
-
-    public:
-        int methodTwo(int x, int y) {
-            return x + y;
-        }
-
-        // Static methods can be called without a class instance, but can only reference static
-        // variables. Since non static variables belong to entities, and static variables belong
-        // to the class, static functions don't know non static variables. They don't know which
-        // entity's variables to use. So they can't be used in static methods.
-        static void staticMethod() {
-            std::cout << s_StaticVar << std::endl;
-        }
-}; // Note the semicolon
-```
-
 Simple class example:
 
 ```c++
 class Player {
-    public:
-        int x, y;
-        int speed;
 
-        // Note that the move method is public due to the access modifier.
-        void move(int delX, int delY) {
-            x += delX * speed;
-            y += delY * speed;
-        }
+    // Class members are private by default.
+    int x, y;
+    int speed;
 
+    void position() {
+        std::cout << posX << ", " << posY << std::endl;
+    }
+
+};
+```
+
+### Access Modifiers
+
+Access modifiers affect both class fields and methods. They can be placed
+in more than one place in the class declaration, it depends on the programmers
+style.
+
+```c++
+class Player {
+
+public:
+    int posX = 3;
+    int posY = 4;
+private:
+    int p_SpeedX = 1;
+    int p_SpeedY = 2;
+
+public:
+    void position() {
+        std::cout << posX << ", " << posY << std::endl;
+    }
+
+private:
+    void adjustSpeed() {
+        // code
+    }
 };
 
 int main() {
     Player player;
-    player.x = 5;
+    player.posX = 5;
 
-    player.move(1, -1);
+    player.position();
+}
+```
+
+### Constructors
+
+Constructors are methods called when you initialize and object. There is a
+default constructor provided, but it's just a method with an empty body.
+
+```c++
+class Player {
+
+public:
+    int posX;
+    int posY;
+private:
+    int p_SpeedX = 1;
+    int p_SpeedY = 2;
+
+public:
+    // Constructor.
+    Player(int x, int y) {
+        posX = x;
+        posY = y;
+    }
+
+    void position() {
+        std::cout << posX << ", " << posY << std::endl;
+    }
+
+private:
+    void adjustSpeed() {
+        // code
+    }
+};
+
+int main() {
+    Player player(3, 4);
+    player.position();
+}
+```
+
+There is a way to remove constructor functionality from a class (common for
+classes with only static methods, where objects don't need to be instantiated)
+
+You can make the constructor private or use the `delete` keyword.
+
+```c++
+class Log {
+// Method 1.
+private:
+    Log() {}
+public:
+    // Method 2
+    Log() = delete;
+    void Write() {
+
+    }
+}
+```
+
+#### Copy Constructors
+
+#### Move Constructors
+
+### Destructors
+
+Destructors are called when an object gets destroyed. It's used for preventing
+memory leaks. Best practice is to uninitialize everything that was initialized in
+the constructor.
+
+```c++
+class Player {
+
+public:
+    int posX = 3;
+    int posY = 4;
+private:
+    int p_SpeedX = 1;
+    int p_SpeedY = 2;
+
+public:
+    // Constructor.
+    Player(int x, int y) {
+        posX = x;
+        posY = y;
+    }
+
+    void position() {
+        std::cout << posX << ", " << posY << std::endl;
+    }
+
+
+    // Destructor
+    ~Player() {
+        std::cout << "I'm being deleted!" << std::endl;
+    }
+
+private:
+    void adjustSpeed() {
+        // code
+    }
+};
+
+int main() {
+    Player player;
+    player.posX = 5;
+
+    player.position();
+    player.~Player(); // Manual call.
+}
+```
+
+### Inheritance
+
+An Object Oriented Programming concept for creating classes that provide common
+functionality and members for child classes to inherit.
+
+```c++
+class Entity {
+
+public:
+    int x, y;
+
+    void move(int xa, int ya) {
+
+    }
+};
+
+class Player : public Entity {
+
+public:
+    const char* name;
+
+    void printName() {
+        std::cout << name << std::endl;
+    }
 }
 
+int main() {
+    Player player;
+    player.move(5, 5);
+    player.printName();
+}
 ```
 
 ### Structs
@@ -462,6 +593,46 @@ file. So trying to access the variable outside the file with `extern` will throw
 defined in these scopes into a global variable that's only accessable **within** that scope. On
 the first call, the static variable is initialized, subsequent calls will ignore the
 initialization of the variable. The variable _belongs_ to the scope.
+
+```c++
+class ClassName {
+
+    static int s_StaticVar = 10; // This variable is shared across all instances.
+
+    int field1 = 0
+    // Fields are private by default, but can be specified.
+    private:
+        int num1 = 1;
+        int num2 = 2;
+    public:
+        int pNum1 = 3;
+        int pNum2 = 4;
+
+    // These access modifiers can be specified multiple times. Style is programmer preference.
+    private:
+        void methodOne() {
+            // code
+        }
+
+    public:
+        // Constructor
+        ClassName() {
+
+        }
+
+        int methodTwo(int x, int y) {
+            return x + y;
+        }
+
+        // Static methods can be called without a class instance, but can only reference static
+        // variables. Since non static variables belong to entities, and static variables belong
+        // to the class, static functions don't know non static variables. They don't know which
+        // entity's variables to use. So they can't be used in static methods.
+        static void staticMethod() {
+            std::cout << s_StaticVar << std::endl;
+        }
+}; // Note the semicolon
+```
 
 ## Language Specifics
 
