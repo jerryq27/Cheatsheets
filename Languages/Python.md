@@ -2,6 +2,10 @@
 
 Python is a interpreted, high level, general-purpose, easy to use programming language developed by Guido van Rossum.
 
+TODO:
+* [FileIO](###File%20Input%20&%20Output)
+* [Modules/Packages](###Modules%20&%20Packages)
+
 ## Basics
 
 * Python uses spaces/tabs for code blocks
@@ -15,6 +19,52 @@ Python is a interpreted, high level, general-purpose, easy to use programming la
 if __name__ == '__main__':
     # Code
 ```
+
+### Keywords
+[`and`]()
+[`as`]()
+[`assert`]()
+[`break`]()
+[`class`]()
+[`continue`]()
+[`def`]()
+[`del`]()
+[`except`]()
+[`finally`]()
+[`for/while`]()
+[`from`]()
+[`global`]()
+[`if/elif/else`]()
+[`import`]()
+[`in`]()
+[`is`]()
+[`lambda`]()
+[`None`]()
+[`nonlocal`]()
+[`not`]()
+[`or`]()
+[`pass`]()
+[`raise`]()
+[`return`]()
+[`True/False`]()
+[`try`]()
+[`with`]()
+[`yield`]()
+
+### Operators
+
+Basic arithmetic operators: `+ - * / %`
+
+Bitwise operators:
+
+* `&` - AND
+* `|` - OR
+* `^` - XOR
+* `~` - NOT
+* `<<` - Left shift
+* `>>` - Right shift
+
+[Special Operators](##Special%20Operators)
 
 ## Variables
 
@@ -94,6 +144,8 @@ Python has 5 commonly used collection types
 * [Dictionaries](###Dictionaries) - key-value pairs
 * [Sets](###Sets) - list of unique values
 * [Generators](###Generators) - lists created on the fly
+
+Membership operators: `in not`
 
 ### Lists
 
@@ -376,21 +428,20 @@ def create_generator():
 ### Map, Filter, Reduce & Zip
 
 These methods allow you to apply functions to iterables without the need
-for loops and conditionals.
+for loops and conditionals. [Lambdas](##Anonymous%20Functions) are useful
+to use for the function argument. These methods rerturn `map`, `filter`,
+and `zip` objects which are basically generators and can be casted into a
+list. `reduce`, however, returns an `int`.
 
 #### Map
 
-`map(function, args*)`
+Map just passes each element in an iterable to a function and returns the
+result of for each element. The number of `iters` must match the number
+of arguments the function needs. If the iterables for multiple arguments
+don't match, map keeps going until it can't find enough arguments for the
+function and returns without raising an exception.
 
-Map returns a map object that's basically a generator. It can be converted
-into a list with the `list()` function.
-
-The number of `args` must match the number of arguments the function
-needs.
-
-If the iterables for multiple arguments don't match, map keeps going until
-it can't find enough arguments for the function and returns without
-raising an exception.
+`map(function, *iters)`
 
 Simple example using `round(number, number of places)`
 
@@ -407,14 +458,53 @@ rounded = map(round, floats, range(1, 3))
 print(list(rounded))  # output: [2.1, 3.15]
 ```
 
+#### Filter
+
+Filter tries to filter out values in an iterable based on a conditional.
+With filter you can only pass in one iterable to a function which
+requires a boolean return. It passes each element to that function and
+filters out the values that return `False`. If the function doesn't 
+return a boolean, then just the iterable will be returned.
+
+`filter(function, iter)`
+
+```python
+words = ("demigod", "rewire", "madam", "freer", "anutforajaroftuna", "kiosk")
+
+is_palindrome = lambda word: word == word[::-1]
+
+print(list(filter(is_palindrome, words)))
+```
+
+#### Reduce
+
+Reduce aims to reduce an iterable into a single value. The function used
+is required to have two parameters, the first element of the iterable,
+and the second element of the iterable. If the `opt_initial_val` value is
+specified, it will be used as the first argument, and the first element
+of the iterable will be the second argument.
+
+> Must be imported from `functools`
+
+`reduce(function, iterable, opt_initial_val)`
+
+```python
+from functools import reduce
+
+_sum = lambda x, y: x + y
+numbers = [13, 17, 22, 5, 11, 2, 1, 4]
+
+print(reduce(_sum, numbers))
+print(reduce(_sum, numbers, 25))
+```
+
 #### Zip
 
-`zip(args*)`
+Zip combines iterables into tuples. If the number of iterables don't
+match, it will pair the values until it can't find enough arguments for
+the tuple then returns without raising an exception.
 
-Zip returns a zip object generator of tuples using the passed in
-iterables. If the number of iterables don't match, it will pair the values
-until it can't find enough arguments for the tuple then returns without
-raising an exception.
+`zip(*args)`
 
 ```python
 l1 = [1, 2, 3]
@@ -456,7 +546,7 @@ else:
 
 ## I/O
 
-### Standard input and output
+### Standard Input & Output
 
 ```python
 name = input('What is your name: ')
@@ -505,7 +595,13 @@ print(F'num={num} flt={flt} name={name}')
 print(f'expression={num * flt}')
 ```
 
-### File input and output
+### File Input & Output
+
+Python uses the built in `open()` function to work with files. This
+function takes in the path to the file, and the mode in which to open the
+file.
+
+
 
 ## Functions
 
@@ -529,6 +625,18 @@ print(add())
 print(add(5))
 print(add(5, 5))
 print(add(y=5))
+```
+
+Seeing a `*` in a function's parameter listing indicates  the end of
+positional arguments. All arguments passed in after the `*` requires
+the parameter's name to be explicitly specified.
+
+```python
+def star_params(a, b, *, c):
+    print(f'{a} {b} {c}')
+    
+star_params(1, 2, c=3)  # No errors
+star_params(1, 2, 3)  # Raises a TypeError
 ```
 
 ### Type Hinting
@@ -579,6 +687,28 @@ def outer_function(message):
 outer_function('Hello, World!')
 ```
 
+### *args & **kwargs
+
+Python functions support parameters that allow for any number of arguments to be passed in by 
+prepending the parameter with `*`.
+
+```python
+def additional_args(arg1, arg1, *args):
+    print(f'first arg: {arg1}\nsecond arg: {arg2}\nthe rest{list(args)}')
+
+additional_args(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+```
+
+or any number of keyword args with `**`.
+
+```python
+def additional_kwargs(arg1, arg2, **kwargs):
+    print(f'first arg: {arg1}\nsecond arg: {arg2}\nkey word args{dict(kwargs)}')
+
+additional_kwargs(1, 2, name='Jerry', color='blue', languages='English|Spanish|Japanese|Korean')
+
+```
+
 ### Anonymous Functions
 
 Anonymous functions (or lambda functions) are used for simple functions
@@ -603,6 +733,19 @@ odd_or_even = (lambda x:
 odd_or_even(3)
 ```
 
+Lambdas can also use named arguments, `*args`, and `**kwargs`.
+
+```py
+named_args = lambda x, y, z=3: x + y + z
+named_args(1, 2)
+
+var_args = lambda *args: sum(args)
+var_args(10, 20, 30, 40, 50)
+
+_kwargs = lambda **kwargs: sum(kwargs.values())
+_kwargs(one=1, two=2, three=3)
+```
+
 Lambdas are commonly used with higher order functions (take functions as
 arguments to produce another function, in this case, the lambda)
 
@@ -613,28 +756,6 @@ hof(2, lambda x: x * x)
 
 Anonymouse functions cannot contain any statements involving `return`
 `pass`, `assert` or `raise`, otherwise a `SyntaxError` will be raised.
-
-### *args & **kwargs
-
-Python functions support parameters that allow for any number of arguments to be passed in by 
-prepending the parameter with `*`.
-
-```python
-def additional_args(arg1, arg1, *args):
-    print('first arg: {}\nsecond arg: {}\nthe rest{}'.format(arg1, arg2, list(args)))
-
-additional_args(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
-```
-
-or any number of keyword args with `**`.
-
-```python
-def additional_kwargs(arg1, arg2, **kwargs):
-    print('first arg: {}\nsecond arg: {}\nkey word args{}'.format(arg1, arg2, dict(kwargs)))
-
-additional_kwargs(1, 2, name='Jerry', color='blue', languages='English|Spanish|Japanese|Korean')
-
-```
 
 ## Exceptions
 
@@ -714,13 +835,13 @@ Underscores have various meanings and uses in Python:
     * However, private members are ignored by Python with `from example import *`
 * `class_` - used to avoid naming conflicts with Python keywords
 * `__example` - used to protect variables from being overridden in subclasses
-    * Python will actaully do _name mangling_ when encountering these members
+    * Using this triggers _name mangling_ with the Python interpreter
     * `dir()` will show how the variable gets altered: (`_SubClass__member`)
     * You will need to specify the altered name to access the correct value
     * Within the class however, you can specify the member with `self.__member`
 * `__example__` - functions reserved for special use in Python.
     * These dunder functions are a convention used by the core Python team
-    * It is not recommended to adopt this convention in your code
+    * Avoid this naming scheme in your code
 * `_` - used to indicate a variable that is temporary, or insignificant.
     * Has no special meaning, just a convention
     * Interpreter session uses `_` to store the result of a previous calculation
@@ -744,7 +865,7 @@ _, food, dessert, _ = info
 ```
 
 
-### Operators
+### Special Operators
 
 The `*` operator can be used with strings
 
@@ -767,6 +888,13 @@ You can use `**` operator for a power relationship:
 ```python
     squared = 5 ** 2  # 5^2
     cubed = 5 ** 3  # 5^3
+```
+
+The `//` operator is used for floor division:
+
+```python
+print(6 / 3.14)  # 1.910828025477707
+print(6 // 3.14)  # 1.0
 ```
 
 ### Code Introspection
