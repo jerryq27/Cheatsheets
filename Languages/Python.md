@@ -3,7 +3,6 @@
 Python is a interpreted, high level, general-purpose, easy to use programming language developed by Guido van Rossum.
 
 TODO:
-* [FileIO](###File%20Input%20&%20Output)
 * [Modules/Packages](###Modules%20&%20Packages)
 
 ## Basics
@@ -601,7 +600,48 @@ Python uses the built in `open()` function to work with files. This
 function takes in the path to the file, and the mode in which to open the
 file.
 
+* `r` - open file for reading, default
+* `w` - opens file for writing, it's created if it doesn't exist, it will replace the file if it does
+* `x` - exclusive creationqq of a file for writing, fails if the file already exists
+* `a` - opens file to append to it, it is created if it doesn't exist
+* `t` - opens file in text mode
+* `b` - opens file in binary mode
+* `+` - opens file for reading and writing
 
+> Text mode is used when reading in strings, binary mode is used for 
+non-text files such as images and executables.
+
+Once opened, a file must be closed once operations on it have finished.
+It is also recommended to specify the encoding when opening files in text
+mode for consistent behavior across systems.
+
+```python
+# Potentialy unsafe, if an exception occurs before the close statement
+# The program ends without closing the file.
+_file = open('example.txt', mode='r', encoding='utf8')
+_file.close()
+
+# Safe alternative
+try:
+    _file = open('example.txt', mode='r', encoding='utf8')
+finally:
+    _file.close()
+
+# Recommended alternative
+with open('example.txt', mode='r', encoding='utf8') as _file:
+    # code
+# File is closed internally when leaving the 'with' block
+```
+
+Common file operations:
+
+1. `read()` - read the whole file or n bytes
+1. `readline()` - read until a newline is encountered
+1. `readlines()` - read the file into a list based on newlines
+1. `tell()` - gets the current position of the cursor in the file
+1. `seek()` - moves the position of the cursor in the file
+1. `write()` - writes a string to the file
+1. `writelines()` - writes a list of strings into a file by newlines
 
 ## Functions
 
