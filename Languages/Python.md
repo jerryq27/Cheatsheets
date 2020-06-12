@@ -864,6 +864,74 @@ Syntax:
 
 ### Modules & Packages
 
+To import a Python module/package, you use the `import` keyword. The
+`import` keyword goes through a series of steps to import:
+
+1. Searches for a built-in modules from the Python Standard Library
+1. If not found, it searches for the specified file in one of the directories specified by `sys.path`. `sys.path` is initialized using:
+    1. The current directory
+    1. The `PYTHONPATH` environment variable
+    1. The installation-dependent default 
+
+#### Modules
+
+Python modules are just Python files with a `.py` extension. The module
+name is the name of the file. Modules may contain a set of defined
+functions, classes, and variables that can be imported. Module definitions
+can be all be imported with `import module` or definitions can be
+specified with `from module import definition`.
+
+> When the interpreter encounters an `import` statement with modules, it
+runs all the code specified.
+
+Module example:
+
+```python
+# log.py
+def info(message):
+    print(f'info: {message}')
+
+def warn(message):
+    print(f'warn: {message}')
+
+def error(message)
+    print(f'error: {message}')
+
+# -----------------
+# main.py
+import log
+
+if __name__ == '__main__':\
+    log.info('Starting program.')
+    log.warn('Warn message')
+    log.error('Program ending.')
+
+#------------------
+# main2.py
+from log import info
+
+if __name__ == '__main__':\
+    info('Starting program.')
+    info('Doing Python things.')
+    info('Ending program.')
+```
+
+You can also alias the name the imported module uses with the `as`
+keyword:
+
+```python
+import log as l
+
+l.info(...)
+l.warn(...)
+l.error(...)
+```
+
+#### Packages
+
+> When the interpreter encounters an `import` statement with packages, it
+runs all the code in the package's `__init__.py` file.
+
 ## Language Specifics
 
 ### Underscores
