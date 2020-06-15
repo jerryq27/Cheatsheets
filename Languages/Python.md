@@ -3,7 +3,7 @@
 Python is a interpreted, high level, general-purpose, easy to use programming language developed by Guido van Rossum.
 
 TODO:
-* [Modules/Packages](###Modules%20&%20Packages)
+* [Modules/Packages](#Modules%20&%20Packages)
 
 ## Basics
 
@@ -63,7 +63,7 @@ Bitwise operators:
 * `<<` - Left shift
 * `>>` - Right shift
 
-[Special Operators](##Special%20Operators)
+[Special Operators](#Special%20Operators)
 
 ## Variables
 
@@ -91,7 +91,7 @@ There are other types of string literals:
 
 * fstrings `f''` - used to allow string interpolation
 * rstrings `r''` - used to make raw strings for regular expressions
-* ustring `u''` - used for unicode
+* ustring `u''` - Unicode string, Python3 strings are u strings by default
 
 ### Numbers
 
@@ -138,11 +138,11 @@ Conditional operators: `== != < > <= >= and or is not`
 
 Python has 5 commonly used collection types
 
-* [Lists](###Lists) - list of values
-* [Tuples](###Tuples) - data values that should be grouped together
-* [Dictionaries](###Dictionaries) - key-value pairs
-* [Sets](###Sets) - list of unique values
-* [Generators](###Generators) - lists created on the fly
+* [Lists](#Lists) - list of values
+* [Tuples](#Tuples) - data values that should be grouped together
+* [Dictionaries](#Dictionaries) - key-value pairs
+* [Sets](#Sets) - list of unique values
+* [Generators](#Generators) - lists created on the fly
 
 Membership operators: `in not`
 
@@ -403,7 +403,7 @@ The values in most iterables are stored in memory which can cause issues
 in large data sets. Generators help with that problem, since values are 
 _generated_ on the fly. 
 
-Using [list comprehension](###List%20Comprehension), lists are created
+Using [list comprehension](#List%20Comprehension), lists are created
 with `[]` and generators use `()`.
 
 ```python
@@ -427,7 +427,7 @@ def create_generator():
 ### Map, Filter, Reduce & Zip
 
 These methods allow you to apply functions to iterables without the need
-for loops and conditionals. [Lambdas](##Anonymous%20Functions) are useful
+for loops and conditionals. [Lambdas](#Anonymous%20Functions) are useful
 to use for the function argument. These methods rerturn `map`, `filter`,
 and `zip` objects which are basically generators and can be casted into a
 list. `reduce`, however, returns an `int`.
@@ -840,10 +840,11 @@ obj.class_function()
 ```
 
 Python classes have default magic/dunder (double underscore) functions
-they can override.
+that can be overridden.
 
 * `__init__` - class constructor.
-* `__repr__` - toString function. 
+* `__str__` - (pretty) string representation of an object for users.
+* `__repr__` - (useful) string representation of an object for developers. 
 * `__call__` - make object callable.
 
 ### Inheritance
@@ -864,27 +865,22 @@ Syntax:
 
 ### Modules & Packages
 
-To import a Python module/package, you use the `import` keyword. The
+Python **modules** are files with the `.py` extension that contain
+variables, functions, and class definitions. The module name is the name
+of the file itself. **Packages** are directories that include an
+`__init__.py` file. Packages can contain many modules, and the package
+name is the name of the directory itself.
+
+#### The import Keyword
+
+Python uses the `import` keyword to import modules and packages. The
 `import` keyword goes through a series of steps to import:
 
 1. Searches for a built-in modules from the Python Standard Library
 1. If not found, it searches for the specified file in one of the directories specified by `sys.path`. `sys.path` is initialized using:
     1. The current directory
     1. The `PYTHONPATH` environment variable
-    1. The installation-dependent default 
-
-#### Modules
-
-Python modules are just Python files with a `.py` extension. The module
-name is the name of the file. Modules may contain a set of defined
-functions, classes, and variables that can be imported. Module definitions
-can be all be imported with `import module` or definitions can be
-specified with `from module import definition`.
-
-> When the interpreter encounters an `import` statement with modules, it
-runs all the code specified.
-
-Module example:
+    1. The installation-dependent default
 
 ```python
 # log.py
@@ -916,7 +912,7 @@ if __name__ == '__main__':\
     info('Ending program.')
 ```
 
-You can also alias the name the imported module uses with the `as`
+You can also alias the name the imported definition with the `as`
 keyword:
 
 ```python
@@ -927,10 +923,9 @@ l.warn(...)
 l.error(...)
 ```
 
-#### Packages
-
-> When the interpreter encounters an `import` statement with packages, it
-runs all the code in the package's `__init__.py` file.
+> When the interpreter encounters an `import` statement with modules, it
+runs all the code specified. however, with packages, it runs all the code
+in the package's `__init__.py` file.
 
 ## Language Specifics
 
