@@ -1,5 +1,23 @@
 # Git
 
+Git is a version control tool used to track changes for project files.
+
+## Basics
+
+Git tracks file changes and who made them. Before we enable Git, we have to set
+who the author for these changes is. Then we enabled Git with the `git init` command:
+
+```console
+$ git config --global user.name "Jerry TheMouse"
+$ git config --global user.email "jerry@example.com"
+$ cd $PROJECT_DIRECTORY
+$ git init
+
+Initialized empty Git repository in $PROJECT_DIRECTORY
+```
+
+## Workflow
+
 ## Basic Workflow
 
 The basic Git workflow is: **Working directory -> Staging Area -> Commit History**
