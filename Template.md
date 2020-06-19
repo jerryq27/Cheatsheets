@@ -14,8 +14,7 @@
 
 # Libraries, Frameworks & Tools
 
-## Structure
-## Commands
+## Basics
 ## Workflow
 ## Advance Use
 ## Other
