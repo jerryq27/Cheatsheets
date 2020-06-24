@@ -2,6 +2,12 @@
 
 C++ is a low-level powerful programming language.
 
+TODO:
+
+* [Checkpoint](https://www.youtube.com/watch?v=FeHZHF0f2dw&list=PLlrATfBNZ98dudnM48yfGUldqGD0S4FFb&index=33)
+* [VirtualFunctions](####Overriding) - [Video](https://www.youtube.com/watch?v=oIV2KchSyGQ&list=PLlrATfBNZ98dudnM48yfGUldqGD0S4FFb&index=28)
+* [Interfaces](####Interfaces) - [Video](https://www.youtube.com/watch?v=UWAdd13EfM8&list=PLlrATfBNZ98dudnM48yfGUldqGD0S4FFb&index=29)
+
 ## Basics
 
 * Anything prepended with a `#` is preprocess statement, which are processed by
@@ -189,6 +195,12 @@ memset(buffer /*pointer*/, 0 /*What data*/, 8 /*How many bytes*/);
 delete[] buffer;
 ```
 
+#### Pointer Arithmetic
+
+Pointer arithmetic is used to modify the memory address to point to other memory addresses using
+arithmetic. Instead of manually adding bytes, the byte count is determined by the pointer's type.
+So for an `int*` adding 1 to the pointer adds 4 bytes.
+
 ### References
 
 References are pointers in disguise. It's not really a variable that takes up memory. It's
@@ -253,6 +265,84 @@ int* ptr = &a; // *ptr = 1
 ptr = &b; // *ptr = 5
 ```
 
+### Strings
+
+Strings are basically an array of characters. To make a C-style string, `const *char` is commonly
+used. The `const` keyword isn't required, but is used since we're allocating a fixed block of
+memory, we don't want to be changing it carelessly. Strings created this way can't just be made
+bigger with since the allocation is fixed. Strings also end with a byte `00` which is known as
+the null character. This is used to mark the end of a string.
+
+```c++
+const char* example = "C Style String";
+char example2[14] = { 'C', ' ', 'S', 't', 'y', 'l', 'e', ' ', 'S', 't', 'r', 'i', 'n', 'g' };
+
+//char example3[15] = { 'C', ' ', 'S', 't', 'y', 'l', 'e', ' ', 'S', 't', 'r', 'i', 'n', 'g', 0 };
+char example3[15] = { 'C', ' ', 'S', 't', 'y', 'l', 'e', ' ', 'S', 't', 'r', 'i', 'n', 'g', '\0' };
+
+std::cout << example << std::endl; // C Style String
+std::cout << example2 << std::endl; // C Style StringeP@ (because no null character specified)
+std::cout << example3 << std::endl; // C Style String
+
+// C functions
+int size = strlen(example);
+// strcpy()
+```
+
+Standard strings that are included in the standard library are commonly used. The standard
+library also has functions to work with these strings. To output these strings, you need to
+include the string header file. You can create them without the header file, but you can't
+display standard strings since the override for `<<` is in the string header file.
+
+```C++
+#include <string>
+
+std::string example = "Standard Library String";
+
+int size = example.size();
+// Returns the start position of the const char array or std::string::npos.
+bool contains = example.find("Library") != std::string::npos;
+
+std::cout << example << std::endl;
+```
+
+With concatenating strings, it's important to keep in mind that `""` refers to const char
+arrays. **not** strings. So trying to do something like `std::string message = "A " + "String";`
+will not work, since you can't just add to char arrays together. Some alternative to concatenate
+standard library strings:
+
+```c++
+std::string example = "Standard Library";
+example += " String";
+
+std::string example2 = std::string("Standard Library") + " String";
+
+std::cout << example << std::endl;
+std::cout << example2 << std::endl;
+```
+
+Passing strings around into functions, keep in mind the behavior of passing by reference or by
+value.
+
+```c++
+
+// This would create a copy of str, any modifications done will not be reflected on the original.
+// Memory-wise, this is inefficient.
+void printStringByValue(std::string str) {
+    std::cout << str << std::endl;
+}
+
+// It is recommended to pass read-only strings by a const reference.
+// Reference means it won't be copied and const means we promise not to modify it.
+void printStringByRef(const std::string& str) {
+    std::cout << str << std::endl;
+}
+
+int main() {
+    printStringByValue("Hello, world!");
+}
+```
+
 ## Conditionals
 
 Syntax:
@@ -283,6 +373,22 @@ else {
 Conditional operators: `== != < > <= >= && || !`
 
 ## Collections
+
+Arrays are a collection of elements of the same type. Arrays are just a pointer to the block of
+allocated memory.
+
+```c++
+int numbers[5];
+
+numbers[0] = 5;
+numbers[4] = 2;
+
+int* p_numbers = numbers; // Works fine since arrays are just pointers.
+
+// Using pointer arithmetic to set a value
+// numbers[2] = 10;
+*(p_numbers + 2) = 10;
+```
 
 ## Loops
 
@@ -381,6 +487,12 @@ class Player {
 ```
 
 ### Access Modifiers
+
+Access modifiers are used to specify from where class members can be accessed from.
+
+* `public` - accessable from anywhere
+* `protected` - accessable to the class and subclasses
+* `private` - only accessable to the class (and a Friend class?)
 
 Access modifiers affect both class fields and methods. They can be placed
 in more than one place in the class declaration, it depends on the programmers
@@ -548,7 +660,7 @@ public:
     void printName() {
         std::cout << name << std::endl;
     }
-}
+};
 
 int main() {
     Player player;
@@ -556,6 +668,8 @@ int main() {
     player.printName();
 }
 ```
+
+#### Overriding
 
 ### Structs
 

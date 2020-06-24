@@ -12,9 +12,9 @@
 ## Language Specifics
 ## Libraries & Frameworks
 
-# Libraries & Frameworks
+# Libraries, Frameworks & Tools
 
 ## Basics
-## Structure
-## Commands
 ## Workflow
+## Advance Use
+## Other
