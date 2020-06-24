@@ -5,6 +5,49 @@ Python is a interpreted, high level, general-purpose, easy to use programming la
 TODO:
 * [Modules/Packages](#Modules%20&%20Packages)
 
+## Table of Contents
+
+1. [Basics](#Basics)
+    1. [Keywords](#Keywords)
+    1. [Operators](#Operators)
+1. [Variables](#Variables)
+    1. [Strings](#Strings)
+    1. [Numbers](#Numbers)
+1. [Conditionals](#Conditionals)
+1. [Collections](#Collections)
+    1. [Lists](#Lists)
+    1. [Tuples](#Tuples)
+    1. [Dictionaries](#Dictionaries)
+    1. [Sets](#Sets)
+    1. [Generators](#Generators)
+    1. [Map, Filter, Reduce & Zip](#Map,%20Filter,%20Reduce%20&%20Zip)
+        1. [Map](#Map)
+        1. [Filter](#Filter)
+        1. [Reduce](#Reduce)
+        1. [Zip](#Zip) 
+1. [Loops](#Loops)
+1. [I/O](#I/O)
+    1. [Standard Input & Output](#Standard%20Input%20&%20Output)
+    1. [String Formatting](#String%20Formatting)
+    1. [File Input & Output](#File%20Input%20&%20Output)
+1. [Functions](#Functions)
+    1. [Type Hinting](#Type%20Hinting)
+    1. [Nested Functions](#Nested%20Functions)
+    1. [*args & **kwargs](#*args%20&%20**kwargs)
+    1. [Anonymous Functions](#Anonymous%20Functions)
+1. [Exceptions](#Exceptions)
+1. [Classes & Objects](#Classes%20&%20Objects)
+    1. [Inheritance](#Inheritance)
+    1. [Modules & Packages](#Modules%20&%20Packages)
+        1. [import](#import)
+1. [Language Specifics](#Language%20Specifics)
+    1. [Underscores](#Underscores)
+    1. [Special Operators](#Special%20Operators)
+    1. [Code Introspection](#Code%20Introspection)
+    1. [Slicing](#Slicing)
+    1. [List Comprehension](#List%20Comprehension)
+1. [Libraries & Frameworks](#Libraries%20&%20Frameworks)
+
 ## Basics
 
 * Python uses spaces/tabs for code blocks
@@ -71,6 +114,8 @@ Variables are loosely typed (no need to include a data type)
 `some_var = 12`
 
 Using the `type()` function returns a variable's data type.
+
+### Strings
 
 * Strings can be defined with both single and double quotes
 * Multiline strings are defined inside of triple quotes.
@@ -871,7 +916,7 @@ of the file itself. **Packages** are directories that include an
 `__init__.py` file. Packages can contain many modules, and the package
 name is the name of the directory itself.
 
-#### The import Keyword
+#### import
 
 Python uses the `import` keyword to import modules and packages. The
 `import` keyword goes through a series of steps to import:
