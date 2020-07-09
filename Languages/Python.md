@@ -51,7 +51,7 @@ TODO:
 ## Basics
 
 * Python uses spaces/tabs for code blocks
-* Newlines are allowed between pairs: ()[]{}''' ''' """ """ or with `\`
+* Newlines are allowed between pairs: `()[]{}''' ''' """ """` or with `\`
 * Semicolons are optional
 * Scripts use the `#!/usr/bin/env python` header to set the interpreter
 
