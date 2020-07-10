@@ -30,13 +30,6 @@ Converts C++ code into an intermediate format known as an object file (one for
 each C++ file).
 
 1. Compilation starts by preprocessing the code by evaluating [preprocess statements](#Preprocess%20Statements)
-    * `#include` - just copies and pastes whatever was in that header file.
-    * `#define` - replaces the all found cases of the first argument with the
-    second
-    * `#if/#endif` - include/exclude code in compilation based on a condition
-    * `#ifndef/#endif` - checks if there is a symbol defined from `#define`
-    * `#pragma` - instruction sent to the preprocessor, `#pragma once` means to
-    only include this file once in a single object file
 1. Tokenize/Parse into an abstract syntax tree (which the compiler can
 understand more easily)
 
