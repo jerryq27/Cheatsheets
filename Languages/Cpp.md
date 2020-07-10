@@ -4,7 +4,7 @@ C++ is a low-level powerful programming language.
 
 TODO:
 
-* [Checkpoint](https://www.youtube.com/watch?v=FeHZHF0f2dw&list=PLlrATfBNZ98dudnM48yfGUldqGD0S4FFb&index=33)
+* [Checkpoint](https://www.youtube.com/watch?v=ezqsL-st8qg&list=PLlrATfBNZ98dudnM48yfGUldqGD0S4FFb&index=37)
 * [VirtualFunctions](####Overriding) - [Video](https://www.youtube.com/watch?v=oIV2KchSyGQ&list=PLlrATfBNZ98dudnM48yfGUldqGD0S4FFb&index=28)
 * [Interfaces](####Interfaces) - [Video](https://www.youtube.com/watch?v=UWAdd13EfM8&list=PLlrATfBNZ98dudnM48yfGUldqGD0S4FFb&index=29)
 
@@ -29,14 +29,13 @@ There are two steps to make a text file into a runnable program:
 Converts C++ code into an intermediate format known as an object file (one for
 each C++ file).
 
-1. Compilation starts by proprocessing the code (evaluating preprocess
-statements) i.e. `#include`, `#define`, `#if`, `#ifndef`, `#pragma`
-    * #include - just copies and pastes whatever was in that header file.
-    * #define - replaces the all found cases of the first argument with the
+1. Compilation starts by preprocessing the code by evaluating [preprocess statements](#Preprocess%20Statements)
+    * `#include` - just copies and pastes whatever was in that header file.
+    * `#define` - replaces the all found cases of the first argument with the
     second
-    * #if/#endif - include/exclude code in compilation based on a condition
-    * #ifndef/#endif - checks if there is a symbol defined from `#define`
-    * #pragma - instruction sent to the preprocessor, `#pragma once` means to
+    * `#if/#endif` - include/exclude code in compilation based on a condition
+    * `#ifndef/#endif` - checks if there is a symbol defined from `#define`
+    * `#pragma` - instruction sent to the preprocessor, `#pragma once` means to
     only include this file once in a single object file
 1. Tokenize/Parse into an abstract syntax tree (which the compiler can
 understand more easily)
@@ -81,7 +80,7 @@ exist).
 
 main.cpp
 
-```cpp
+```c++
 void Hello(const char* message); // Declaraction
 extern int globalVar; // External linking of a variable outside this file.
 
@@ -93,7 +92,7 @@ int main() {
 
 hello.cpp
 
-```cpp
+```c++
 #include <iostream>
 
 int globalVar = 5; // Variable definition
@@ -193,6 +192,10 @@ memset(buffer /*pointer*/, 0 /*What data*/, 8 /*How many bytes*/);
 
 // Deletes the memory at that address using array notation (buffer was made with an array).
 delete[] buffer;
+
+// Declaring multiple pointers on one line.
+int* ptr1, ptr2; // Error: ptr1 is an int pointer, ptr2 is an int.
+int *ptr1, *ptr2; // Fix: Both are pointers.
 ```
 
 #### Pointer Arithmetic
@@ -267,11 +270,35 @@ ptr = &b; // *ptr = 5
 
 ### Strings
 
-Strings are basically an array of characters. To make a C-style string, `const *char` is commonly
-used. The `const` keyword isn't required, but is used since we're allocating a fixed block of
-memory, we don't want to be changing it carelessly. Strings created this way can't just be made
-bigger with since the allocation is fixed. Strings also end with a byte `00` which is known as
-the null character. This is used to mark the end of a string.
+Strings are basically an array of characters. The string literal of
+`"some string"` is treated as a `const char` array. Also, string literals
+are **always** stored in read-only memory.
+
+#### C Style Strings
+
+To make a C-style string, `const char*` is commonly used. Using `const char*` provides a more
+consistent behavior throughout C++ compilers. Since some compilers allow `char*` strings
+to be modified while others will raise an error. Since there's no standardization of what should happen in this situation, it is known
+as _undefined behavior_. Never write code like this.
+
+```c++
+// Undefined behavior, might compile, might throw an error.
+char* name = "Jerry";
+name[1] = 'a';
+std::cout << name << std::endl; // Jerry
+
+// Workaround
+char[] name = "Jerry";
+name[1] = 'a';
+std::cout << name << std::endl; // Jarry
+```
+
+Since we're allocating a fixed block of memory, we don't want to be changing it carelessly.
+Strings created this way can't just be made bigger with since the allocation is fixed. Using
+`const` is a good reminder to keeping these things in mind.
+
+Strings also end with the byte `00` which is known as the _null termination character_.
+This is used to mark the end of a string.
 
 ```c++
 const char* example = "C Style String";
@@ -289,10 +316,23 @@ int size = strlen(example);
 // strcpy()
 ```
 
-Standard strings that are included in the standard library are commonly used. The standard
-library also has functions to work with these strings. To output these strings, you need to
-include the string header file. You can create them without the header file, but you can't
-display standard strings since the override for `<<` is in the string header file.
+Other `char` data types:
+
+```c++
+const char* str = u8"string"; // 1-byte char string, u8 prefix is optional.
+const wchar_t* str2 = L"string"; // 1/2/4-byte char string, platform/compiler dependent.
+const char16_t str2 = u"string"; // 2-byte char string.
+const char32_t str2 = U"string"; // 4-byte char string.
+```
+
+#### Standard Strings
+
+Standard strings that are included in the standard library are commonly used.
+The standard library also has functions to work with these strings. 
+
+> To output these strings, you need to include the string header file.
+You can create them without the header file, but you can't display
+standard strings since the override for `<<` is in the string header file.
 
 ```C++
 #include <string>
@@ -325,7 +365,7 @@ Passing strings around into functions, keep in mind the behavior of passing by r
 value.
 
 ```c++
-
+#include <string>
 // This would create a copy of str, any modifications done will not be reflected on the original.
 // Memory-wise, this is inefficient.
 void printStringByValue(std::string str) {
@@ -339,15 +379,39 @@ void printStringByRef(const std::string& str) {
 }
 
 int main() {
-    printStringByValue("Hello, world!");
+    std::string message = "Hello, world!";
+
+    printStringByValue(message);
+    printStringByRef(message);
 }
+```
+
+Other string literals can be used in the `string_literals` library.
+
+```c++
+using namespace std::string_literals;
+
+// s is a function to convert const char array to a standarad string.
+std::string msg = "Hello, "s + "World";
+
+// Raw strings, useful for multiline strings and ignoring escape charactes.
+const char* example R"(
+    Line1
+    Line2
+    Line3
+)"
+
+// Multiline string without using raw strings.
+const char* example = "Line1\n"
+"Line2\n"
+"Line3\n";
 ```
 
 ## Conditionals
 
 Syntax:
 
-```cpp
+```c++
 if(condition) {
     // code
 }
@@ -368,6 +432,11 @@ else {
 
     }
 }
+
+// Ternary Operator
+int level = 1;
+
+std::string rank = level > 10? "Master" : "Beginner";
 ```
 
 Conditional operators: `== != < > <= >= && || !`
@@ -396,7 +465,7 @@ C++ supports `while`, `do while`, and `for` loops.
 
 while syntax:
 
-```cpp
+```c++
 int i = 0;
 while(i < 10) {
     // code
@@ -408,7 +477,7 @@ while(i < 10) {
 
 do while syntax
 
-```cpp
+```c++
 int i = 0;
 do {
     // code
@@ -419,7 +488,7 @@ do {
 
 for syntax:
 
-```cpp
+```c++
 for(int i = 0; i < 10; i++) {
     // code
 }
@@ -452,13 +521,15 @@ Control flow statements are used with loops to affect the flow of the loop.
 
 Syntax:
 
-```cpp
+```c++
 void myFunction(int param1, int param2) {
     // code
 }
 
 myFunction();
 ```
+
+### Lambdas
 
 ## Exceptions
 
@@ -584,6 +655,92 @@ public:
 }
 ```
 
+#### Constructor Initializer List
+
+Provides a way to initilalize class members outside of the body of the constructor.
+They help keep the constructor's body clean, and performance-wise they prevent memory
+leaks by ensuring that only one object is created instead of two. You can also
+initialize `const` variables using initilizer lists.
+
+Example:
+
+```c++
+class Entity {
+
+private:
+    std::string m_Name;
+    int m_Score;
+
+public:
+
+    // Example 1
+    Entity() {
+        m_Name = "Unknown";
+    }
+    Entity()
+        : m_Name("Unknown"), m_Score(0) {
+
+    }
+
+    // Example 2
+    Entity(const std::string& name) {
+        m_Name = name;
+    }
+    Entity(const std::string& name)
+        : m_Name(name) {
+
+    }
+}
+```
+
+Memory leak example (Primitive data types don't experience this type of issue):
+
+```c++
+class Kiwi {
+
+public:
+    Kiwi() {
+        std::cout << "Created a Kiwi!" << std::endl;
+    }
+
+    Kiwi(int x) {
+        std::cout << "Created a Kiwi with " << x << "!" << std::endl;
+    }
+}
+
+class Lunch {
+    
+private:
+    std::string m_Name;
+    // Creates a Kiwi with a call to Kiwi()!
+    Kiwi m_Kiwi;
+
+public:
+    Lunch() {
+        m_Name = "Jerry";
+        // Creates a second kiwi with Kiwi(int x)!
+        m_Kiwi = Kiwi(4);
+    }
+
+    // Only one object instance is created with initializer lists!
+    Lunch()
+        : m_Kiwi(Kiwi(4)) {
+        
+        m_Name = "Jerry";
+    }
+    Lunch()
+        : m_Kiwi(4) {
+        
+        m_Name = "Jerry";
+    }
+
+}
+
+```
+
+> Note: The variable declarations and the initializer list **must** be declared in the
+same order.
+
 #### Copy Constructors
 
 #### Move Constructors
@@ -690,7 +847,120 @@ This is the recommended way to view these types
 
 > The reasoning for having structs is for C++ to maintain compatibility with C.
 
-### Static
+## Language Specifics
+
+### Preprocess Statements
+
+Preprocess statements are bits of code evaluated before compiling. Some commonly
+used preprocess statements are:
+
+* `#include` - just copies and pastes whatever was in that header file.
+* `#define` - replaces the all found cases of the first argument with the
+    second
+* `#if/#endif` - include/exclude code in compilation based on a condition
+* `#ifndef/#endif` - checks if there is a symbol defined from `#define`
+* `#pragma` - instruction sent to the preprocessor, `#pragma once` means to
+    only include this file once in a single object file
+
+With `#include` the argument is enclosed in `<>` or `""`.
+
+* `<>` - search for file in include path folders.
+* `""` - search for file in folders both relative to current directory and
+include path folders.
+
+> Files from the C standard library are usually using .h and the C++ standard
+library has no extension.
+
+### Header Files
+
+Header files are meant to have declarations and constants that can be included
+in various C++ files.
+
+Most Header files begin with `#pragma once` which means to include this file only
+once per object file. This helps prevent duplicate code which can cause linking
+errors.
+
+`#pragma once` is a commonly used header guard, before it was supported by most
+compilers, the following structure was used:
+
+```c++
+#ifndef _SOME_VAR
+#define _SOME_VAR
+
+// Declarations
+
+#endif
+```
+
+### Multi-use Keywords: const & static
+
+#### The const keyword
+
+The `const` keyword can be used in multiple locations and has a different effect on where
+it's used: 
+
+* Before the `*`, makes the pointer value constant
+* After the `*`, makes the pointer itself constant
+* After a class method signature, marks the method as read-only, it cannot modify class
+members
+
+```c++
+// Value pNum is pointing to cannot be modified.
+const int* pNum;
+int const* pNum;
+
+// The pNum pointer itself cannot be modified.
+int* const pNum2;
+
+// The pNum3 value and pointer itself cannot be modified.
+const int* const pNum3;
+
+class Entity {
+
+private:
+    int y, x;
+
+public:
+    // Read-only method.
+    int getX() const {
+        // x = 2; // Will throw an error.
+        return x;
+    }
+
+    // Read-only method returning a non-modifiable pointer with a non-modifiable value.
+    const int* const getY() const {
+        return y;
+    }
+
+}
+```
+
+##### mutable
+
+The `mutable` keyword can be used to _break_ the promise of `const` within a class:
+
+```c++
+class Entity {
+
+private:
+    mutable int counter;
+    int y, x;
+
+public:
+    // Read-only method.
+    int getX() const {
+        // x = 2; // Will throw an error.
+        counter++; // mutable, so no error!
+        return x;
+    }
+
+}
+```
+
+It is also used with [lambdas](#Lambdas) for a cleaner look when passing arguments in by 
+value.
+
+#### The static keyword
 
 The `static` keyword has a different meaning when used within a class/struct, outside a class
 struct. or withing a local scope.
@@ -746,38 +1016,6 @@ class ClassName {
             std::cout << s_StaticVar << std::endl;
         }
 }; // Note the semicolon
-```
-
-## Language Specifics
-
-With `#include` the argument is enclosed in `<>` or `""`.
-
-* `<>` - search for file in include path folders.
-* `""` - search for file in folders both relative to current directory and
-include path folders.
-
-> Files from the C standard library are usually using .h and the C++ standard
-library has no extension.
-
-### Header Files
-
-Header files are meant to have declarations and constants that can be included
-in various C++ files.
-
-Most Header files begin with `#pragma once` which means to include this file only
-once per object file. This helps prevent duplicate code which can cause linking
-errors.
-
-`#pragma once` is a commonly used header guard, before it was supported by most
-compilers, the following structure was used:
-
-```cpp
-#ifndef _SOME_VAR
-#define _SOME_VAR
-
-// Declarations
-
-#endif
 ```
 
 ## Libraries & Frameworks
