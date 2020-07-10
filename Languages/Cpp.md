@@ -4,7 +4,7 @@ C++ is a low-level powerful programming language.
 
 TODO:
 
-* [Checkpoint](https://www.youtube.com/watch?v=ezqsL-st8qg&list=PLlrATfBNZ98dudnM48yfGUldqGD0S4FFb&index=37)
+* [Checkpoint](https://www.youtube.com/watch?v=Z_hPJ_EhceI&list=PLlrATfBNZ98dudnM48yfGUldqGD0S4FFb&index=42)
 * [VirtualFunctions](####Overriding) - [Video](https://www.youtube.com/watch?v=oIV2KchSyGQ&list=PLlrATfBNZ98dudnM48yfGUldqGD0S4FFb&index=28)
 * [Interfaces](####Interfaces) - [Video](https://www.youtube.com/watch?v=UWAdd13EfM8&list=PLlrATfBNZ98dudnM48yfGUldqGD0S4FFb&index=29)
 
@@ -104,6 +104,50 @@ void Hello(const char* name) {
 This is where the linker comes in, since there is an object file generated for
 each C++ file, the linker links these object files together. However, if a
 definition isn't found by the linker, this results in a **Linker Error**.
+
+### Memory Management
+
+#### Stack
+
+#### Heap
+
+##### The new & delete Keywords
+
+The `new` key word is used for heap allocation. It can be used with a class type or 
+primitive type. The `new` keyword finds a block of memory (size depends on the type)
+and returns a pointer to the allocated memory. For every call to `new` there should be
+a call to `delete` to free up the allocated memory. Both `new` and `delete` are just
+functions that call the underlyind C functions for allocating and freeing memory.
+
+```c++
+class Entity {
+
+private:
+    std::string m_Name;
+public:
+    Entity() : m_Name("Unknown") {}
+};
+
+int main() {
+    int a = 2;
+    int* b = new int;
+    int* c = new int[50]; // 200 bytes
+
+    Entity e;
+
+    Entity* e2 = new Entity();
+    // What new does behind the scenes in C code.
+    Entity* e2 = (Entity*)malloc(sizeof(Entity)); // + call the constructor.
+
+    delete e2;
+    // What delete does behind the scenes in C code.
+    free(e2); // + call the destructor.
+
+    delete b;
+    delete[] c; // To delete arrays, use the delete[] function.
+}
+
+```
 
 ## Variables
 
@@ -430,6 +474,9 @@ else {
 int level = 1;
 
 std::string rank = level > 10? "Master" : "Beginner";
+
+// Nested Ternary (Avoid if possible)
+std::string rank = level > 5? level > 10? "Master" : "Intermediate" : "Beginner";
 ```
 
 Conditional operators: `== != < > <= >= && || !`
@@ -520,6 +567,48 @@ void myFunction(int param1, int param2) {
 }
 
 myFunction();
+```
+
+### Operator Functions
+
+Operators in C++ are just functions. They can overloaded, or redefined, to
+modify their behavior.
+
+Example:
+
+```c++
+struct Vector2 {
+    float x, y;
+    Vector2(float x, float y) : x(x), y(y) {}
+
+    Vector2 add(const Vector2& other) const {
+        return Vector2(x + other.x, y + other.y);
+    }
+
+    Vector2 multiply(const Vector2& other) const {
+        return Vector2(x * other.x, y * other.y);
+    }
+
+    Vector2 operator+(const Vector2& other) const {
+        return add(other);
+    }
+
+    Vector2 operator*(const Vector2& other) const {
+        return multiply(other);
+    }
+};
+
+int main() {
+    Vector2 position(4.0f, 4.0f);
+    Vector2 speed(0.5f, 1.5f);
+    Vector2 powerup(1.1f, 1.1f);
+
+    // Starting to look very Java-like...
+    Vector2 result = position.add(speed).multiply(powerup);
+
+    // Overloading operators.
+    Vector2 result2 = position + speed * powerup;
+}
 ```
 
 ### Lambdas
@@ -738,6 +827,76 @@ same order.
 
 #### Move Constructors
 
+#### Implicit Construction
+
+Objects n C++ can be instantiated using implicit construction. That is to say if a class
+defines a constructor with a parameter, it can be instantiated using the type of that
+parameter. However, you are only allowed one layer of implicit conversion.
+
+Example:
+
+```c++
+class Entity {
+
+private:
+    std::string m_Name;
+    int m_Age;
+
+public:
+    Entity() : m_Name("Unknown"), m_Age(-1) {}
+    Entity(std::string& name) : m_Name(name), m_Age(-1) {}
+    Entity(int &age) : m_Name("Unknown"), m_Age(age) {}
+};
+
+void printEntity(const Entity& entity) {
+    std::cout << entity << std::endl;
+}
+
+int main() {
+    // Since the constructors are provided, this code works due to implicit conversion.
+    Entity e1 = "Jerry";
+    Entity e2 = 23;
+    
+    // This code all works.
+    printEntity(23);
+    // Doesn't work, we're only allowed one implicit conversion.
+    // char array -> standard string -> Entity
+    // printEntity("Jerry");
+    printEntity(std::string("Jerry")); // or
+    printEntity(Entity("Jerry"));
+}
+```
+
+It's usually best to avoid implicit conversion when possible, in some situations it
+can help simplify the code. The `explicit` keyword is used with constructors to disable
+the behavior of implicit conversion:
+
+```c++
+class Entity {
+
+private:
+    std::string m_Name;
+    int m_Age;
+
+public:
+    Entity() : m_Name("Unknown"), m_Age(-1) {}
+    Entity(std::string& name) : m_Name(name), m_Age(-1) {}
+    explicit Entity(int age) : m_Name("Unknown"), m_Age(age) {}
+};
+
+void printEntity(const Entity& entity) {
+    std::cout << entity << std::endl;
+}
+
+int main() {
+    Entity e1 = "Jerry";
+    Entity e2 = 23; // Compiler error.
+    
+    printEntity(23); // Compiler error.
+    printEntity(std::string("Jerry")); // or
+}
+```
+
 ### Destructors
 
 Destructors are called when an object gets destroyed. It's used for preventing
@@ -820,6 +979,68 @@ int main() {
 ```
 
 #### Overriding
+
+### Stack & Heap Objects
+
+Stack objects lifespan is limited to the scope it's in and heap objects' lifespan is
+determined by the programmer.
+
+#### Stack Objects
+
+Stack objects are more managaeable and efficient due to their limited use and
+scope-dependent lifespan. It is recommended to use them when possible.
+
+```c++
+using std::string = String;
+
+class Entity {
+
+private:
+    String m_Name;
+
+public:
+    Entity() : m_Name("Unknown") {}
+    Entity(const String& name) : m_Name(name) {}
+};
+
+int main() {
+    // In C#/Java, this would be a null object, in C++ this initializes 
+    // an object on the stack with the default constructor.
+    Entity stackEntity;
+    // Entity stackEntity("Jerry");
+    // Entity stackEntity = Entity("Jerry");
+}
+```
+
+#### Heap Objects
+
+Heap objects' lifespan is determined by the programmer by using the [new and delete keywords](#The%20new%20&%20delete%20Keywords).
+
+```c++
+using std::string = String;
+
+class Entity {
+
+private:
+    String m_Name;
+
+public:
+    Entity() : m_Name("Unknown") {}
+    Entity(const String& name) : m_Name(name) {}
+
+    const String& getName() const { return m_Name; }
+};
+
+int main() {
+    /* Heap Allocation */
+    Entity* heapEntity = new Entity();
+
+    (*heapEntity).getName();
+    heapEntity->getName();
+
+    delete heapEntity;
+}
+```
 
 ### Structs
 
