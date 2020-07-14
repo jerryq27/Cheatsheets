@@ -7,6 +7,7 @@ TODO:
 1. Reserach remotes
     * Git push origin == connecting to remote?
     * What are remotes??
+2. Research `git rebase` and `git cherry-pick` with use cases
 
 ## Basics
 
