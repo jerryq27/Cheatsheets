@@ -5,16 +5,15 @@ written in Python.
 
 TODO:
 
-* [Checkpoint](https://www.youtube.com/watch?v=qDwdMDQ8oX4)
+* [Checkpoint](https://www.youtube.com/watch?v=aHC3uTkT9r8)
 
 ## Basics
 
 Django has a concept of Projects and Apps. Projects is the entire website, and apps are sections
-of the website (store, blog, etc). Apps are designed to be pluggable and can be transferred from 
+of the website (store, blog, etc). Apps are designed to be pluggable and can be transferred from
 one Django project to another.
 
-* **Project** - the website
-* **Apps** - parts of the website (blog, store, etc)
+### Projects
 
 Projects can contain multiple apps, and apps can be in multiple projects.
 
@@ -30,6 +29,8 @@ mysite/
         wsgi.py
 ```
 
+### Apps
+
 App structure:
 
 ```code
@@ -44,14 +45,14 @@ app/
     views.py        -> All the views of the app.
 ```
 
-Everytime you add an app, you have to include it in **settings.py**.
+Apps can contain subfolders and files not included in the default generated files.
 
-```python
-INSTALLED_APPS = [
-    ...,
-    'app.apps.AppsConfig', # app/apps/AppConfig
-]
-```
+> It is important that these subfolders created within the app that are processed by
+Django should contain a folder with that app's name. The reason for this is with how
+Django processes these files. Since the full path isn't processed, it could cause
+issues is two apps contained a `base.html` file. With the subfolder structure, despite
+looking redundant, Django would process `app1/base.html` and `app2/base.html` rather
+than two `base.html` files.
 
 ### Common Commands
 
@@ -61,11 +62,17 @@ INSTALLED_APPS = [
 * `python manage.py shell` - Calls the Django version of the Python shell.
 * `python manage.py test $APP` - Calls the tests for a Django web app.
 
+## Admin
+
+The admin user is created with the `python manage.py createsuperuser` command.
+
+> Make sure the database has been created by running [migrations](#Migrations)!
+
 ## Routing
 
 Both the project and apps can contain a `urls.py` file to handle routing.
 The project's `urls.py` file is the root router, defining the main routes
-and the routes leading to each app. 
+and the routes leading to each app.
 
 Example:
 
@@ -89,11 +96,85 @@ urlpatterns = [
     path('', views.home, name='blog-home'),
     path('about/', views.about, name='blog-about')
 ]
+
+# project/blog/views.py
+from django.shortcuts import render
+from django.http import HttpResponse
+
+# Create your views here.
+def home(request):
+    return HttpResponse('<h1>Blog Home</h1>')
+
+def about(request):
+    return HttpResponse('<h1>Blog About</h1>')
 ```
 
 > Django first tried to match a pattern in the project's `urls.py`, when it finds
 one, (with the use of `include()`) it sends only the remaining string to the app's
 `urls.py` for further pattern matching.
+
+### Templates
+
+Templates are HTML pages that can be used within `views.py`. They are defined
+within an app's `app/templates/app/` directory.
+
+Django also uses a templating engine which allows code to be written within the HTML.
+There are a number of ways to display a template, the easiest way to do so is with the
+`render(request, template, optional_template_data)` method:
+
+```python
+def home(request):
+    return render(request, 'blog/home.html')
+```
+
+> In order for Django to search the app for templates, it must be included as an
+installed app in `project/settings.py`.
+
+#### Template Inheritance
+
+Using inheritance with templates helps prevent duplicate code. Usually common code
+is defined within a base and then extended by templates using that code. To use
+inheritance in Django, the parent template defines a block that can be overridden
+by a child template:
+
+```html
+<!-- base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+    <div class="container">
+        <!-- Define a block for child templates to override. -->
+        {% block content %}
+        {% endblock content %}
+    </div>
+
+</body>
+</html>
+
+<!-- home.html -->
+<!-- Specify the parent template to inherit from. -->
+{% extends "blog/base.html" %}
+
+<!-- Override the block defined in the parent. -->
+{% block content %}
+
+    {% for post in posts %}
+        <h1>{{ post.title }}</h1>
+        <p>By {{ post.author }} on {{ post.date_posted }}</p>
+        <p>{{ post.content }}</p>
+    {% endfor %}
+
+{% endblock content %}
+
+```
+
+### Static Files
+
+Static files are located within the `static/` directory. To use
+them in templates, you must include the `{% load static %}` line
+at the start of the template file.
 
 ## Database
 
@@ -132,3 +213,8 @@ python manage.py migrate # This runs the migrations to create the tables in the 
 Migrations are very powerful, and can keep track of which ones have already been ran, which ones need updating.
 
 When the Models are changed, migrations can be updated, and the changes can be applied to your database without the loss of data.
+
+### Migrations
+
+`python manage.py makemigrations`
+`python manage.py migrate`
