@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag & Drop Files</title>
+    <script src="https://unpkg.com/vue"></script>
+</head>
+<body>
+<div id="app">
+
+    <div v-on:drop.prevent="addFile" v-on:dragover.prevent>
+        <h2>Drag an drop a file.</h2>
+        <ul>
+            <li v-for="file in files">
+                {{ file }}
+            </li>
+        </ul>
+    </div>
+
+    <script>
+    let app = new Vue({
+        el: '#app',
+        data: {
+            files: [],
+        },
+        methods: {
+            addFile: function(e) {
+                let droppedFiles = e.dataTransfer.files;
+                if(!droppedFiles) {
+                    console.log('Error getting the file.');
+                    return;
+                }
+                console.log(droppedFiles);
+                this.files = [...droppedFiles];
+            }
+        }
+    });
+    </script>
+
+
+    <style>
+
+    </style>
+
+</div>
+</body>
+</html>
