@@ -4,7 +4,8 @@ Vue.js is a JavaScript framework for reactive frontend applications.
 
 TODO:
 
-* [Checkpoint](https://youtu.be/Wy9q22isx3U?t=1607)
+* [Docs Checkpoint](https://vuejs.org/v2/guide/computed.html)
+* [Checkpoint](https://www.vuemastery.com/courses/real-world-vue-js/real-world-intro)
 
 ## Basics
 
@@ -463,8 +464,9 @@ data: {
 }
 </script>
 
-<!-- Ternary operators are allowed in the array syntax. -->
+<!-- Ternary operators and the object expression are allowed in the array syntax. -->
 <div v-bind:class="[ isActive? active : '', error]"></div>
+<div v-bind:class="[{ active: isActive }, error]"></div>
 
 <script>
 data: {
