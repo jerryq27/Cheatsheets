@@ -4,8 +4,8 @@ Vue.js is a JavaScript framework for reactive frontend applications.
 
 TODO:
 
-* [Docs Checkpoint](https://vuejs.org/v2/guide/computed.html)
-* [Checkpoint](https://www.vuemastery.com/courses/real-world-vue-js/real-world-intro)
+* [Docs Checkpoint](https://vuejs.org/v2/guide/list.html#Mutation-Methods)
+* [Checkpoint](https://youtu.be/BPyniDJ5QOQ?t=1161)
 
 ## Basics
 
@@ -73,9 +73,10 @@ vm.$watch('a', function (newValue, oldValue) {
 
 Common predefined properties:
 
-* `data` - defined values that can be used by the current instance.
-* `methods` - defined methods that can be used as expressions for directives.
-* `computed` - defined methods that compute values from the data's propertied which are then cached.
+* `data` - defined values that can be used by the current instance
+* `methods` - defined methods that can be used as expressions for directives
+* `computed` - defined methods that compute values from the data's propertied which are then cached
+* `watch` - defined methods that watch for data changes requiring asynchronous or expensive operations
 
 ```js
 var app = new Vue({
@@ -83,6 +84,7 @@ var app = new Vue({
   data: {},
   methods: {},
   computed: {},
+  watch: {},
 });
 ```
 
@@ -343,8 +345,46 @@ A `computed` object can be defined in a Vue instance's options. Methods
 defined here compute a value based on the values in the `data` object.
 The difference between methods defined in `computed` and `methods` is that
 `computed` methods are cached. This means that the resulting value is saved
-once calculated, and the method won't run again unless the arguments change.
-Functions in `methods` are ran everytime they're called.
+once calculated, and subsequent calls to the method won't run again unless
+their reactive properties change. Functions in `methods` are ran everytime
+they're called.
+
+> Using non-reactive properties (not defined in `data`) in computed methods
+won't cause a recalculation on update.
+
+```js
+computed: {
+  willUpdateOnChange: function() {
+    // Will update when message changes.
+    this.message.split('').reverse().join('');
+  }
+
+  willNotUpdateOnChange: function() {
+    // Not a reactive property!
+    return Date.now();
+  }
+}
+```
+
+Computed properties are by default a getter only. However, you can provide setters
+when needed:
+
+```js
+computed: {
+  fullName: {
+    get: function() {
+      return this.firstName + ' ' + this.lastName;
+    },
+    set: function(newVal) {
+      var names = newValue.split(' ');
+      this.firstName = names[0];
+      this.lastName = names[names.length - 1];
+    }
+  }
+}
+
+this.fullName = "John Smith"; // Will invoke the setter method.
+```
 
 #### Exportable Components
 
@@ -372,10 +412,11 @@ export default {
 
 ### Styling
 
-We use objects to modify styles in Vue. The expression we pass into `v-bind:style`
-is an object with user-defined styles.
+#### Inline style
 
-Inline style:
+We use objects to modify styles in Vue. The expression we pass into `v-bind:style`
+is an object with user-defined styles. The CSS properties can be written using
+CamelCase or kebab-case:
 
 ```html
 <div v-bind:style="{ background: blue, fontSize: 14 }"></div>
@@ -398,6 +439,16 @@ data: {
 </script>
 ```
 
+Using the Array Syntax with `v-bind:style` allows multiple style objects to
+be applied.
+
+```html
+<div v-bind:style="[ styleObj1, styleObj2 ]"></div>
+```
+
+> CSS properties with [vendor prefixes](https://developer.mozilla.org/en-US/docs/Glossary/Vendor_Prefix)
+are automatically detected and applied by Vue.
+
 #### Class Bindings
 
 Adding styles and classes dynamically is done with `v-bind`.
@@ -406,7 +457,7 @@ Vue provides special enhancements to the expression argument.
 
 Objects are passed into `v-bind:class` to toggle a class using
 the following syntax: `v-bind:class="{ className: isActive }"`
-Where the class `className` will toggle if `isActive` is true.
+Where the class `className` will toggle if `isActive` is truthy.
 
 The `v-bind:class` directive can co-exist with the normal `class`
 attribute:
@@ -452,7 +503,7 @@ computed: {
 </script>
 ```
 
-Multiple classes can also be applied using array syntax:
+Using the Array Syntax, multiple classes can be applied:
 
 ```html
 <div v-bind:class="[active, error]"></div>
@@ -477,8 +528,96 @@ data: {
 </script>
 ```
 
+> Using class bindings on a component apply the classes to the component's root element.
+
 ## Workflow
 
+### Conditional Rendering
+
+Conditional rendering is done using the `v-if/v-else-if/v-else` directives.
+Rendering of an element (and their children) is determined by the truthyness
+of the arguments passed into these directives:
+
+```html
+<div v-if="type === 'A'">
+  A
+</div>
+<div v-else-if="type === 'B'">
+  B
+</div>
+<div v-else-if="type === 'C'">
+  C
+</div>
+<div v-else>
+  Not A/B/C
+</div>
+```
+
+### List Rendering
+
+List rendering is done using the `v-for` directive. `v-for` can be used
+inside of `v-if` directives, however the inverse is not a recommended
+practice.
+
+```html
+<!-- 'item of items' works as well (JavaScript iterator syntax) -->
+<ul>
+  <li v-for="item in items">
+    {{ item.message }}
+  </li>
+</ul>
+
+<!-- Optional second parameter for the index. -->
+<ul>
+  <li v-for="(item, index) in items">
+    {{ index }} - {{ item.message }}
+  </li>
+</ul>
+```
+
+List rendering can also iterate over objects:
+
+```html
+<ul>
+  <li v-for="value in object">
+    {{ value }}
+  </li>
+</ul>
+
+<!-- Optional second parameter for the object key. -->
+<ul>
+  <li v-for="(value, key) in object">
+    {{ key }}: {{ value }}
+  </li>
+</ul>
+
+<!-- Optional third parameter for the index. -->
+<ul>
+  <li v-for="(value, key, index) in object">
+    {{ index }} - {{ key }}: {{ value }}
+  </li>
+</ul>
+```
+
+> It is highly recommended to provide a `key` atttribute with `v-for`'s to make
+sure item render order is consistent.
+
 ## Advance Use
+
+### Vue CLI
+
+Vue offers a command-line interface to automate the creation of a project.
+The CLI configures things like Webpack, Babel, and npm and creates this
+files and folders:
+
+* public/ - where files you don't want processed by webpack are stored
+* src/ - app specific code goes here
+  * assets/ - where images, fonts, etc. are stored
+  * components/ - where Vue components (building blocks) are stored
+  * router/index.js - (Vue router plugin)
+  * store/index.js - (Vuex plugin)
+  * views/ - where the different views (pages) are stored
+  * App.vue - root Vue component where all others are nested in
+  * main.js - file that renders the app and mounts it to the DOM
 
 ## Other
