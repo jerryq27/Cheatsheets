@@ -15,6 +15,17 @@ Best practices:
 * Link the stylesheet within the `head` tags.
 * Link the JavaScript at the bottom of the `body` tags.
 
+### Emmet
+
+[Cheatsheet](https://docs.emmet.io/cheat-sheet/)
+
+Emmet is a plugin that makes typing HTML much easier.
+Common Emmet shorthands:
+
+* element*n - creates element n times
+* element.CLASS - creates an element with the class.
+* element>child>child - creates element with the nested children
+
 ---
 
 ## CSS
