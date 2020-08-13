@@ -23,7 +23,7 @@ Vim operates by using various modes:
     * `:saveas $PATH` - save file to $PATH
 * **Insert** - Allows for normal text input
     * `i`/`a` - switch to insert mode at/after the cursor's position
-    * `I`/`A` - switch to insert mode at the beginning/end of the line
+    * `I`/`A` - switch to insert mode at the beginning/end of the line ([more](#Modifying%20Text))
 * **Visual** - Allows you to select text and apply commands to them
     * `v` - switch to visual mode with character highlighting (can be used with targeted [Text Objects](#Text%20Objects)
     * `V` - switch to visual mode with line highlighting
@@ -39,7 +39,6 @@ Text navigation commands:
 
 * `/$SEARCH` - search for a string ([more](#Find%20&%20Replace))
 * `t`/`f` - to/find; jump cursor before/to a character
-* `*` - jump cursor to other instances of the word under the cursor
 * `;`/`,` - jump to the next/previous instance after jumping to a character
 * `0`/`$` - jump to the beginning/end of the line
 * `^` - jump to the first non-blank character in a line
@@ -107,6 +106,26 @@ Examples:
 
 ## Workflow
 
+### Modifying Text
+
+There are numerous ways to enter insert mode besides the basic commands.
+
+Other insertion commands:
+
+* `o`/`O` - open a new line below/above the current one
+* `r`/`R` - replace character under cursor/replace character and keep typing
+* `c$`/`C` - change target/change current line
+* `s`/`S` - substitute from the cursor to the next command/substitute entire line
+
+Common deletion commands:
+
+* `x`/`X` - exterminate the character under/before the cursor
+* `d$`/`D` - delete target/to the end of the line
+* `dd` - delete the current line
+* `J` - join the current line with the next one by deleting what's between
+
+> The `~` command changes the case of the current character or selection
+
 ### Undo & Redo
 
 `u` - undo
@@ -125,8 +144,11 @@ Examples:
     * `n`/`N` - goes to the next/previous matching pattern
 * `:%s /$SEARCH/$REPLACE/g` - change searched text to replace text on every line
 * `:s /$SEARCH/$REPLACE/g` - change searched text to replace text on the current line
+* `*` - jump cursor to other instances of the word under the cursor
 
 ## Advance Use
+
+* `.` - repeats previous command
 
 Combining motions with commands provide some useful functionality,
 for example:
