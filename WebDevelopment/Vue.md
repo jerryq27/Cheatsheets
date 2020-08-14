@@ -4,7 +4,7 @@ Vue.js is a JavaScript framework for reactive frontend applications.
 
 TODO:
 
-* [Docs Checkpoint](https://vuejs.org/v2/guide/list.html#Mutation-Methods)
+* [Docs Checkpoint](https://vuejs.org/v2/guide/events.html#Key-Codes)
 * [Checkpoint](https://youtu.be/BPyniDJ5QOQ?t=1161)
 
 ## Basics
@@ -32,7 +32,7 @@ Simplest HelloWorld Vue application:
       data: {
         message: 'Hello Vue!',
       }
-    })
+    });
   </script>
 </body>
 </html>
@@ -88,30 +88,44 @@ var app = new Vue({
 });
 ```
 
-### Directives
+#### Reactivity
 
-**Directives** are special Vue attributes pre-fixed with a `v-`.
-The values for these attributes are expected to be a **single**
-JavaScript expression. Directives are in charge of reactively applying
-changes to the DOM when the value of its expression changes.
+The Vue instance does not allow for properties to be added dynamically.
+However, new properties for an already defined object can be added.
 
-A notable exception for the single expression rule is the `v-for` directive.
+#### The data Property
 
-Directives can take an _argument_ denoted by a `:`. Directives can also
-take _dynamic_ arguments, but their are some notable
-[limitations](https://vuejs.org/v2/guide/syntax.html#Dynamic-Arguments).
+Values defined in the data property are reactive when updated. 
 
-Common directives:
+##### Arrays
 
-* `v-bind:ATTR="EXPR"` - one-way binding of an attribute to a an expression (listens to changes in `data`)
-  * Shorthand: `:ATTR="EXPR"`
-* `v-on:EVENT="METHOD"` - attaches a method to an event
-  * Shorthand: `@EVENT="METHOD"`
-* `v-if="EXPR"`/`v-else-if="EXPR"`/`v-else` - removes or adds elements based on a condition
-(elements are not added by default unless their condition is true)
-* `v-show="EXPR"` - displays or hides elements (instead of adding or removing them)
-* `v-for="VAR in LIST"` - allows for reading through a list
-* `v-model="DATA"` - two-way binding of an attribute to an expression (listens to changes in `data` and the HTML elements like forms)
+Arrays are reactive when using mutating methods the modify the array such as:
+
+* `push()`
+* `pop()`
+* `shift()`
+* `unshift()`
+* `splice()`
+* `sort()`
+* `reverse()`
+
+However, with non-muating methods:
+
+* `filter()`
+* `concat()`
+* `slice()`
+
+That always return a new array, make sure to replace the original array and
+Vue will handle the update with the DOM efficiently.
+
+```js
+this.items = this.items.filter(function(items){
+  ...
+});
+```
+
+> Displaying the result of a non-mutating method without altering the original
+`data` array property is best handled using a `computed` property.
 
 ## Lifecyle
 
@@ -134,16 +148,328 @@ new Vue({
     mounted: function() {}, // Runs when mounted to the page.
     updated: function() {}, // Runs when data gets updated.
     destroyed: function() {}, // Runs when the instance is destroyed.
-})
+});
 ```
 
 > Do **not** use arrow functions with these lifecycle methods! Arrow
 functions don't have a `this`, so `this` gets treated as any other
 variabel resulting in `TypeError` being thrown.
 
-## Components & Styling
+## Templates
 
-### Components
+Vue's templating uses custom HTML elements and attributes. Vue HTML
+attributes are known as _directives_ and makes it easier to perform
+common logic and connect methods defined in the Vue instance.
+
+### Directives
+
+**Directives** are special Vue attributes pre-fixed with a `v-`.
+The values for these attributes are expected to be a value from the Vue
+instance or a **single** JavaScript expression. Directives are in charge of
+reactively applying changes to the DOM when the value of its expression changes.
+
+> A notable exception for the single expression rule is the `v-for` directive.
+
+Directives can take an _argument_ denoted by a `:`. Directives can also
+take _dynamic_ arguments, but their are some notable
+[limitations](https://vuejs.org/v2/guide/syntax.html#Dynamic-Arguments).
+
+Common directives used with values defined in the Vue instance:
+
+* `v-bind:ATTR="EXPR"` - one-way binding of an attribute to a an expression (listens to changes in `data`)
+  * Shorthand: `:ATTR="EXPR"`
+* `v-on:EVENT="METHOD"` - attaches a method to an event
+  * Shorthand: `@EVENT="METHOD"`
+* `v-show="EXPR"` - displays or hides elements (instead of adding or removing them)
+* `v-model="DATA"` - two-way binding of an attribute to an expression (listens to changes in `data` and the HTML elements like forms)
+
+#### Conditional Rendering
+
+Conditional rendering is done using the `v-if/v-else-if/v-else` directives.
+Rendering of an element (and their children) is determined by the _truthyness_
+of the arguments passed into these directives:
+
+```html
+<div v-if="type === 'A'">
+  A
+</div>
+<div v-else-if="type === 'B'">
+  B
+</div>
+<div v-else-if="type === 'C'">
+  C
+</div>
+<div v-else>
+  Not A/B/C
+</div>
+```
+
+#### List Rendering
+
+List rendering is done using the `v-for` directive. When rendering lists with a `v-for`
+a unique key (string or integer) **should** be provided to each element rendered to help
+ensure that Vue consistently renders items in order.
+
+```html
+<!-- 'item of items' works as well (JavaScript iterator syntax) -->
+<ul>
+  <li v-for="item in items">
+    {{ item.message }}
+  </li>
+</ul>
+
+<!-- Optional second parameter for the index. -->
+<ul>
+  <li v-for="(item, index) in items">
+    {{ index }} - {{ item.message }}
+  </li>
+</ul>
+
+<!-- Rendering with a range. -->
+<ul>
+  <li v-for="i in 10">
+    {{ i }}
+  </li>
+</ul>
+```
+
+List rendering can also iterate over objects:
+
+```html
+<ul>
+  <li v-for="value in object">
+    {{ value }}
+  </li>
+</ul>
+
+<!-- Optional second parameter for the object key. -->
+<ul>
+  <li v-for="(value, key) in object">
+    {{ key }}: {{ value }}
+  </li>
+</ul>
+
+<!-- Optional third parameter for the index. -->
+<ul>
+  <li v-for="(value, key, index) in object">
+    {{ index }} - {{ key }}: {{ value }}
+  </li>
+</ul>
+```
+
+> It is usually not recommended to use `v-for` and `v-if` together. However, it can be useful to have both
+directives used on the same element in [some cases](https://vuejs.org/v2/guide/list.html#v-for-with-v-if).
+Also, `v-for` can be used inside of `v-if` directives, however the inverse is not a good practice.
+
+#### Events
+
+Events are handled using the `v-on:$EVENT` directive. Since this is a commonly used directive, it has the
+`@$EVENT=""` shorthand.
+
+Example:
+
+```html
+<div>
+  <button v-on:click="counter += 1">Add One</button>
+  <p>Button has been clicked {{ counter }} time(s).</p>
+</div>
+```
+
+Methods defined in the Vue instance are passed into this directive for more complex logic:
+
+```html
+<div>
+  <button v-on:click="greet">Greet</button>
+</div>
+
+<script>
+var app = new Vue({
+  data: {
+    name: 'Vue.js'
+  },
+  methods: {
+    greet: function(event) {
+      // `this` inside methods points to the Vue instance
+      alert('Hello ' + this.name + '!')
+      // `event` is the native DOM event
+      if(event) {
+        alert(event.target.tagName);
+      }
+    }
+  }
+});
+</script>
+```
+
+Parenthesis aren't required unless arguments other than the event are passed into a
+defined method. To pass additional arguments and the event, the variable `$event` is
+used:
+
+```html
+<button v-on:click="warn('Form cannot be submitted yet.', $event)">
+  Submit
+</button>
+
+<script>
+methods: {
+  warn: function (message, event) {
+    // now we have access to the native event
+    if(event) {
+      event.preventDefault()
+    }
+    alert(message)
+  }
+}
+</script>
+```
+
+##### Event Modifiers
+
+Event modifierd are used on the `v-on` directive to deal with DOM event.
+Some common modifiers for `v-on` are:
+
+* `.stop`
+* `.prevent` - prevents the default behavior for an event (like the page reloade when submitting a form)
+* `.capture`
+* `.self` - handle the event only when the element is clicked and not the child.
+* `.once` - event will only be triggered once.
+* `.passive` - default behavior isn't prevented.
+
+Vue also includes modifiers for handling key events:
+
+```html
+<input v-on:keyup.enter="submit">
+<!-- Keycodes also work -->
+<input v-on:keyup.13="submit">
+```
+
+All [KeyboardEvents](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values) are
+supported using kebab-case.
+
+## Styling
+
+Styling in Vue can is handled with directives. Styles can be defined inline or
+within the Vue instance using style objects. In both approaches the CSS properties
+can be defined in either CamelCase or kebab-case.
+
+### Inline style
+
+We use objects to define inline styles in Vue. The expression passed into `v-bind:style`
+is an object with user-defined styles:
+
+```html
+<div v-bind:style="{ background: blue, fontSize: 14 }"></div>
+<!-- Translates to -->
+<div style="background: blue; font-size: 14px"></div>
+```
+
+However, it is much cleaner to use a defined style object as the expression:
+
+```html
+<div v-bind:style="divStyle"></div>
+
+<script>
+data: {
+    divStyle: {
+        background: 'blue',
+        fontSize: 14,
+    }
+}
+</script>
+```
+
+Using the Array Syntax with `v-bind:style` allows multiple style objects to
+be applied.
+
+```html
+<div v-bind:style="[ styleObj1, styleObj2 ]"></div>
+```
+
+> CSS properties with [vendor prefixes](https://developer.mozilla.org/en-US/docs/Glossary/Vendor_Prefix)
+are automatically detected and applied by Vue.
+
+### Class Bindings
+
+Adding styles and classes dynamically is done with `v-bind`.
+When `v-bind` is used with the `style` and `class` attributes,
+Vue provides special enhancements to the expression argument.
+
+Objects are passed into `v-bind:class` to toggle a class using
+the following syntax: `v-bind:class="{ className: isActive }"`
+Where the class `className` will toggle if `isActive` is truthy.
+
+The `v-bind:class` directive can co-exist with the normal `class`
+attribute:
+
+```html
+<div
+  class="square"
+  v-bind:class="{ active: isActive, error: errors.length }">
+</div>
+
+<!-- The object expression doesn't have to be inline. -->
+<div
+  class="square"
+  v-bind:class="classObject">
+</div>
+<script>
+data: {
+  classObject: {
+    active: true,
+    errors: false,
+  }
+}
+</script>
+
+<!-- Using a computed property is a common pattern. -->
+<div
+  class="square"
+  v-bind:class="classObject">
+</div>
+<script>
+data: {
+  isActive: true,
+  hasErrors: false,
+},
+computed: {
+  classObject: function() {
+    return {
+      active: this.isActive && !this.hasErrors,
+      error: this.error && this.error.type === 'fatal',
+    }
+  }
+}
+</script>
+```
+
+Using the Array Syntax, multiple classes can be applied:
+
+```html
+<div v-bind:class="[active, error]"></div>
+
+<script>
+data: {
+  active: {...},
+  error: {...},
+}
+</script>
+
+<!-- Ternary operators and the object expression are allowed in the array syntax. -->
+<div v-bind:class="[ isActive? active : '', error]"></div>
+<div v-bind:class="[{ active: isActive }, error]"></div>
+
+<script>
+data: {
+  isActive: true,
+  active: {...},
+  error: {...},
+}
+</script>
+```
+
+> Using class bindings on a component apply the classes to the component's root element.
+
+## Components
 
 Components are used to divide an application in manageble pieces.
 An ideal Vue template using components should look like:
@@ -185,7 +511,7 @@ defining a data object is that the former allows each instance of the component
 to have it's own data object. The latter would have each component sharing the
 same data object.
 
-#### Props
+### Props
 
 Values from a parent can be passed into a component using the component's
 props option. The component must explicitly declare the props it's
@@ -198,6 +524,28 @@ expecting to receive:
 Vue.component('example', {
   props: [message],
   template: '<div>{{ message }}</div>',
+  data() {
+    return {}
+  }
+});
+</script>
+```
+
+Values passed in through a `v-for` are handled differently
+[requires more study](https://vuejs.org/v2/guide/list.html#v-for-with-a-Component)
+
+```html
+<example
+  v-for="(item, index) in items"
+  v-bind:item="item"
+  v-bind:index="index"
+  v-bind:key="item.id">
+</example>
+
+<script>
+Vue.component('example', {
+  props: [item],
+  template: '<div>{{ item }}</div>',
   data() {
     return {}
   }
@@ -282,9 +630,9 @@ var app = new Vue({
 </script>
 ```
 
-#### Templates
+### Template Property
 
-Templates are renderable HTML code. Templates **must** have only one root element.
+The HTML defined in a component's template property **must** have only one root element.
 Templates can access values from the data object using the _Mustache syntax_ `{{ }}`.
 Data processed by the mustache syntax is treated as plain text.
 
@@ -339,7 +687,7 @@ var app = new Vue({
 </script>
 ```
 
-#### Computed Properties
+### Computed Properties
 
 A `computed` object can be defined in a Vue instance's options. Methods
 defined here compute a value based on the values in the `data` object.
@@ -386,7 +734,7 @@ computed: {
 this.fullName = "John Smith"; // Will invoke the setter method.
 ```
 
-#### Exportable Components
+### Exportable Components
 
 Vue components are composed of a template, script, and style.
 
@@ -410,197 +758,7 @@ export default {
 
 > Templates can only have one child element. `scoped` means the styling is only for this component.
 
-### Styling
-
-#### Inline style
-
-We use objects to modify styles in Vue. The expression we pass into `v-bind:style`
-is an object with user-defined styles. The CSS properties can be written using
-CamelCase or kebab-case:
-
-```html
-<div v-bind:style="{ background: blue, fontSize: 14 }"></div>
-<!-- Translates to -->
-<div style="background: blue; font-size: 14px"></div>
-```
-
-It is much cleaner to use a defined object as the expression.
-
-```html
-<div v-bind:style="divStyle"></div>
-
-<script>
-data: {
-    divStyle: {
-        background: 'blue',
-        fontSize: 14,
-    }
-}
-</script>
-```
-
-Using the Array Syntax with `v-bind:style` allows multiple style objects to
-be applied.
-
-```html
-<div v-bind:style="[ styleObj1, styleObj2 ]"></div>
-```
-
-> CSS properties with [vendor prefixes](https://developer.mozilla.org/en-US/docs/Glossary/Vendor_Prefix)
-are automatically detected and applied by Vue.
-
-#### Class Bindings
-
-Adding styles and classes dynamically is done with `v-bind`.
-When `v-bind` is used with the `style` and `class` attributes,
-Vue provides special enhancements to the expression argument.
-
-Objects are passed into `v-bind:class` to toggle a class using
-the following syntax: `v-bind:class="{ className: isActive }"`
-Where the class `className` will toggle if `isActive` is truthy.
-
-The `v-bind:class` directive can co-exist with the normal `class`
-attribute:
-
-```html
-<div
-  class="square"
-  v-bind:class="{ active: isActive, error: errors.length }">
-</div>
-
-<!-- The object expression doesn't have to be inline. -->
-<div
-  class="square"
-  v-bind:class="classObject">
-</div>
-<script>
-data: {
-  classObject: {
-    active: true,
-    errors: false,
-  }
-}
-</script>
-
-<!-- Using a computed property is a common pattern. -->
-<div
-  class="square"
-  v-bind:class="classObject">
-</div>
-<script>
-data: {
-  isActive: true,
-  hasErrors: false,
-},
-computed: {
-  classObject: function() {
-    return {
-      active: this.isActive && !this.hasErrors,
-      error: this.error && this.error.type === 'fatal',
-    }
-  }
-}
-</script>
-```
-
-Using the Array Syntax, multiple classes can be applied:
-
-```html
-<div v-bind:class="[active, error]"></div>
-
-<script>
-data: {
-  active: {...},
-  error: {...},
-}
-</script>
-
-<!-- Ternary operators and the object expression are allowed in the array syntax. -->
-<div v-bind:class="[ isActive? active : '', error]"></div>
-<div v-bind:class="[{ active: isActive }, error]"></div>
-
-<script>
-data: {
-  isActive: true,
-  active: {...},
-  error: {...},
-}
-</script>
-```
-
-> Using class bindings on a component apply the classes to the component's root element.
-
 ## Workflow
-
-### Conditional Rendering
-
-Conditional rendering is done using the `v-if/v-else-if/v-else` directives.
-Rendering of an element (and their children) is determined by the truthyness
-of the arguments passed into these directives:
-
-```html
-<div v-if="type === 'A'">
-  A
-</div>
-<div v-else-if="type === 'B'">
-  B
-</div>
-<div v-else-if="type === 'C'">
-  C
-</div>
-<div v-else>
-  Not A/B/C
-</div>
-```
-
-### List Rendering
-
-List rendering is done using the `v-for` directive. `v-for` can be used
-inside of `v-if` directives, however the inverse is not a recommended
-practice.
-
-```html
-<!-- 'item of items' works as well (JavaScript iterator syntax) -->
-<ul>
-  <li v-for="item in items">
-    {{ item.message }}
-  </li>
-</ul>
-
-<!-- Optional second parameter for the index. -->
-<ul>
-  <li v-for="(item, index) in items">
-    {{ index }} - {{ item.message }}
-  </li>
-</ul>
-```
-
-List rendering can also iterate over objects:
-
-```html
-<ul>
-  <li v-for="value in object">
-    {{ value }}
-  </li>
-</ul>
-
-<!-- Optional second parameter for the object key. -->
-<ul>
-  <li v-for="(value, key) in object">
-    {{ key }}: {{ value }}
-  </li>
-</ul>
-
-<!-- Optional third parameter for the index. -->
-<ul>
-  <li v-for="(value, key, index) in object">
-    {{ index }} - {{ key }}: {{ value }}
-  </li>
-</ul>
-```
-
-> It is highly recommended to provide a `key` atttribute with `v-for`'s to make
-sure item render order is consistent.
 
 ## Advance Use
 
