@@ -4,7 +4,17 @@ Python is a interpreted, high level, general-purpose, easy to use programming la
 
 TODO:
 * [Modules/Packages](#Modules%20&%20Packages)
+    * [Modules](https://www.youtube.com/watch?v=CqvZ3vGoGs0)
 * [Formatting f strings](#String%20Formatting)
+* [Unit Tests](#Unit%20Tests)
+    * [patch & mocking](https://youtu.be/6tNS--WetLI?t=1843)
+* [Classes & Objects](#Classes%20&%20Objects)
+    * [classmethods & staticmethods](https://www.youtube.com/watch?v=rq8cL2XMM5M&list=PL-osiE80TeTsqhIuOqKhwlXsIBIdSeYtc&index=4&t=0s)
+* [Language Specifics](#Language%20Specifics)
+    * [Context Managers](https://www.youtube.com/watch?v=-aKFBoZpiqA)
+* [List Comprehension](#List%20Comprehension)
+    * [dicts & sets](https://www.youtube.com/watch?v=3dt4OGnU5sM)
+
 
 ## Table of Contents
 
@@ -749,6 +759,10 @@ print(add(5, 5))
 print(add(y=5))
 ```
 
+> Default parameter values are only evaluated **once**! Using a mutable
+data type like an empty list as a default value will use the **same** list
+in subsequent calls.
+
 Seeing a `*` in a function's parameter listing indicates  the end of
 positional arguments. All arguments passed in after the `*` requires
 the parameter's name to be explicitly specified.
@@ -953,6 +967,22 @@ of the file itself. **Packages** are directories that include an
 `__init__.py` file. Packages can contain many modules, and the package
 name is the name of the directory itself.
 
+Your Python code takes priority over imported modules. This can cause
+issues if your code is using names being used in an imported module. For
+example, naming a file the same name as a module from the standard
+library will throw an error since the Python interpreter will prioritize
+your code:
+
+```python
+# math.py
+
+# ImportError, trying to import radians() and sin() from this math.py!
+from math import radians, sin
+
+rads = radians(90)
+print(sin(rads))
+```
+
 #### import
 
 Python uses the `import` keyword to import modules and packages. The
@@ -1008,6 +1038,317 @@ l.error(...)
 > When the interpreter encounters an `import` statement with modules, it
 runs all the code specified. however, with packages, it runs all the code
 in the package's `__init__.py` file.
+
+#### Command Line
+
+When running Python code, it is common to use `python example.py`. There
+is another way using the `-m` argument, `python -m example`. This can also
+be used to load modules from `sys.path` and pass arguments to that module.
+
+To find out what arguments can be passed into a module, use `help()` in the
+Python interpreter.
+
+## Advance Use
+
+### Threads
+
+Threading is used for speeding up **I/O bound tasks** by running code _concurrently_.
+I/O bound tasks are operations such as file system and network tasks that wait for
+processes to complete. Threading in Python is handled using the `threading` module.
+
+Simple example:
+
+```python
+import time
+
+def do_something(seconds):
+    print(f'Sleeping {seconds} second(s)..')
+    time.sleep(seconds)
+    print('Done sleeping.')
+
+start = time.perf_counter()  # Create a timer.
+do_something(1)
+do_something(1)
+finish = time.perf_counter()
+
+# Task finished in 2 seconds.
+print(f'Finished in {round(finish - start, 2)} second(s).')
+
+
+import threading
+import time
+
+def do_something(seconds):
+    print('Sleeping 1 second..')
+    time.sleep(seconds)
+    print('Done sleeping.')
+
+start = time.perf_counter()  # Create a timer.
+
+threads = []
+for _ in range(10):
+    t = threading.Thread(target=do_something, args=[1])
+    # Launch the threads.
+    t.start()
+    threads.append(t)
+
+for thread in threads:
+    # Rejoin the threads AKA wait for them to finish.
+    thread.join()
+
+finish = time.perf_counter()
+# Task finished in 1 second!
+print(f'Finished in {round(finish - start, 2)} second(s).')
+```
+
+This is the manual way of executing threads, as of Python 3.2 a
+`ThreadPoolExecutor` has been added for a more easier and efficient
+way to create and execute threads.
+
+```python
+import concurrent.futures
+import time
+
+def do_something(seconds):
+    print('Sleeping 1 second..')
+    time.sleep(seconds)
+    return 'Done sleeping.'
+
+start = time.perf_counter()  # Create a timer.
+
+# Use a context manager for pools to handle waiting for results and joins.
+with concurrent.futures.ThreadPoolExecutor() as executor:
+    # submit() schedules a function to be ran and returns a future object.
+    future1 = executor.submit(do_something, 1)
+    future2 = executor.submit(do_something, 1)
+    print(future1.result())
+    print(future2.result())
+
+    # List comprehension example 
+    results = [executor.submit(do_something, 1) for _ in range(10)]
+    # as_completed() returns an iterator that can be looped over.
+    for future in concurrent.futures.as_completed(results):
+        print(future.result())
+
+    # Map example
+    secs = [1, 2, 3, 4, 5]
+    results = executor.map(do_something, secs)
+    for result in results:
+        print(result)
+
+finish = time.perf_counter()
+# Task finished in 1 second!
+print(f'Finished in {round(finish - start, 2)} second(s).')
+```
+
+### Processes
+
+Multiprocessing on the other hand is used for speeding up **CPU bound tasks**
+by running code _in parallel_. CPU bound tasks are operations that run calculations
+using the CPU. Multiprocessing in Python is handled using the `multiprocessing` module.
+
+Simple example:
+
+```python
+import time
+
+def do_something(seconds):
+    print(f'Sleeping {seconds} second(s)..')
+    time.sleep(seconds)
+    print('Done sleeping.')
+
+start = time.perf_counter()  # Create a timer.
+do_something(1)
+do_something(1)
+finish = time.perf_counter()
+
+# Task finished in 2 seconds.
+print(f'Finished in {round(finish - start, 2)} second(s).')
+
+
+import multiprocessing
+import time
+
+def do_something(seconds):
+    print('Sleeping 1 second..')
+    time.sleep(seconds)
+    print('Done sleeping.')
+
+start = time.perf_counter()  # Create a timer.
+
+processes = []
+for _ in range(10):
+    p = multiprocessing.Process(target=do_something, args=[1])
+    # Launch the processes.
+    p.start()
+    processes.append(p)
+
+for process in processes:
+    # Rejoin the processes AKA wait for them to finish.
+    process.join()
+
+finish = time.perf_counter()
+# Task finished in 1 second!
+print(f'Finished in {round(finish - start, 2)} second(s).')
+```
+
+This is the manual way of running processes, as of Python 3.2 a
+`ProcessPoolExecutor` has been added for a more easier and efficient
+way to create and run processes.
+
+```python
+import concurrent.futures
+import time
+
+def do_something(seconds):
+    print('Sleeping 1 second..')
+    time.sleep(seconds)
+    return 'Done sleeping.'
+
+start = time.perf_counter()  # Create a timer.
+
+# Use a context manager for pools to handle waiting for results and joins.
+with concurrent.futures.ProcessPoolExecutor() as executor:
+    # submit() schedules a function to be ran and returns a future object.
+    future1 = executor.submit(do_something, 1)
+    future2 = executor.submit(do_something, 1)
+    print(future1.result())
+    print(future2.result())
+
+    # List comprehension example 
+    results = [executor.submit(do_something, 1) for _ in range(10)]
+    # as_completed() returns an iterator that can be looped over.
+    for future in concurrent.futures.as_completed(results):
+        print(future.result())
+
+    # Map example
+    secs = [1, 2, 3, 4, 5]
+    results = executor.map(do_something, secs)
+    for result in results:
+        print(result)
+
+finish = time.perf_counter()
+# Task finished in 1 second!
+print(f'Finished in {round(finish - start, 2)} second(s).')
+```
+
+> Results of processes depends on the number of cores on the machine.
+The ProcessPoolExecutor handles how the number of processes to number of
+cores work together.
+
+## Unit Tests
+
+Unit testing makes debugging code much easier, especially in large code bases.
+Python unit tests use the `unittest` module.
+
+> Python files containing unit tests are formatted like `test_$FILE_TO_TEST.py` by
+convention.
+
+Simple example:
+
+```python
+# calc.py
+def add(x, y):
+    return x + y
+
+def div(x, y):
+    if y == 0:
+        raise ValueError('Cannot divide by zero!')
+    return x/y
+
+# test_calc.py
+import unittest
+import calc
+
+class TestCalc(unittest.TestCase):
+
+    # the test_ prefix is required, otherwise the test will be ignored.
+    def test_add(self):
+        self.asserEqual(calc.add(10, 5), 15)
+        # Edge case: neg + pos
+        self.assetEqual(calc.add(-1, 1), 0)
+        # Edge case: neg + neg
+        self.assertEqual(calc.add(-1, -1), -2)
+
+    def test_div(self):
+        self.asserEqual(calc.div(10, 5), 2)
+        self.assetEqual(calc.div(-1, 1), -1)
+        self.assertEqual(calc.div(-1, -1), 1)
+        self.assertEqual(clac.div(5, 2), 2.5)
+
+        # Testing exceptions.
+
+        # If we passed in a call to the function, the error will
+        # be raised without the test going through. So the function
+        # and arguments are passed in this way.
+        self.assertRaises(ValueError, calc.divide, 10, 0)
+        # Second way using a context manager
+        with self.assertRaises(ValueError):
+            calc.divide(10, 0)
+
+
+# Allows us to use 'python test_calc.py' in the terminal
+# Otherwise you would need to use 'python -m unittest test_calc.py'
+if __name__ == '__main__':
+    unittest.main()
+```
+
+For more complicated testing, there are methods that help
+prevent repeatable code called `setUp()`, `tearDown()`,
+`setUpClass()`, and `tearDownClass()`:
+
+```python
+# employee.py
+class Employee:
+
+    raise_amt = 1.05
+
+    def __init__(self, first, last, pay):
+        self.first = first
+        self.last = last
+        self.pay = pay
+
+    @property
+    def email(self):
+        return '{}.{}@email.com'.format(self.first, self.last)
+    
+    @property
+    def fullname(self):
+        return '{} {}'.format(self.first, self.last)
+
+    def apply_raise(self):
+        self.pay = int(self.pay * self.raise_amt)
+
+# test_employee.py
+
+class TestEmployee(unittest.TestCase):
+
+    # Runs before every single test.
+    def setUp(self):
+        print('Starting unit test..')
+        self.emp_1 = Employee('John', 'Smit', 50_000)
+        self.emp_2 = Employee('Sue', 'Miller', 60_000)
+
+    # Runs after every single test.
+    def tearDown(self):
+        print('Finished unit test.')
+    
+    # Runs before testing.
+    @classmethod
+    def setUpClass(cls):
+        print('Starting tests..')
+    
+    # Runs after testing.
+    @classmethod
+    def tearDownClass(cls)
+        print('Finished tests.')
+```
+
+Best practices:
+
+* Tests should be isolated, as in they should be able to run by themselves without relying on other tests.
+* Test driven development means to write the test first then the code, so you know what the code's behavior should be.
+
 
 ## Language Specifics
 
