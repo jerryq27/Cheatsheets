@@ -4,6 +4,7 @@ Python is a interpreted, high level, general-purpose, easy to use programming la
 
 TODO:
 * [Modules/Packages](#Modules%20&%20Packages)
+* [Formatting f strings](#String%20Formatting)
 
 ## Table of Contents
 
@@ -252,6 +253,10 @@ if 'My Hero Academia' in anime:
 # Loop through a list
 for show in anime:
     print(show)
+
+# Loop through a list with indexes.
+for index, show in enumerate(anime):
+    print(index, show)
 ```
 
 ### Tuples
@@ -293,10 +298,29 @@ for c in classes:
     print(c)
 ```
 
-Tuples have a concept known as packing and unpacking.
+Tuples have a concept known as _packing_ and _unpacking_.
+The number of values **must** match the number of variables
+being used for the unpacking **unless** `*`is specified.
 
 ```python
+a, b = (1, 2)
+print(a, b)  # 1 2
+
+a, b, c = (1, 2)  # ValueError
+a, b, c = (1, 2, 3, 4, 5)  # ValueError
+
+a, b, c* = (1, 2, 3, 4, 5)
+print(a, b, c)  # 1 2 [3, 4, 5]
+
+a, b, c*, d = (1, 2, 3, 4, 5)
+print(a, b, c, d)  # 1 2 [3, 4] 5
+
+# The underscore is commonly used in unpacking to signal ignored values.
+a, b, _* = (1, 2, 3, 4, 5)
 ```
+
+> [Underscores](#Underscores) are commonly used in unpacking to signal to Python and
+the programmer that a value is being ignored.
 
 ### Dictionaries
 
@@ -557,6 +581,13 @@ l3 = ['+', '-', '*', '/', '%']
 
 print(list(zip(l1, l2)))  # output: [(1, 'a'), (2, 'b'), (3, 'c')]
 print(list(zip(l1, l2, l3)))  # output: [(1, 'a', '+'), (2, 'b', '-'), (3, 'c', '*')]
+
+# Using Zip with a for loop.
+names = ['Peter Parker', 'Clark Kent', 'Bruce Wayne']
+heroes = ['Spiderman', 'Superman', 'Batman']
+
+for name, hero in zip(names, heroes):
+    print(f'{name} is {hero}')
 ```
 
 ## Loops
@@ -595,6 +626,12 @@ else:
 ```python
 name = input('What is your name: ')
 print('Your name is ' + name)
+
+# For sensitive input like passwords, use getpass() instead.
+from getpass import getpass
+
+username = input('Username: ')
+password = getpass('Password: ')
 ```
 
 ### String Formatting
