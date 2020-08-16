@@ -3,16 +3,16 @@
 Python is a interpreted, high level, general-purpose, easy to use programming language developed by Guido van Rossum.
 
 TODO:
-* [Modules/Packages](#Modules%20&%20Packages)
+* [Modules/Packages](#Modules-&-Packages)
     * [Modules](https://www.youtube.com/watch?v=CqvZ3vGoGs0)
-* [Formatting f strings](#String%20Formatting)
-* [Unit Tests](#Unit%20Tests)
+* [Formatting f strings](#String-Formatting)
+* [Unit Tests](#Unit-Tests)
     * [patch & mocking](https://youtu.be/6tNS--WetLI?t=1843)
-* [Classes & Objects](#Classes%20&%20Objects)
+* [Classes & Objects](#Classes-&-Objects)
     * [classmethods & staticmethods](https://www.youtube.com/watch?v=rq8cL2XMM5M&list=PL-osiE80TeTsqhIuOqKhwlXsIBIdSeYtc&index=4&t=0s)
-* [Language Specifics](#Language%20Specifics)
+* [Language Specifics](#Language-Specifics)
     * [Context Managers](https://www.youtube.com/watch?v=-aKFBoZpiqA)
-* [List Comprehension](#List%20Comprehension)
+* [List Comprehension](#List-Comprehension)
     * [dicts & sets](https://www.youtube.com/watch?v=3dt4OGnU5sM)
 
 
@@ -31,33 +31,33 @@ TODO:
     1. [Dictionaries](#Dictionaries)
     1. [Sets](#Sets)
     1. [Generators](#Generators)
-    1. [Map, Filter, Reduce & Zip](#Map,%20Filter,%20Reduce%20&%20Zip)
+    1. [Map, Filter, Reduce & Zip](#Map,-Filter,-Reduce-&-Zip)
         1. [Map](#Map)
         1. [Filter](#Filter)
         1. [Reduce](#Reduce)
-        1. [Zip](#Zip) 
+        1. [Zip](#Zip)
 1. [Loops](#Loops)
 1. [I/O](#I/O)
-    1. [Standard Input & Output](#Standard%20Input%20&%20Output)
-    1. [String Formatting](#String%20Formatting)
-    1. [File Input & Output](#File%20Input%20&%20Output)
+    1. [Standard Input & Output](#Standard-Input-&-Output)
+    1. [String Formatting](#String-Formatting)
+    1. [File Input & Output](#File-Input-&-Output)
 1. [Functions](#Functions)
-    1. [Type Hinting](#Type%20Hinting)
-    1. [Nested Functions](#Nested%20Functions)
-    1. [*args & **kwargs](#*args%20&%20**kwargs)
-    1. [Anonymous Functions](#Anonymous%20Functions)
+    1. [Type Hinting](#Type-Hinting)
+    1. [Nested Functions](#Nested-Functions)
+    1. [*args & **kwargs](#*args-&-**kwargs)
+    1. [Anonymous Functions](#Anonymous-Functions)
 1. [Exceptions](#Exceptions)
-1. [Classes & Objects](#Classes%20&%20Objects)
+1. [Classes & Objects](#Classes-&-Objects)
     1. [Inheritance](#Inheritance)
-    1. [Modules & Packages](#Modules%20&%20Packages)
+    1. [Modules & Packages](#Modules-&-Packages)
         1. [import](#import)
-1. [Language Specifics](#Language%20Specifics)
+1. [Language Specifics](#Language-Specifics)
     1. [Underscores](#Underscores)
-    1. [Special Operators](#Special%20Operators)
-    1. [Code Introspection](#Code%20Introspection)
+    1. [Special Operators](#Special-Operators)
+    1. [Code Introspection](#Code-Introspection)
     1. [Slicing](#Slicing)
-    1. [List Comprehension](#List%20Comprehension)
-1. [Libraries & Frameworks](#Libraries%20&%20Frameworks)
+    1. [List Comprehension](#List-Comprehension)
+1. [Libraries & Frameworks](#Libraries-&-Frameworks)
 
 ## Basics
 
@@ -117,7 +117,7 @@ Bitwise operators:
 * `<<` - Left shift
 * `>>` - Right shift
 
-[Special Operators](#Special%20Operators)
+[Special Operators](#Special-Operators)
 
 ## Variables
 
@@ -482,7 +482,7 @@ The values in most iterables are stored in memory which can cause issues
 in large data sets. Generators help with that problem, since values are 
 _generated_ on the fly. 
 
-Using [list comprehension](#List%20Comprehension), lists are created
+Using [list comprehension](#List-Comprehension), lists are created
 with `[]` and generators use `()`.
 
 ```python
@@ -506,7 +506,7 @@ def create_generator():
 ### Map, Filter, Reduce & Zip
 
 These methods allow you to apply functions to iterables without the need
-for loops and conditionals. [Lambdas](#Anonymous%20Functions) are useful
+for loops and conditionals. [Lambdas](#Anonymous-Functions) are useful
 to use for the function argument. These methods rerturn `map`, `filter`,
 and `zip` objects which are basically generators and can be casted into a
 list. `reduce`, however, returns an `int`.
