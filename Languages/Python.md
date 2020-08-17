@@ -3,15 +3,11 @@
 Python is a interpreted, high level, general-purpose, easy to use programming language developed by Guido van Rossum.
 
 TODO:
-* [Modules/Packages](#Modules--Packages)
-    * [Modules](https://www.youtube.com/watch?v=CqvZ3vGoGs0)
 * [Formatting f strings](#String-Formatting)
 * [Unit Tests](#Unit-Tests)
     * [patch & mocking](https://youtu.be/6tNS--WetLI?t=1843)
 * [Classes & Objects](#Classes--Objects)
     * [classmethods & staticmethods](https://www.youtube.com/watch?v=rq8cL2XMM5M&list=PL-osiE80TeTsqhIuOqKhwlXsIBIdSeYtc&index=4&t=0s)
-* [Language Specifics](#Language-Specifics)
-    * [Context Managers](https://www.youtube.com/watch?v=-aKFBoZpiqA)
 * [List Comprehension](#List-Comprehension)
     * [dicts & sets](https://www.youtube.com/watch?v=3dt4OGnU5sM)
 
@@ -169,6 +165,101 @@ print(f'''
     exponential={1.5e2}
     underscores={1_000_000}
 ''')
+```
+
+### Scope
+
+To understand the scoping rules in Python, the acronym LEGB is used:
+
+* Local - variables defined in an enclosing block (functions, classes, etc)
+* Enclosing - variables in an enclosing block and parent blocks
+* Global - variables defined in the top level of the script
+* Built-in - pre-defined names in python (min(), list(), print(), etc.)
+
+When Python encounters a variable, it searches for it in this LEGB order.
+
+Local and global scope:
+
+```python
+global_var = 'global'
+
+def test():
+    local_var = 'local'
+    global_var = 'local'
+
+    print(local_var)  # local
+    print(global_var)  # local
+
+print(global_var)  # global
+print(local_var)  # Outside of scope error.
+
+def test2():
+    global global_var
+    global_var = 'local'
+
+print(global_var)  # local
+
+def test3(local_var):
+    print(local_var)  # local
+
+test3('local')
+print(local_var)  # Outside of scope error.
+```
+
+Enclosing scope:
+
+```python
+# Finding a variable in the enclosing scope.
+def outer():
+    var = 'outer'
+    def inner():
+        # Python will look for this first, if it doesn't find it, it'll look for the variable in the enclosing scope AKA outer().
+        # var = 'inner' 
+        print(var)  # 'inner' or 'outer'
+    
+    inner()
+    print(var)  # outer
+
+outer()
+
+# Doesn't work in reverse.
+def outer():
+    # var = 'outer'
+    def inner():
+        # Python will look for this first, if it doesn't find it, it'll look for the variable in the enclosing scope AKA outer().
+        var = 'inner' 
+        print(var)  # 'inner'
+    
+    inner()
+    print(var)  # Outside of scope error.
+
+outer()
+
+# Altering a variable in the enclosing scope.
+def outer():
+    var = 'outer'
+    def inner():
+        # Opposite of 'global', enclosing scope 'var' will be affected.
+        nonlocal var
+        var = 'inner' 
+        print(var)  # 'inner'
+    
+    inner()
+    print(var)  # 'inner'
+
+outer()
+```
+
+Built-in scope:
+
+```python
+import builtins
+
+# Displays a list of built-in values.
+print(dir(builtins))
+
+# Importless statement.
+print(dir(__builtins__))
 ```
 
 ## Conditionals
@@ -775,6 +866,41 @@ star_params(1, 2, c=3)  # No errors
 star_params(1, 2, 3)  # Raises a TypeError
 ```
 
+Functions can also be passed into other functions as arguments and
+returned as values from a function:
+
+```python
+# Function as an argument.
+def hello(name):
+    print(f'Hello {name}!')
+
+def greet(f, name):
+    f(name)
+    print('\nHow are you?')
+
+# Parenthesis are omitted since that will execute the function.
+greet(hello, 'Jerry')
+
+
+# Function as a return value.
+def html_tag(tag):
+
+    def wrap_text(msg):
+        print(f'<{tag}>{msg}</{tag}>')
+    
+    return wrap_text
+
+print_h1 = html_tag('h1')
+# Still remembers the 'tag' value!
+print_h1('Header!')
+```
+
+Another good example is the [map()](#Map) function.
+
+> Returned inner functions will remember the local variables in the
+outer function environment it was created in even after the outer function
+has already finished executing.
+
 ### Type Hinting
 
 You can use type hints to specify what the type of the parameters and the 
@@ -794,7 +920,7 @@ are asking for.
 
 ### Nested Functions
 
-With nested functions, the inner function has read only access to
+With nested functions, the inner function has read-only access to
 variables within the scope of the outer function.
 
 ```python
@@ -890,8 +1016,59 @@ hof = lambda x, function: x + function(x)
 hof(2, lambda x: x * x)
 ```
 
-Anonymouse functions cannot contain any statements involving `return`
+Anonymous functions cannot contain any statements involving `return`
 `pass`, `assert` or `raise`, otherwise a `SyntaxError` will be raised.
+
+### Decorators
+
+Decorators are functions that takes another function as an argument,
+adds some functionality to it, and returns the new function.
+
+Example:
+
+```python
+def decorator_func(orig_func):
+    
+    def wrapper_func():
+        # Add extra functionality
+        print(f'Other functionality before calling {orig_func.__name__}')
+        return orig_func()
+        
+    return wrapper_func
+
+
+def display():
+    print('Running the display function.')
+
+decorated_display = decorator_func(display)
+decorated_display()
+
+
+# Common syntax.
+def decorator_func(orig_func):
+    
+    def wrapper_func():
+        # Add extra functionality
+        print(f'Other functionality before calling {orig_func.__name__}')
+        return orig_func()
+        
+    return wrapper_func
+
+@decorator_func
+def display():
+    print('Running the display function.')
+
+display()
+
+# This syntax translates to:
+# display = decorator_func(display)
+```
+
+Decorators can also be defined with classes as well.
+
+Example:
+
+
 
 ## Exceptions
 
@@ -983,16 +1160,23 @@ rads = radians(90)
 print(sin(rads))
 ```
 
-#### import
+#### Importing Modules & Packages
 
 Python uses the `import` keyword to import modules and packages. The
-`import` keyword goes through a series of steps to import:
+`import` keyword looks at`sys.path`, which is a list of directories
+where modules can be found. The paths get searched in the following
+order:
 
-1. Searches for a built-in modules from the Python Standard Library
-1. If not found, it searches for the specified file in one of the directories specified by `sys.path`. `sys.path` is initialized using:
-    1. The current directory
-    1. The `PYTHONPATH` environment variable
-    1. The installation-dependent default
+1. The script's current directory
+1. The `PYTHONPATH` environment variable
+1. The Python Standard Library
+1. The `site-packages` directory for third-party packages
+
+Specific definitions can be imported using the `from MODULE import DEFINITION` syntax.
+This way only the code you need is imported instead of the whole module.
+
+> You can import everything from a module using `from MODULE import *`, however this is
+not a recommended approach as it makes it difficult to tell where definitions come from.
 
 ```python
 # log.py
@@ -1033,6 +1217,31 @@ import log as l
 l.info(...)
 l.warn(...)
 l.error(...)
+```
+
+There are a couple of approaches for handling modules defined outside
+of the running script's current directory:
+
+1. Modifying the `PYTHONPATH` directory to include the path modules are defined in
+1. Modifying the `sys.path` variable to include the path of modules:
+
+```python
+# /Users/Jerry/Desktop/Modules/log.py
+def info(message):
+    print(f'info: {message}')
+
+def warn(message):
+    print(f'warn: {message}')
+
+def error(message)
+    print(f'error: {message}')
+
+# Dev/Python/main.py
+import sys
+sys.path.append('/Users/Jerry/Desktop/Modules')
+
+from log import info
+info('Should work.')
 ```
 
 > When the interpreter encounters an `import` statement with modules, it
@@ -1483,6 +1692,85 @@ numbers = [34.6, -203.4, 44.9, 68.3, -12.2, 44.6, 12.7]
 
 postive_numbers = [x for x in numbers if x > 0]
 print(positive_numbers)
+```
+
+### Context Managers
+
+Context managers are used for handling the set up and tear down of
+a task. The most common example is opening and closing a file.
+
+#### Custom Context Manager
+
+To define a context manager, a class or function needs to be implemented:
+
+```python
+# Class approach
+class Open_File():
+
+    def __init(self, filename, mode):
+        self.filename = filename
+        self.mode = mode
+
+    # Code ran using the 'with' keyword.
+    def __enter__(self):
+        self.file = open(self.filename, self.mode)
+        return self.file
+
+    # Code ran when the context manager exits.
+    def __exit__(self, exc_type, exc_val, traceback):
+        self.file.close()
+
+with Open_File('sample.txt', 'w') as f:
+    f.write('test')
+
+# Should be true.
+print(f.closed)
+
+
+# Function approach
+from contextlib import contextmanager
+
+@contextmanager
+def open_file(file, mode):
+    # Before yield: everything that would be in __enter__().
+    f = open(file, mode)
+    # At yield: What will be worked with in the context manager.
+    yield f
+    # After yield: everything that would be in __exit__().
+    f.close()        
+```
+
+Practical example:
+
+```python
+import os
+from contextlib import contextmanager
+
+# cwd = os.getcwd()
+# os.chdir('Dir1')
+# print(os.listdir())
+# os.chdir(cwd)
+
+# cwd = os.getcwd()
+# os.chdir('Dir2')
+# print(os.listdir())
+# os.chdir(cwd)
+
+@contextmanager
+def change_dir(destination):
+    try: # Setup
+        cwd = os.getcwd()
+        os.chdir(destination)
+        yield
+    finally: # Teardown
+        os.chdir(cwd)
+
+# 'as' not really necessary since nothing is captured with 'yield'
+with change_dir('Dir1'):
+    print(os.listdir())
+
+with change_dir('Dir2'):
+    print(os.listdir())
 ```
 
 ## Libraries & Frameworks
