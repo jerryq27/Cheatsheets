@@ -3,6 +3,7 @@
 Python is a interpreted, high level, general-purpose, easy to use programming language developed by Guido van Rossum.
 
 TODO:
+
 * [Formatting f strings](#String-Formatting)
 * [Unit Tests](#Unit-Tests)
     * [patch & mocking](https://youtu.be/6tNS--WetLI?t=1843)
@@ -11,6 +12,10 @@ TODO:
 * [List Comprehension](#List-Comprehension)
     * [dicts & sets](https://www.youtube.com/watch?v=3dt4OGnU5sM)
 
+CHECK OUT:
+
+* [Transforming Code into Beautiful, Idiomatic Python - Raymond Hettinger](https://www.youtube.com/watch?v=anrOzOapJ2E)
+* [Beyond PEP 8 -- Best practices for beautiful intelligible code - PyCon 2015 - Raymond Hettinger](https://www.youtube.com/watch?v=wf-BqAjZb8M)
 
 ## Table of Contents
 
@@ -1062,13 +1067,61 @@ display()
 
 # This syntax translates to:
 # display = decorator_func(display)
+
+# Adding more decorators creates a chain:
+@logger
+@decorator_func
+def display():
+    print('Running the display function')
+
+# This syntax translates to:
+# display = logger(decorator_func(display))
 ```
 
 Decorators can also be defined with classes as well.
 
 Example:
 
+```python
+class DecoratorClass(Object):
 
+    def __init__(self, orig_func):
+        self.orig_func = orig_func
+    
+    def __call__(self):
+        print(f'Other functionality before calling {self.orig_func.__name__}')
+        return self.orig_func()
+
+@DecoratorClass
+def display():
+    print('Running the display function.')
+
+display()
+```
+
+Practical example:
+
+```python
+# Decorator to time the execution of a function.
+def my_timer(orig_func):
+    import time
+    def wrapper(*args, **kwargs):
+        t1 = time.time()
+        result = orig_func(*args, **kwargs)
+        t2 = time.time() - t1
+        print(f'{orig_func.__name__} ran in {t2} second(s).')
+        return result
+    
+    return wrapper
+
+import time
+@my_timer
+def display(name, age):
+    time.sleep(1)
+    print(f'Display ran with args: {name}, {age}')
+
+display('John', 25)
+```
 
 ## Exceptions
 
