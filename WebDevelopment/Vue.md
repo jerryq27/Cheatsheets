@@ -4,7 +4,7 @@ Vue.js is a JavaScript framework for reactive frontend applications.
 
 TODO:
 
-* [Docs Checkpoint](https://vuejs.org/v2/guide/events.html#Key-Codes)
+* [Docs Checkpoint](https://vuejs.org/v2/guide/components-registration.html)
 * [Checkpoint](https://youtu.be/BPyniDJ5QOQ?t=1161)
 
 ## Basics
@@ -339,12 +339,38 @@ Vue also includes modifiers for handling key events:
 
 ```html
 <input v-on:keyup.enter="submit">
-<!-- Keycodes also work -->
+<!-- Keycodes also work, but are depracated and may not work on newer browsers. -->
 <input v-on:keyup.13="submit">
 ```
 
 All [KeyboardEvents](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values) are
 supported using kebab-case.
+
+And mouse events as well:
+
+* `.left`
+* `.right`
+* `.middle`
+
+More [details](https://vuejs.org/v2/guide/events.html#Key-Modifiers) on key and mouse events in Vue.
+
+#### Input Bindings
+
+Two-way data binding on forms, text areas, and select elements are created using the `v-model` directive.
+It automatically picks the best way to update the element based on the input type.
+
+Example:
+
+```html
+<input v-model="message" placeholder="edit me">
+<p>Message is: {{ message }}</p>
+```
+
+The following modifiers can be used with `v-model`:
+
+* `.lazy` - syncs changes after the input event
+* `.number` - type casts the input into a number
+* `.trim` - trims whitespace from the input
 
 ## Styling
 
@@ -471,8 +497,10 @@ data: {
 
 ## Components
 
-Components are used to divide an application in manageble pieces.
-An ideal Vue template using components should look like:
+Components are named Vue instances that are reusable. Since they are Vue instances as well,
+they accept the same properties like `data`, `methods`, `computed`, etc. properties.
+However, there are some root-only properties such as `el`. Components are used to divide
+an application in manageble pieces. An ideal Vue template using components should look like:
 
 ```html
 <div id="app">
@@ -518,10 +546,10 @@ props option. The component must explicitly declare the props it's
 expecting to receive:
 
 ```html
-<example message="Hello"></example>
+<test-component message="Hello"></test-component>
 
 <script>
-Vue.component('example', {
+Vue.component('test-component', {
   props: [message],
   template: '<div>{{ message }}</div>',
   data() {
@@ -531,19 +559,19 @@ Vue.component('example', {
 </script>
 ```
 
-Values passed in through a `v-for` are handled differently
+Values passed in through a `v-for` are handled differently using the `v-bind` directive.
 [requires more study](https://vuejs.org/v2/guide/list.html#v-for-with-a-Component)
 
 ```html
-<example
+<test-component
   v-for="(item, index) in items"
   v-bind:item="item"
   v-bind:index="index"
   v-bind:key="item.id">
-</example>
+</test-component>
 
 <script>
-Vue.component('example', {
+Vue.component('test-component', {
   props: [item],
   template: '<div>{{ item }}</div>',
   data() {
@@ -553,13 +581,15 @@ Vue.component('example', {
 </script>
 ```
 
+#### Prop Validation
+
 It is usually recommended to define requirements for props using built-in prop validation:
 
 ```html
-<example message="Hello"></example>
+<test-component message="Hello"></test-component>
 
 <script>
-Vue.component('example', {
+Vue.component('test-component', {
   props: {
     message: {
       type: String,
@@ -575,16 +605,23 @@ Vue.component('example', {
 </script>
 ```
 
+#### Emit
+
 The `emit` method is used by a component to signal an event to the parent.
-The  first argument for `emit` is the event attribute specified in the parent,
+The  first argument for `emit` is the custom event attribute specified in the parent,
 arguments following after are arguments that will be passed into the parent's
 method:
 
 ```html
-<example message="message" v-on:update-message="updateMessage" v-on:print-number></example>;
+<test-component
+  message="message"
+  v-on:update-message="updateMessage"
+  v-on:display-event-value="displayValue($event)"
+  v-on:print-number>
+</test-component>;
 
 <script>
-Vue.component('example', {
+Vue.component('test-component', {
   props: {
     message: {
       type: String,
@@ -594,7 +631,8 @@ Vue.component('example', {
   },
   template: `
   <div>
-    <button v-on:click="informParentToUpdate">Change Message</button>
+    <button v-on:click="$emit('update-message')">Change Message</button>
+    <button v-on:click="$emit('display-event-val', 5)">Event Value</button>
     <button v-on:click="informParentToPrint">Print Number</button>
     {{ message }}
   </div>
@@ -603,8 +641,8 @@ Vue.component('example', {
     return {}
   },
   methods: {
-    informParentToUpdate() {
-      this.$emit('update-message');
+    displayValue(e) {
+      console.log(e);
     },
     informParentToPrint() {
       this.$emit('print-number', 7);
@@ -734,7 +772,57 @@ computed: {
 this.fullName = "John Smith"; // Will invoke the setter method.
 ```
 
-### Exportable Components
+### Global & Local Components
+
+Vue components so far have been created using:
+
+```js
+Vue.component('example-component', {
+  ...
+});
+```
+
+This creates a component and registers it globally. Which means
+that these components can be used in any root Vue instance created
+afterwards. This also applies to sub-components, which means all
+components defined this way will also be available inside each other.
+
+Global registration isn't always ideal since unused components will be
+included in your final build with Webpack which increases the amount of
+JavaScript users will have to download.
+
+#### Local Registration
+
+Using the `components` property in the root Vue Instance registers a
+component locally:
+
+```js
+var exampleComponent = {...};
+
+new Vue({
+  el: '#app',
+  components: {
+    // The key will be the component name, and the object will contain the component's options.
+    'example-component': exampleComponent,
+  }
+})
+```
+
+Defining components locally will also make them unavailable to sub-components. To make
+them available, they would need to be included in a sub-component's `components` property.
+
+The more common approach is using the ES15 modules:
+
+```js
+import ExampleComponent from './ExampleComponent.vue';
+
+export default {
+  components: {
+    // ES15+, this is a shorthand for 'ExampleComponent: ExampleComponent'.
+    ExampleComponent
+  }
+}
+```
 
 Vue components are composed of a template, script, and style.
 
