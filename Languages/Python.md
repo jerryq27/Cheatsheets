@@ -7,8 +7,6 @@ TODO:
 * [Formatting f strings](#String-Formatting)
 * [Unit Tests](#Unit-Tests)
     * [patch & mocking](https://youtu.be/6tNS--WetLI?t=1843)
-* [Classes & Objects](#Classes--Objects)
-    * [classmethods & staticmethods](https://www.youtube.com/watch?v=rq8cL2XMM5M&list=PL-osiE80TeTsqhIuOqKhwlXsIBIdSeYtc&index=4&t=0s)
 * [List Comprehension](#List-Comprehension)
     * [dicts & sets](https://www.youtube.com/watch?v=3dt4OGnU5sM)
 
@@ -913,7 +911,7 @@ Another good example is the [map()](#Map) function.
 
 > Returned inner functions will remember the local variables in the
 outer function environment it was created in even after the outer function
-has already finished executing.
+has already finished executing. This is known as a **closure**.
 
 ### Type Hinting
 
@@ -935,7 +933,8 @@ are asking for.
 ### Nested Functions
 
 With nested functions, the inner function has read-only access to
-variables within the scope of the outer function.
+variables within the scope of the outer function, this is known
+as a **closure**.
 
 ```python
 def outer_function(message):
@@ -1154,48 +1153,303 @@ finally:
 Syntax:
 
 ```python
-class ClassName:
+class Character:
 
-    field1 = 'field' # public field
+    # Class Variables
+    num_of_characters = 0
 
-    def __init__(self):
-        # These (except private) don't affect access
-        # Just a convention to note their uses
-        # It is up to the programmer to recognize these conventions.
-        self.pub_field = 1  # public field
-        self._pro_field = 2  # protected field
-        self.__priv_field = 3  # private field
+    # Constructor
+    def __init__(self, name, race):
+        # Instance Variables
+        self.name = name
+        self.race = race
 
-    def class_function(self):
-        print('Class function call.')
+    # Class Method
+    def who_am_i(self):
+        return f'{self.name} is a(n) {self.race}'
 
-obj = ClassName()
-print(obj.field1)
-obj.class_function()
+c1 = Character('Aragorn', 'Human')
+print(c1.name)
+print(c1.who_am_i())
+# Since the instance is always passed in as the first argument,
+# the above code translates to:
+print(Character.who_am_i(c1))
 ```
 
-Python classes have default magic/dunder (double underscore) functions
+`self` refers to the instance of the class and is always passed into class methods as
+the first argument. The parameter used to refer to the instance argument can be named
+anything the programmer wants, but `self` is used by convention.
+
+> Default arguments can be specified in the constructor parameter list, however
+be careful not to use mutable types as a default argument. See [function note](#Functions).
+
+### Dunder Methods
+
+Python classes have default dunder(double underscore)/magic  functions
 that can be overridden.
 
-* `__init__` - class constructor.
+* `__init__` - the class constructor.
 * `__str__` - (pretty) string representation of an object for users.
 * `__repr__` - (useful) string representation of an object for developers. 
-* `__call__` - make object callable.
+* `__call__` - makes instance callable by providing a behavior for `instance()`.
+* `__add__` - allows the use of `+` between instances of a class by providing a definition.
+* `__len__` - allows the use of `len()` on an instance of a class by providing a definition.
+
+```python
+class Character:
+
+    def __init__(self, name, race):
+        self.name = name
+        self.race = race
+    
+    def __repr__(self):
+        return f'Character(name={self.name} race={self.race})'
+
+    def __str__(self):
+        return f'{self.name} is a(n) {self.race}.'
+
+    def __len__(self):
+        return len(self.name)
+
+```
+
+### Class & Instance Variables
+
+_Class variables_ belong to all instances of the class, while _instance variables_
+are unique to each individual instance. Class variables can be accessed with `ClassName.class_var`
+or `self.class_var`. If the class variable can change depending on the instance, such as a default
+value for all instances, use the `self.class_var`. Otherwise, if the variable should be the same for
+all instances, even the changes, use `ClassName.class_var`.
+
+Underscores are used as a convention to specify the access modifier of class fields:
+
+* `self.variable` - public field
+* `self._variable` - protected field
+* `self.__variable` - private field
+
+> Visibility isn't affected (except for private fields) since these are just a convention.
+
+### Class & Static Methods
+
+Regular methods always take the class instance (`self`) as the first argument. **Class methods**
+however, use the Class itself as the first argument. To create a class method, the `@classmethod`
+[decorator](#Decorators) is used which alters the functionality of the method to automatically
+pass in the class as the first argument instead of the instance:
+
+```python
+class Character:
+    
+    num_of_characters = 0
+
+    def __init__(self, name, race):
+        Character.num_of_characters += 1
+        self.name = name
+        self.race = race
+    
+    # By convention cls is used as the parameter for the class argument.
+    @classmethod
+    def set_character_count(cls, num):
+        cls.num_of_characters = num
+
+Character.set_character_count(20)
+```
+
+Class methods are also used to provide alternative constructors to a class:
+
+```python
+class Character:
+    
+    num_of_characters = 0
+
+    def __init__(self, name, race):
+        Character.num_of_characters += 1
+        self.name = name
+        self.race = race
+    
+    # By convention cls is used as the parameter for the class argument.
+    @classmethod
+    def set_character_count(cls, num):
+        cls.num_of_characters = num
+
+    @classmethod
+    def from_string(cls, character_str)
+        name, race = character_str.split('-')
+        return cls(name, race)
+
+Character.set_character_count(20)
+character1 = Character('Gandalf', 'Wizard')
+character2 = Character.from_string('Frodo-Hobbit')
+```
+
+Unlike regular methods and class methods, **Static methods** don't have
+an argument automatically passed in. They are able to operate in relation
+to the class without needing a reference to the instance or class. To create
+a static method the `@staticmethod` [decorator](#Decorators) is used:
+
+```python
+class Character:
+    
+    num_of_characters = 0
+
+    def __init__(self, name, race):
+        Character.num_of_characters += 1
+        self.name = name
+        self.race = race
+
+    @staticmethod
+    def is_middle_earth_race(race):
+        races = ['Human', 'Wizard', 'Elf', 'Dwarf', 'Hobbit', 'Orc', 'Goblin']
+        return race in races
+```
+
+> If the method doesn't require an instance or the class, it's a good candidate
+for a static method.
+
+### Property Decorators
+
+There are other [decorators](#Decorator) besides `@classmethod` and `@staticmethod` that are
+used in classes. These are the `@property`, `@getter`, `@setter`, and `@deleter` decorators. 
+
+These decorators are meant to help with various situations such as calculating a value, or
+adding functionality when variables are updated or accessed:
+
+```python
+class Character:
+    
+    num_of_characters = 0
+
+    def __init__(self, name, race):
+        Character.num_of_characters += 1
+        self.name = name
+        self.race = race
+        self.email = f'{name}.{race}@middleearth.com' # Calculated value.
+
+    def __repr__(self):
+        return f'Character(name={} race={} email={})'
+
+c1 = Chracter('Frodo', 'Hobbit')
+print(c1)
+c1.name = 'Bilbo'
+print(c1.email)  # Email doesn't update!
+```
+
+The `@property` decorator treats a function as if it were a variable
+and allows us to access it as such:
+
+```python
+class Character:
+    
+    num_of_characters = 0
+
+    def __init__(self, name, race):
+        Character.num_of_characters += 1
+        self.name = name
+        self.race = race
+
+    @property
+    def email(self):
+        return f'{self.name}.{self.race}@middleearth.com'
+
+c1 = Character('Frodo', 'Hobbit')
+print(c1.email)  # Frodo.Hobbit@middleearth.com
+# Throws Error, doesn't know how to set attribute!
+c1.email = 'Bilbo.Hobbit@middleearth.com'
+```
+
+The `@getter`, `@setter`, and `@deleter` decorators allow us to add functionality when
+a value is updated or accessed:
+
+```python
+class Character:
+    
+    num_of_characters = 0
+
+    def __init__(self, name, race):
+        Character.num_of_characters += 1
+        self.name = name
+        self.race = race
+
+    @property
+    def email(self):
+        return f'{self.name}.{self.race}@middleearth.com'
+
+    @email.setter
+    def email(self, email):
+        self.name = email.split('.')[0]
+
+    @email.deleter
+    def email(self):
+        print('null email.')
+        self.name = None
+        self.race = None
+
+
+c1 = Character('Frodo', 'Hobbit')
+print(c1.email)  # Frodo.Hobbit@middleearth.com
+c1.email = 'Bilbo.Hobbit@middleearth.com'  # Works now and updates the name to Bilbo.
+print(c1.name)
+print(c1.email)
+
+# Runs the deleter.
+del c1.email
+```
 
 ### Inheritance
 
 Syntax:
 
 ```python
- class Child(Parent):
+class Hobbit(Character):
+    pass
 
-    def __init__(self, name):
+h1 = Hobbit('Frodo', 'Hobbit')
+h2 = Hobbit('Pippin', 'Hobbit')
+
+print(h1.who_am_i())
+print(h2.who_am_i())
+```
+
+Despite not having any code, the child class inherited all of the functionality
+from the parent class. Running the [code introspection](#Code-Introspection)
+function `help(Hobbit)` shows the order which Python uses to search for an
+`__init__()` method and what members have been inherited.
+
+> Every class in Python inherits from the Object class.
+
+Child classes can define their own functionality and
+override the parent's members:
+
+```python
+class Hobbit(Character):
+
+    # num_of_characters = 5  # Overrides the class variable without altering the parent.
+
+    def __init__(self, name, has_the_ring):
         # Both acheive the same thing.
-        Parent.__init__(self, name)
-        super().__init__(name)
+        super().__init__(name, 'Hobbit')
+        Character.__init__(self, name, 'Hobbit')
+        self.has_the_ring = has_the_ring
 
-    # Class body
+h1 = Hobbit('Frodo', 'Hobbit', True)
+h2 = Hobbit('Pippin', 'Hobbit', False)
 
+print(h1.who_am_i())
+print(h2.who_am_i())
+```
+
+Python has two built in functions called `isinstance()` and `issubclass()`:
+
+```python
+h1 = Human('Boromir')
+w1 = Wizard('Gandalf')
+c1 = Character('Tom Bobadil', None)
+
+isinstance(h1, Human)  # True
+isinstance(h1, Character)  # True
+isinstance(h1, Wizard)  # False
+
+issubclass(Human, Character)  # True
+issubclass(Human, Wizard)  # False
 ```
 
 ### Modules & Packages
