@@ -24,6 +24,7 @@ Common Emmet shorthands:
 
 * element*n - creates element n times
 * element.CLASS - creates an element with the class.
+* element#ID - creates an element witht the id.
 * element>child>child - creates element with the nested children
 
 ---
