@@ -7,6 +7,37 @@ TODO:
 * [Docs Checkpoint](https://vuejs.org/v2/guide/components-registration.html)
 * [Checkpoint](https://youtu.be/BPyniDJ5QOQ?t=1161)
 
+## Table of Contents
+
+1. [Basics](#Basics)
+    1. [Vue Instace](#Vue-Instance)
+        1. [Reactivity](#Reactivity)
+        1. [The data Property](#The-data-Property)
+            1. [Arrays](#Arrays)
+1. [Lifecycle](#Lifecycle)
+1. [Templates](#Templates)
+    1. [Directives](#Directives)
+        1. [Conditional Rendering](#Conditional-Rendering)
+        1. [List Rendering](#List-Rendering)
+        1. [Events](#Events)
+            1. [Event Modifiers](#Event-Modifiers)
+        1. [Input Bindings](#Input-Bindings)
+1. [Styling](#Styling)
+    1. [Inline Styles](#Inline-Styles)
+    1. [Class Bindings](#Class-Bindings)
+1. [Components](#Components)
+    1. [Props](#Props)
+        1. [Prop Validation](#Prop-Validation)
+        1. [Emit](#Emit)
+    1. [Template Property](#Template-Property)
+    1. [Computer Properties](#Computer-Properties)
+    1. [Global & Local Components](#Global--Local-Components)
+        1. [Local Registration](#Local-Registration)
+1. [Workflow](#Workflow)
+1. [Advance Use](#Advance-Use)
+    1. [Vue CLI](#Vue-CLI)
+1. [Other](#Other)
+
 ## Basics
 
 Vue can be used in a simple `index.html` file, provided the script is included.
@@ -127,7 +158,7 @@ this.items = this.items.filter(function(items){
 > Displaying the result of a non-mutating method without altering the original
 `data` array property is best handled using a `computed` property.
 
-## Lifecyle
+## Lifecycle
 
 Each Vue instance goes through a series of steps throughout it's
 [lifecycle](https://vuejs.org/v2/guide/instance.html#Lifecycle-Diagram).
@@ -364,6 +395,10 @@ Example:
 ```html
 <input v-model="message" placeholder="edit me">
 <p>Message is: {{ message }}</p>
+
+<!-- v-model under the hood -->
+<input v-bind="message" v-on:input="message = $event.target.value" placeholder="edit me">
+<p>Message is: {{ message }}</p>
 ```
 
 The following modifiers can be used with `v-model`:
@@ -378,7 +413,7 @@ Styling in Vue can is handled with directives. Styles can be defined inline or
 within the Vue instance using style objects. In both approaches the CSS properties
 can be defined in either CamelCase or kebab-case.
 
-### Inline style
+### Inline Styles
 
 We use objects to define inline styles in Vue. The expression passed into `v-bind:style`
 is an object with user-defined styles:
@@ -676,7 +711,7 @@ Data processed by the mustache syntax is treated as plain text.
 
 > To process something like HTML, use the `v-html` directive.
 
-Mustaches cannot be used inside of HTML attributes. In these cases, use
+Mustaches **cannot** be used inside of HTML attributes. In these cases, use
 the `v-bind` directive to access values from the data property.
 
 JavaScript expressions are supported inside of Mustaches. However, they
