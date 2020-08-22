@@ -127,6 +127,31 @@ respository and changes in one might not be reflected in the other.
 
 ## Advance Use
 
+### Reverting Changes
+
+There are a few ways to go back to a previous commit. Some ways involve rewriting
+history (dangerous), and others preserve history (recommended).
+
+#### Dangerous Method
+
+This method isn't recommended if you're working with others, since it rewrites history
+and other people might have those commits.
+
+`git reset`
+
+* `--soft` - Uncommits changes, but leaves them in the staging area
+* `--mixed` - Uncommits changes and removes them from the staging area (Default)
+* `--hard` - Uncommits changes, removes them from the staging area, and deletes them from the working tree
+
+#### Recommended Method
+
+This method is recommended since it doesn't rewrite history, instead it reverts you files to the specified
+commit and then you can commit those reverted changes.
+
+`git revert --no-commit $HASH..HEAD`
+
+> if `--no-commit` isn't specified, you'll be prompted for a message for every commit in the range.
+
 ## Other
 
 ### Error Handling
