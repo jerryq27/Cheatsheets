@@ -1,10 +1,10 @@
 # CSS
 
-CSS (Cascading Style Sheets) are used to add styling to HTML elements.
+CSS (Cascading Style Sheets) are used to add styling to websites.
 
 ## Basics
 
-Styles can be loaded into the HTML page in 3 different ways:
+Styles can be loaded into an HTML page in 3 different ways:
 
 1. **Inline style** - CSS written into the element (not recommended)
 1. **Style element** - CSS written into the HTML document (not recommended)
