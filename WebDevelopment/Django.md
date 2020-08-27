@@ -178,9 +178,13 @@ at the start of the template file.
 
 ## Database
 
+Database specifics can be specified in `settings.py`.
+
 ### Models
 
-The layout for your database. Models are the single definition of truth about the app's data. They contain the essential fields and behaviors of the data the app is storing. Models are created in **$APPNAME/models.py**.
+Models, also known as Object Relational Mappers (ORM), are an object representation of the database tables.
+They define the layout for your database tables, and contain the essential fields and behaviors of the data
+each table is storing. Models are created in `$APPNAME/models.py`.
 
 ```python
 # Example model.
@@ -191,14 +195,19 @@ class Example(models.Model):
     date_field = models.DateTimeField('date published')
 ```
 
-In Django, models are used to create migrations. Migrations are what will
-be used to create the database schema.
+### Migrations
+
+`python manage.py makemigrations`
+`python manage.py migrate`
+
+Models are used to create migrations. Migrations are what will
+be used to create the database tables.
 
 ```bash
-python manage.py makemigrations $APPNAME # Creates the migrations from the models.
+python manage.py makemigrations # Creates the migrations from the models.
 ```
 
-A file is created in **$APPNAME/migrations/** that shows the Python code that will be used to generate SQL. The reason for this is so that any tweaks the developer wants to make before the database creation can be made.
+A file is created in `$APPNAME/migrations/` that shows the Python code that will be used to generate SQL. The reason for this is so that any tweaks the developer wants to make before the database creation can be made.
 
 ```bash
 python manage.py sqlmigrate $APPNAME 0001 # To view the SQL generated from the migrations.
@@ -214,7 +223,14 @@ Migrations are very powerful, and can keep track of which ones have already been
 
 When the Models are changed, migrations can be updated, and the changes can be applied to your database without the loss of data.
 
-### Migrations
+## Advance Use
 
-`python manage.py makemigrations`
-`python manage.py migrate`
+### Shell
+
+Allows the use of the Python interpreter with the project.
+
+```bash
+python manage.py shell
+>>> from blog.models import Post
+>>> Post.objects.all()  # Will display all the posts saved in the database.
+```
