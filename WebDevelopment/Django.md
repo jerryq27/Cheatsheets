@@ -16,6 +16,8 @@ one Django project to another.
 ### Projects
 
 Projects can contain multiple apps, and apps can be in multiple projects.
+In order for Django to look in an app directory for templates, models, etc.
+The app must be included in the `INSTALLED_APPS` list in `settings.py`.
 
 Project structure:
 
@@ -93,6 +95,8 @@ from . import views
 
 # Since blog/ already got matched, only the string after blog/ is processed here.
 urlpatterns = [
+    # Giving these paths a name allows them to be referenced with the {% url '' %}
+    # template tag
     path('', views.home, name='blog-home'),
     path('about/', views.about, name='blog-about')
 ]
@@ -119,12 +123,26 @@ Templates are HTML pages that can be used within `views.py`. They are defined
 within an app's `app/templates/app/` directory.
 
 Django also uses a templating engine which allows code to be written within the HTML.
+Template tags allow for the use of logic such as loops and conditionals.
 There are a number of ways to display a template, the easiest way to do so is with the
-`render(request, template, optional_template_data)` method:
+`render(request, template, optional_template_data_dict)` method:
 
 ```python
 def home(request):
-    return render(request, 'blog/home.html')
+    context = {
+        'posts': {...}
+    }
+    return render(request, 'blog/home.html', data)
+```
+
+```html
+<body>
+    {% for post in posts %}
+        <h1>{{ post.title }}</h1>
+         <p>By {{ post.author }} on {{ post.date_posted }}</p>
+         <p>{{ post.content }}</p>
+    {% endfor %}
+</body>
 ```
 
 > In order for Django to search the app for templates, it must be included as an
@@ -172,13 +190,18 @@ by a child template:
 
 ### Static Files
 
-Static files are located within the `static/` directory. To use
+Static files are located within the `static/$APPNAME` directory. To use
 them in templates, you must include the `{% load static %}` line
 at the start of the template file.
 
+```html
+<link rel="stylesheet" type="text/css" href="{% static '%APPNAME/main.css' %}">
+```
+
 ## Database
 
-Database specifics can be specified in `settings.py`.
+Database specifics can be specified in `settings.py`. You can specify a database for
+testing and production.
 
 ### Models
 
@@ -207,20 +230,24 @@ be used to create the database tables.
 python manage.py makemigrations # Creates the migrations from the models.
 ```
 
-A file is created in `$APPNAME/migrations/` that shows the Python code that will be used to generate SQL. The reason for this is so that any tweaks the developer wants to make before the database creation can be made.
+A file is created in `$APPNAME/migrations/` that shows the Python code that will be used to generate SQL.
+The reason for this is so that any tweaks the developer wants to make before the database creation can be made.
+Django also automatically adds primary keys, and foreign keys are appended with `_id` by default.
+Both of these settings can be overriden.
+
+To view the SQL generated from the migrations:
 
 ```bash
-python manage.py sqlmigrate $APPNAME 0001 # To view the SQL generated from the migrations.
+python manage.py sqlmigrate $APPNAME 0001
 ```
 
-Django automatically adds primary keys, and foreign keys are appended with `_id` by default. Both of these settings can be overriden.
+To actually execute the migrations and make the changes to the app's database:
 
 ```bash
-python manage.py migrate # This runs the migrations to create the tables in the app's database.
+python manage.py migrate
 ```
 
 Migrations are very powerful, and can keep track of which ones have already been ran, which ones need updating.
-
 When the Models are changed, migrations can be updated, and the changes can be applied to your database without the loss of data.
 
 ## Advance Use
