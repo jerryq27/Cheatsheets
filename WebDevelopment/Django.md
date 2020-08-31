@@ -5,7 +5,7 @@ written in Python.
 
 TODO:
 
-* [Checkpoint](https://www.youtube.com/watch?v=aHC3uTkT9r8)
+* [Checkpoint](https://www.youtube.com/watch?v=q4jPR-M0TAQ)
 
 ## Basics
 
@@ -212,22 +212,42 @@ each table is storing. Models are created in `$APPNAME/models.py`.
 ```python
 # Example model.
 from django.db import models
+from django.utils import timezone
+from django.contrib.auth.models import User
 
-class Example(models.Model):
-    text_field = models.CharField(max_length=200)
-    date_field = models.DateTimeField('date published')
+class Post(models.Model):
+    title       = models.CharField(max_length=100)
+    content     = models.TextField()
+    date_posted = models.DateTimeField(default=timezone.now)
+    author      = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    # Changes how each object is represented when querying the database.
+    def __str__(self):
+        return self.title
+```
+
+In order to modify a model objects in the admin page, you must register the model in
+`$APPNAME/admin.py`:
+
+```python
+from django.contrib import admin
+from .models import Post
+
+# Register your models here.
+admin.site.register(Post)
 ```
 
 ### Migrations
-
-`python manage.py makemigrations`
-`python manage.py migrate`
 
 Models are used to create migrations. Migrations are what will
 be used to create the database tables.
 
 ```bash
-python manage.py makemigrations # Creates the migrations from the models.
+# Creates the migrations from the models.
+python manage.py makemigrations
+
+# Execute the migrations.
+python manage.py migrate
 ```
 
 A file is created in `$APPNAME/migrations/` that shows the Python code that will be used to generate SQL.
@@ -241,14 +261,38 @@ To view the SQL generated from the migrations:
 python manage.py sqlmigrate $APPNAME 0001
 ```
 
-To actually execute the migrations and make the changes to the app's database:
-
-```bash
-python manage.py migrate
-```
-
 Migrations are very powerful, and can keep track of which ones have already been ran, which ones need updating.
 When the Models are changed, migrations can be updated, and the changes can be applied to your database without the loss of data.
+
+### Queries
+
+You can perform queries to the database using the `python manage.py shell` Django command.
+This will open up the Python interactive shell, but we can make calls to the project's code:
+
+```py
+>>> from blog.models import Post
+>>> from django.contrib.auth.models import user
+>>>
+>>> user = User.objects.get(id=1)
+>>> # Queries for all items in a table
+>>> Post.objects.all()
+>>>
+>>> # Insert items into a table
+>>> post_1 = Post(title='Blog 1', content='First post content!', author=user)
+>>> post_1.save()
+>>>
+>>> # Searching for items
+>>> user = User.object.filter(username='jerry').first()
+>>>
+>>> # Getting item from a foreign keys
+>>> post = Post.objects.first()
+>>> post.author.email
+>>>
+>>> # Getting all values in a one to many relationship
+>>> # $ONE.$MANY_set is the generated queryset.
+>>> user.post_set.all()
+>>> user.post_set.create(title='Blog 2', content='Second post content!')
+```
 
 ## Advance Use
 
