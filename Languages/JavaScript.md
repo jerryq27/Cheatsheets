@@ -8,9 +8,12 @@ add functionality to websites.
 JavaScript can be loaded into an HTML page in different ways:
 
 1. **Script element**
+    1. **Script Tag - default** - Loads the JavaScript, runs the code, then finishes loading the HTML afterwards
+    1. **Script Tag - async** - Loads the JavaScript and HTML synchronously, but puases to run the code after the JavaScript finishes loading.
+    1. **Script Tag - defer** - Loads the JavaScript and HTML synchronously, waits until everything is loaded before running the JavaScript code.
 1. **External JavaScript**
 
-> JavaScript should be linked in the bottom of the 'body' tag.
+> JavaScript should be linked in the bottom of the 'body' tag, unless the `defer` attribute is specified or the script type is set to [module](#Modules).
 
 ### DOM
 
@@ -35,6 +38,33 @@ Variables are loosely typed (no need to include a data type)
 `var someVar = 12;`
 
 Using the `typeof()` function returns a variable's data type.
+
+### Scope
+
+`var` - function scoped (if not in a function, globally scoped)
+`let/const` - block scoped (if/for/functions/etc.)
+
+`let` and `const` were introduced to fix some of the problems with `var`:
+
+```js
+var x = 1;
+// No error..
+var x = 10;
+
+let y = true;
+// SyntaxError, y has already been delcared.
+let y = false;
+
+const z = 'a';
+// TypeError, invalid assignment to const 'z'
+z = 'b';
+
+const person = {
+    name: 'Frodo'
+};
+// Object properties can be changed for const variables.
+person.name = 'Bilbo';
+```
 
 ### Strings
 
@@ -299,6 +329,154 @@ person.printNameArrow(); // 'John'
 ## Exceptions
 ## Classes & Objects
 ## Language Specifics
+
+### ES6
+
+#### Modules
+
+Modules allow for the importing and exporting of JavaScript code, which
+removes dependencies defined in HTML and allows us to only need one `<script>`
+tag. Exporting is done using the `export` keyword. A JavaScript module can
+contain many `export` statements, but only one `export default` statement.
+
+```js
+// hobbit.js
+
+// Can be exported inline
+export default class Hobbit {
+    constructor(name, age) {
+        this.name = name;
+        this.age = age;
+    }
+}
+
+export function printName(character) {
+    console.log(`Character's name is ${character.name}`);
+}
+
+export function printAge(character) {
+    console.log(`Character's age is ${character.age}`);
+}
+
+// or can be exported at the end of the file.
+// export default Hobbit;
+// export { printName, printAge }
+```
+
+The `import` can be used in code that is trying to grab exported
+code. In order for JavaScript to use the `import` keyword, the
+`type` attribute needs to be set for the `script` tag.
+
+```html
+<!-- The defer attribute is set by default for modules! -->
+<script type="module" src="main.js"></script>
+```
+
+```js
+// main.js
+import Hobbit, { printName, printAge } from './hobbit.js';
+// You can alias imports as well
+// import Hobbit, { printName as printHobbitName, printAge } from './hobbit.js';
+
+const hobbit = new Hobbit('Bilbo', 111);
+```
+
+#### Promises
+
+Promises are used to handle tasks that can take some time in the background
+without putting everything else on hold. Promises were also mean to solve the
+issue with the continuous nested callbacks (callback hell).
+
+```js
+let p = new Promise((resolve, reject) => {
+    // Task code..
+    let a = 1 + 1;
+    let success = a === 2;
+    if(success) {
+        resolve('Success');
+    }
+    else {
+        reject('Failed');
+    }
+});
+
+p.then((message) => {
+    console.log(`Resolve message: ${message}`);
+}).catch((message) => {
+    console.log(`Reject message: ${message}`);
+});
+
+// Multiple Promises
+const p1 = new Promise((resolve, reject => resolve('Success 1')))
+const p2 = new Promise((resolve, reject => resolve('Success 2')))
+const p3 = new Promise((resolve, reject => resolve('Success 3')))
+
+// Used to run all the promises at the same time (if one task takes more time, the others will wait for it to finish).
+Promise.all([p1, p2, p3]).then((messages) => {
+    // Array of resolve() messages.
+    console.log(messages);
+});
+
+// Same except the task that finishes first returns instead of waiting.
+Promise.race([p1, p2, p3]).then((message) => {
+    // First returned resolve() message.
+    console.log(message);
+});
+```
+
+##### async & await
+
+The keywords `async` and `await` are syntactic sugar for working with Promises:
+
+```js
+// Using Promises
+function makeRequest(location) {
+    return new Promise((resolve, reject) => {
+        console.log(`Making a request to ${location}`);
+        if(location === 'Google') {
+            resolve('Google says hi');
+        }
+        else {
+            reject('We can only talk to Google');
+        }
+    });
+}
+function processRequest(response) {
+    return new Promise((resolve, reject) => {
+        console.log('Processing response');
+        resolve(`Extra information + ${response}`);
+    });
+}
+
+makeRequest('Google').then(response => {
+    console.log('Response has been received');
+    // Returned promise gets handled in the next then().
+    return processRequest(response);
+}).then(processedResponse => {
+    // Extra information + Google says hi
+    console.log(processedResponse);
+}).catch(err => {
+    console.log(err);
+});
+
+// Using async & await
+
+// A function must be marked with 'async' to tell JavaScript that this function is working with Promises.
+async function doWork() {
+    try {
+        // Mark function calls that return a promise with 'await' to get the resolved response instead of a Promise.
+        const response = await makeRequest('Google');
+        console.log('Response has been received');
+
+        const processedResponse = await processRequest(response);
+        console.log(processedResponse);
+    } catch(err) {
+        console.log(err);
+    }
+}
+doWork();
+```
+
 ## Libraries & Frameworks
 
 * jQuery
