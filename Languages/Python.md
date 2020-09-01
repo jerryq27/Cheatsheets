@@ -226,9 +226,9 @@ def outer():
     var = 'outer'
     def inner():
         # Python will look for this first, if it doesn't find it, it'll look for the variable in the enclosing scope AKA outer().
-        # var = 'inner' 
+        # var = 'inner'
         print(var)  # 'inner' or 'outer'
-    
+
     inner()
     print(var)  # outer
 
@@ -239,9 +239,9 @@ def outer():
     # var = 'outer'
     def inner():
         # Python will look for this first, if it doesn't find it, it'll look for the variable in the enclosing scope AKA outer().
-        var = 'inner' 
+        var = 'inner'
         print(var)  # 'inner'
-    
+
     inner()
     print(var)  # Outside of scope error.
 
@@ -253,9 +253,9 @@ def outer():
     def inner():
         # Opposite of 'global', enclosing scope 'var' will be affected.
         nonlocal var
-        var = 'inner' 
+        var = 'inner'
         print(var)  # 'inner'
-    
+
     inner()
     print(var)  # 'inner'
 
@@ -276,7 +276,7 @@ print(dir(__builtins__))
 
 ## Conditionals
 
-Syntax: 
+Syntax:
 
 ```python
 if condition:
@@ -579,11 +579,11 @@ for m in movies:
 
 ### Generators
 
-Generators are an iterable, but while most iterables can be looped 
-through multiple times, generators can only be looped through once. 
-The values in most iterables are stored in memory which can cause issues 
-in large data sets. Generators help with that problem, since values are 
-_generated_ on the fly. 
+Generators are an iterable, but while most iterables can be looped
+through multiple times, generators can only be looped through once.
+The values in most iterables are stored in memory which can cause issues
+in large data sets. Generators help with that problem, since values are
+_generated_ on the fly.
 
 Using [list comprehension](#List-Comprehension), lists are created
 with `[]` and generators use `()`.
@@ -594,10 +594,10 @@ lst = [x * x for x in range(1, 11)]  # List
 gnr = (x * x for x in range(1, 11))  # Generator
 ```
 
-The keyword `yield` is used in a function. It acts like `return`, but 
+The keyword `yield` is used in a function. It acts like `return`, but
 unlike `return` where code runs until it hits a `return`/end, code with
-`yield` will not run until a value needs to be accessed. At that point 
-the next value is _generated_. 
+`yield` will not run until a value needs to be accessed. At that point
+the next value is _generated_.
 
 ```python
 # Returns a generator with the 1-10 squared values
@@ -644,7 +644,7 @@ print(list(rounded))  # output: [2.1, 3.15]
 Filter tries to filter out values in an iterable based on a conditional.
 With filter you can only pass in one iterable to a function which
 requires a boolean return. It passes each element to that function and
-filters out the values that return `False`. If the function doesn't 
+filters out the values that return `False`. If the function doesn't
 return a boolean, then just the iterable will be returned.
 
 `filter(function, iter)`
@@ -720,7 +720,7 @@ for i in sequence:
     # code
 ```
 
-Python allows the use of `else` clauses with loops. These clauses trigger if no `break` is 
+Python allows the use of `else` clauses with loops. These clauses trigger if no `break` is
 encountered. The `continue` keyword has no effect on whether or not the clause triggers.
 
 ```python
@@ -751,7 +751,7 @@ password = getpass('Password: ')
 
 There are a few ways to format a print statement
 
-1. Using the `%` operator:
+\1. Using the `%` operator:
 
 ```python
 num = 2
@@ -764,7 +764,7 @@ colors = ['blue', 'green', 'cyan']
 print('num=%d flt=%f name=%s colors=%s' % (num, flt, name, colors))
 ```
 
-2. Using the `.format()` function:
+\2. Using the `.format()` function:
 
 ```python
 num = 2
@@ -776,7 +776,7 @@ print('num={2} flt={1} name={0}'.format(name, flt, num))
 print('num={a} flt={b} name={c}'.format(a=num, b=flt, c=name))
 ```
 
-3. Using string interpolation with f strings:
+\3. Using string interpolation with f strings:
 
 ```python
 num = 2
@@ -803,7 +803,7 @@ file.
 * `b` - opens file in binary mode
 * `+` - opens file for reading and writing
 
-> Text mode is used when reading in strings, binary mode is used for 
+> Text mode is used when reading in strings, binary mode is used for
 non-text files such as images and executables.
 
 Once opened, a file must be closed once operations on it have finished.
@@ -873,7 +873,7 @@ the parameter's name to be explicitly specified.
 ```python
 def star_params(a, b, *, c):
     print(f'{a} {b} {c}')
-    
+
 star_params(1, 2, c=3)  # No errors
 star_params(1, 2, 3)  # Raises a TypeError
 ```
@@ -899,7 +899,7 @@ def html_tag(tag):
 
     def wrap_text(msg):
         print(f'<{tag}>{msg}</{tag}>')
-    
+
     return wrap_text
 
 print_h1 = html_tag('h1')
@@ -915,7 +915,7 @@ has already finished executing. This is known as a **closure**.
 
 ### Type Hinting
 
-You can use type hints to specify what the type of the parameters and the 
+You can use type hints to specify what the type of the parameters and the
 return type of the function is:
 
 ```python
@@ -964,7 +964,7 @@ outer_function('Hello, World!')
 
 ### *args & **kwargs
 
-Python functions support parameters that allow for any number of arguments to be passed in by 
+Python functions support parameters that allow for any number of arguments to be passed in by
 prepending the parameter with `*`.
 
 ```python
@@ -1041,12 +1041,12 @@ Example:
 
 ```python
 def decorator_func(orig_func):
-    
+
     def wrapper_func():
         # Add extra functionality
         print(f'Other functionality before calling {orig_func.__name__}')
         return orig_func()
-        
+
     return wrapper_func
 
 
@@ -1059,12 +1059,12 @@ decorated_display()
 
 # Common syntax.
 def decorator_func(orig_func):
-    
+
     def wrapper_func():
         # Add extra functionality
         print(f'Other functionality before calling {orig_func.__name__}')
         return orig_func()
-        
+
     return wrapper_func
 
 @decorator_func
@@ -1095,7 +1095,7 @@ class DecoratorClass(Object):
 
     def __init__(self, orig_func):
         self.orig_func = orig_func
-    
+
     def __call__(self):
         print(f'Other functionality before calling {self.orig_func.__name__}')
         return self.orig_func()
@@ -1119,7 +1119,7 @@ def my_timer(orig_func):
         t2 = time.time() - t1
         print(f'{orig_func.__name__} ran in {t2} second(s).')
         return result
-    
+
     return wrapper
 
 import time
@@ -1190,7 +1190,7 @@ that can be overridden.
 
 * `__init__` - the class constructor.
 * `__str__` - (pretty) string representation of an object for users.
-* `__repr__` - (useful) string representation of an object for developers. 
+* `__repr__` - (useful) string representation of an object for developers.
 * `__call__` - makes instance callable by providing a behavior for `instance()`.
 * `__add__` - allows the use of `+` between instances of a class by providing a definition.
 * `__len__` - allows the use of `len()` on an instance of a class by providing a definition.
@@ -1201,7 +1201,7 @@ class Character:
     def __init__(self, name, race):
         self.name = name
         self.race = race
-    
+
     def __repr__(self):
         return f'Character(name={self.name} race={self.race})'
 
@@ -1238,14 +1238,14 @@ pass in the class as the first argument instead of the instance:
 
 ```python
 class Character:
-    
+
     num_of_characters = 0
 
     def __init__(self, name, race):
         Character.num_of_characters += 1
         self.name = name
         self.race = race
-    
+
     # By convention cls is used as the parameter for the class argument.
     @classmethod
     def set_character_count(cls, num):
@@ -1258,14 +1258,14 @@ Class methods are also used to provide alternative constructors to a class:
 
 ```python
 class Character:
-    
+
     num_of_characters = 0
 
     def __init__(self, name, race):
         Character.num_of_characters += 1
         self.name = name
         self.race = race
-    
+
     # By convention cls is used as the parameter for the class argument.
     @classmethod
     def set_character_count(cls, num):
@@ -1288,7 +1288,7 @@ a static method the `@staticmethod` [decorator](#Decorators) is used:
 
 ```python
 class Character:
-    
+
     num_of_characters = 0
 
     def __init__(self, name, race):
@@ -1308,14 +1308,14 @@ for a static method.
 ### Property Decorators
 
 There are other [decorators](#Decorator) besides `@classmethod` and `@staticmethod` that are
-used in classes. These are the `@property`, `@getter`, `@setter`, and `@deleter` decorators. 
+used in classes. These are the `@property`, `@getter`, `@setter`, and `@deleter` decorators.
 
 These decorators are meant to help with various situations such as calculating a value, or
 adding functionality when variables are updated or accessed:
 
 ```python
 class Character:
-    
+
     num_of_characters = 0
 
     def __init__(self, name, race):
@@ -1338,7 +1338,7 @@ and allows us to access it as such:
 
 ```python
 class Character:
-    
+
     num_of_characters = 0
 
     def __init__(self, name, race):
@@ -1361,7 +1361,7 @@ a value is updated or accessed:
 
 ```python
 class Character:
-    
+
     num_of_characters = 0
 
     def __init__(self, name, race):
@@ -1649,7 +1649,7 @@ with concurrent.futures.ThreadPoolExecutor() as executor:
     print(future1.result())
     print(future2.result())
 
-    # List comprehension example 
+    # List comprehension example
     results = [executor.submit(do_something, 1) for _ in range(10)]
     # as_completed() returns an iterator that can be looped over.
     for future in concurrent.futures.as_completed(results):
@@ -1740,7 +1740,7 @@ with concurrent.futures.ProcessPoolExecutor() as executor:
     print(future1.result())
     print(future2.result())
 
-    # List comprehension example 
+    # List comprehension example
     results = [executor.submit(do_something, 1) for _ in range(10)]
     # as_completed() returns an iterator that can be looped over.
     for future in concurrent.futures.as_completed(results):
@@ -1836,7 +1836,7 @@ class Employee:
     @property
     def email(self):
         return '{}.{}@email.com'.format(self.first, self.last)
-    
+
     @property
     def fullname(self):
         return '{} {}'.format(self.first, self.last)
@@ -1857,12 +1857,12 @@ class TestEmployee(unittest.TestCase):
     # Runs after every single test.
     def tearDown(self):
         print('Finished unit test.')
-    
+
     # Runs before testing.
     @classmethod
     def setUpClass(cls):
         print('Starting tests..')
-    
+
     # Runs after testing.
     @classmethod
     def tearDownClass(cls)
@@ -1912,9 +1912,8 @@ print(food)
 
 # Unpacking tuple:
 info = ('water', 'chicken', 'cake', 'bread')
-_, food, dessert, _ = info 
+_, food, dessert, _ = info
 ```
-
 
 ### Special Operators
 
@@ -1931,7 +1930,7 @@ date_format = '{}/{}/{}'.format(month, day, year)
 and can be used with lists as well
 
 ```python
-print([1, 2, 3] * 3)  # [1, 2, 3, 1, 2, 3, 1, 2, 3] 
+print([1, 2, 3] * 3)  # [1, 2, 3, 1, 2, 3, 1, 2, 3]
 ```
 
 You can use `**` operator for a power relationship:
@@ -1950,29 +1949,29 @@ print(6 // 3.14)  # 1.0
 
 ### Code Introspection
 
-Python has some built in utilities to examine classes, functions and 
+Python has some built in utilities to examine classes, functions and
 keywords.
 
 * `help(function)` - used to find out what other functions do
-* `dir(class/obj)` - returns a list of attributesa and functions in a 
+* `dir(class/obj)` - returns a list of attributesa and functions in a
 class/object
-* `hasattr(obj, attr)` - returns whether the object has the given 
+* `hasattr(obj, attr)` - returns whether the object has the given
 attribute
-* `id(obj)` - returns the unique id of the object (cpython uses the 
+* `id(obj)` - returns the unique id of the object (cpython uses the
 memory address)
 * `type(arg)` - returns the type of the argument
-* `repr(obj)` - returns the string represention of the object (default 
-contains the memory address in hex == decimal from `id()`) 
+* `repr(obj)` - returns the string represention of the object (default
+contains the memory address in hex == decimal from `id()`)
 * `callable(arg)` - returns whether the argument is callable
-* `issubclass(subclass, superclass)` - returns whether a is subclass of b 
-* `isinstance(obj, class)` - returns whether the object is an instance of 
+* `issubclass(subclass, superclass)` - returns whether a is subclass of b
+* `isinstance(obj, class)` - returns whether the object is an instance of
 the class
 * `__doc__` -
 * `__name__` -
 
 ### Slicing
 
-Slicing can be used with iterables such as collections and strings, 
+Slicing can be used with iterables such as collections and strings,
 and provides alternative ways of accessing values.
 The format is usually `[start(inclusive):stop(exclusive):step(every n value from start to stop)]`
 
@@ -1981,7 +1980,7 @@ The format is usually `[start(inclusive):stop(exclusive):step(every n value from
 
 ```python
 str1 = 'Python'
-print(str1[2:5])  # tho 
+print(str1[2:5])  # tho
 print(str1[:5])  # Pytho
 print(str1[::2])  # Pto
 
@@ -1990,6 +1989,7 @@ print(list1[0:3])  # [1, 2, 3]
 ```
 
 Using negative numbers counts from the end of the iterable.
+
 ```python
 str1 = 'Python.md'
 print(str1[:-3])  # Python
@@ -2053,7 +2053,7 @@ def open_file(file, mode):
     # At yield: What will be worked with in the context manager.
     yield f
     # After yield: everything that would be in __exit__().
-    f.close()        
+    f.close()
 ```
 
 Practical example:
