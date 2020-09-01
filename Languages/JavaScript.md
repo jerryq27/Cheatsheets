@@ -12,6 +12,21 @@ JavaScript can be loaded into an HTML page in different ways:
 
 > JavaScript should be linked in the bottom of the 'body' tag.
 
+### DOM
+
+The DOM (Document Object Model) is a tree structure of objects/HTML elements
+that can be manipulated and selected.
+
+```js
+// Selecting objects.
+document.getElementById("title"); // Returns the element with that #title id.
+document.querySelector("#list li.item a"); // Returns an element using a CSS style selector.
+document.getElementsByTagName("p"); // Returns an array of <p> elements.
+document.getElementsByClassName("btn"); // Returns an array of elements with the .btn class.
+
+// Manipulating properties.
+```
+
 ## Variables
 
 Variables can be decalared using `var`, `let`, and `const`.
@@ -68,7 +83,7 @@ const filteredItems = items.filter(item => item.price <= 100);
 console.log(filteredItems);
 ```
 
-### map
+#### map
 
 Map returns an new array constructed from the old array:
 
@@ -88,7 +103,7 @@ const itemNames = items.map(item => item.name);
 console.log(itemNames);
 ```
 
-### find
+#### find
 
 Find will return a single item in the array based on a condition:
 
@@ -108,7 +123,7 @@ const foundItem = items.find(item => item.name === 'Book');
 console.log(foundItem);
 ```
 
-### foreach
+#### foreach
 
 Foreach applies a function to every single item in the array:
 
@@ -127,7 +142,7 @@ const items = [
 items.foreach(item => console.log(item));
 ```
 
-### some
+#### some
 
 Some returns a boolean of whether an item in the array meets the condition:
 
@@ -146,7 +161,7 @@ const items = [
 const hasExpensiveItems = items.some(item => item.price >= 100);
 ```
 
-### every
+#### every
 
 Every returns a boolean of whether all items in teh array meet the condition:
 
@@ -165,7 +180,7 @@ const items = [
 const hasOnlyExpensiveItems = items.every(item => item.price >= 100);
 ```
 
-### reduce
+#### reduce
 
 Reduce takes every item in the array and reduces it into some accumulator:
 
@@ -187,7 +202,7 @@ const total = items.reduce((accumulator, item) => {
 }, accumulatorStartPoint);
 ```
 
-### includes
+#### includes
 
 includes() returns a boolean of whether the item exists in the array or not:
 
