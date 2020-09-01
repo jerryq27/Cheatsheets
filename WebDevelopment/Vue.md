@@ -212,7 +212,7 @@ Common directives used with values defined in the Vue instance:
 * `v-on:EVENT="METHOD"` - attaches a method to an event
   * Shorthand: `@EVENT="METHOD"`
 * `v-show="EXPR"` - displays or hides elements (instead of adding or removing them)
-* `v-model="DATA"` - two-way binding of an attribute to an expression (listens to changes in `data` and the HTML elements like forms)
+* `v-model="DATA"` - two-way binding of an attribute to an expression (listens to changes in `data` and input HTML elements like forms, see [input bindings](#Input-Bindings))
 
 #### Conditional Rendering
 
@@ -396,8 +396,8 @@ Example:
 <input v-model="message" placeholder="edit me">
 <p>Message is: {{ message }}</p>
 
-<!-- v-model under the hood -->
-<input v-bind="message" v-on:input="message = $event.target.value" placeholder="edit me">
+<!-- v-model is syntactic sugar for the following pattern: -->
+<input v-bind:value="message" v-on:input="message = $event.target.value" placeholder="edit me">
 <p>Message is: {{ message }}</p>
 ```
 
@@ -653,7 +653,7 @@ method:
   v-on:update-message="updateMessage"
   v-on:display-event-value="displayValue($event)"
   v-on:print-number>
-</test-component>;
+</test-component>
 
 <script>
 Vue.component('test-component', {
@@ -689,6 +689,58 @@ var app = new Vue({
   el: "#app",
   data: {
     message: 'Hello',
+  },
+  methods: {
+    updateMessage() {
+      this.message = 'Hello, World!';
+    },
+    printNumber(n) {
+      console.log(n);
+    }
+  },
+  computed: {},
+});
+</script>
+```
+
+#### Input Binding On Props
+
+Since childrent can't modify tha parent's state, using `v-model` in a child component with a prop value will cause an error.
+A common pattern to using `v-model` on a prop value is to use a [computed property](#Computed-Properties):
+
+```html
+<test-component v-model=""/>
+
+<script>
+Vue.component('test-component', {
+  props: {
+    value: Number,
+  },
+  template: `
+  <div>
+    <button v-model="valueComputed">Add One!</button>
+    Parent's data: {{ this.value }}
+  </div>
+  `,
+  data() {
+    return {}
+  },
+  computed: {
+    valueComputed: {
+      get() {
+        return this.value;
+      },
+      set() {
+        this.$emit('input', this.value + 1)
+      }
+    }
+  }
+});
+
+var app = new Vue({
+  el: "#app",
+  data: {
+    parentData: 12,
   },
   methods: {
     updateMessage() {
