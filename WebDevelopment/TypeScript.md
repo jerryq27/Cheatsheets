@@ -1,5 +1,7 @@
 # TypeScript
 
+[Checkpoint](https://www.youtube.com/watch?v=jXoSaX_yFh4&list=PL4cUxeGkcC9gUgr39Q_yD6v-bSyMwKPUI&index=8)
+
 Superset of the JavaScript language with extra features meant to make
 development easier:
 
