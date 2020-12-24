@@ -1,0 +1,2 @@
+let char;
+char = 'lol';

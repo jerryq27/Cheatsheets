@@ -11,9 +11,8 @@ TODO:
 
 1. [Basics](#Basics)
     1. [Vue Instace](#Vue-Instance)
-        1. [Reactivity](#Reactivity)
-        1. [The data Property](#The-data-Property)
-            1. [Arrays](#Arrays)
+        1. [Vue Properties](#Vue-Properties)
+            1. [data](#data)
 1. [Lifecycle](#Lifecycle)
 1. [Templates](#Templates)
     1. [Directives](#Directives)
@@ -75,12 +74,42 @@ object argument's `el` (element) key.
 
 > All Vue code can only be used within the `#app` div.
 
+### Vue CLI
+
+Most projects use the Vue CLI to create an organized project structure.
+
+* vue init - Vue CLI2 way of creating a project
+* vue create - Vue CLI3 way of creating a project and setting presets
+
+The CLI configures things like Webpack, Babel, and npm and creates this
+project structure:
+
+* public/ - where files you don't want processed by webpack are stored
+* src/ - app specific code goes here
+  * assets/ - where images, fonts, etc. are stored
+  * components/ - where Vue components (building blocks) are stored
+  * router/index.js - (Vue Router plugin)
+  * store/index.js - (Vuex plugin)
+  * views/ - where the different views (pages) are stored
+  * App.vue - root Vue component where all others are nested in
+  * main.js - file that renders the app and mounts it to the DOM
+
 ### Vue Instance
 
+The Vue instance controls everything in the app. It has properties to define
+what data it has, the components being used, lifecycle event methods, etc.
+There can be multiple Vue instances running different apps in a project.
+
+#### Vue Properties
+
+##### data
+
 When a Vue instance is created, all the properties found in the `data` object
-are added to Vue's _reactivity system_. When the data is changed, the changes
-are updated reactively. However, this does **not** work if additional properties
-are added after intiialization. It is common practice to set blank values for
+are added to Vue's _reactivity system_. When that data is changed, the changes
+are updated reactively. The Vue instance does not allow for properties to be added
+dynamically. However, new properties for an already defined object can be added.
+
+> It is common practice to set blank values for
 propterties that will be used initially and later in code.
 
 Vue provided [properties and methods](https://vuejs.org/v2/api/#Instance-Properties)
@@ -102,34 +131,6 @@ vm.$watch('a', function (newValue, oldValue) {
 })
 ```
 
-Common predefined properties:
-
-* `data` - defined values that can be used by the current instance
-* `methods` - defined methods that can be used as expressions for directives
-* `computed` - defined methods that compute values from the data's propertied which are then cached
-* `watch` - defined methods that watch for data changes requiring asynchronous or expensive operations
-
-```js
-var app = new Vue({
-  el: "#app",
-  data: {},
-  methods: {},
-  computed: {},
-  watch: {},
-});
-```
-
-#### Reactivity
-
-The Vue instance does not allow for properties to be added dynamically.
-However, new properties for an already defined object can be added.
-
-#### The data Property
-
-Values defined in the data property are reactive when updated. 
-
-##### Arrays
-
 Arrays are reactive when using mutating methods the modify the array such as:
 
 * `push()`
@@ -140,7 +141,7 @@ Arrays are reactive when using mutating methods the modify the array such as:
 * `sort()`
 * `reverse()`
 
-However, with non-muating methods:
+However, with non-mutating methods:
 
 * `filter()`
 * `concat()`
@@ -157,6 +158,28 @@ this.items = this.items.filter(function(items){
 
 > Displaying the result of a non-mutating method without altering the original
 `data` array property is best handled using a `computed` property.
+
+##### computed
+
+Defined methods that compute values from the data's properties which are then cached
+
+##### methods
+
+Defined methods that can be used as expressions for directives.
+
+##### watch
+
+Defined methods that watch for data changes requiring asynchronous or expensive operations
+
+```js
+var app = new Vue({
+  el: "#app",
+  data: {},
+  methods: {},
+  computed: {},
+  watch: {},
+});
+```
 
 ## Lifecycle
 
@@ -184,7 +207,7 @@ new Vue({
 
 > Do **not** use arrow functions with these lifecycle methods! Arrow
 functions don't have a `this`, so `this` gets treated as any other
-variabel resulting in `TypeError` being thrown.
+variabel resulting in a `TypeError` being thrown.
 
 ## Templates
 
@@ -936,21 +959,5 @@ export default {
 ## Workflow
 
 ## Advance Use
-
-### Vue CLI
-
-Vue offers a command-line interface to automate the creation of a project.
-The CLI configures things like Webpack, Babel, and npm and creates this
-files and folders:
-
-* public/ - where files you don't want processed by webpack are stored
-* src/ - app specific code goes here
-  * assets/ - where images, fonts, etc. are stored
-  * components/ - where Vue components (building blocks) are stored
-  * router/index.js - (Vue router plugin)
-  * store/index.js - (Vuex plugin)
-  * views/ - where the different views (pages) are stored
-  * App.vue - root Vue component where all others are nested in
-  * main.js - file that renders the app and mounts it to the DOM
 
 ## Other
