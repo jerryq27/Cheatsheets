@@ -5,7 +5,7 @@ written in Python.
 
 TODO:
 
-* [Checkpoint](https://www.youtube.com/watch?v=q4jPR-M0TAQ)
+* [Checkpoint](https://www.youtube.com/watch?v=3aVqWaLjqS4)
 
 ## Basics
 
