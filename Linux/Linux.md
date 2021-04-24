@@ -119,6 +119,7 @@ Adding **public RSA keys** to `~/.ssh/authorized_keys` allows for public/private
 `chntpw`
 
 1. Mount the Windows HDD if necessary, take note of the HD label.
+    * `mount dev/sda2/ $MOUNT_DIRECTORY`
 1. `cd /media/$HDD_LABEL/Windows/system32/config`
 1. `sudo chntpw SAM`
 
