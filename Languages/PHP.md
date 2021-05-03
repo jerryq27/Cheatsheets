@@ -358,6 +358,27 @@ foreach($data as $item) {
 ?>
 ```
 
+### Cookies
+
+Cookies allow you to store values in the user's browser.
+
+```php
+<?php
+
+    setCookie('my_cookie', 'value_name', 5, '/');
+
+    if(!isset($_COOKIE['my_cookie'])) {
+        echo 'Cookie not set <br>';
+    }
+    else {
+        echo 'Cookie value: ' . $_COOKIE['my_cookie'] . '<br>';
+    }
+?>
+```
+
+> Note: Cookies aren't always going to be enabled, so it's a good idea to check before
+using them.
+
 ## Functions
 
 Syntax:
@@ -460,6 +481,155 @@ Syntax:
 ```
 
 ## Classes & Objects
+
+Sample class:
+
+```php
+<?php
+class Animal {
+    // Class fields.
+    protected $name;
+    protected $favorite_food;
+    protected $sound;
+    protected $id;
+
+    // Static field.
+    public static $number_of_animals = 0;
+
+    // Constant field.
+    const PI = '3.14';
+
+    // Constructor.
+    function __construct() {
+        $this->id = rand(100, 1000000);
+        echo $this->id . " has been assigned.<br>";
+
+        Animal::$number_of_animals++;
+    }
+
+    // Class method.
+    function what_am_i() {
+        return "I'm an animal.<br>"
+    }
+
+    // 'Magic' Getters/Setters
+    function __get($name) {
+        echo "Asking for name value."
+        return $this->name;
+    }
+
+    function __set($name, $value) {
+        switch($name) {
+            case "name":
+                $this->name = $value;
+                break;
+            case "favorite_food":
+                $this->favorite_food = $value;
+                break;
+            case "sound":
+                $this->sound = $value;
+                break;
+            default:
+                echo $name . " not found.<br>"
+        }
+        echo "Set " . $name . " to " . $value . ".<br>";
+    }
+
+    // Final functions.
+    final function cant_override() {
+        echo "I can't be overriden."
+    }
+
+    // toString function.
+    function __toString() {
+        return "Name $this->name<br>";
+    }
+
+    // Destructor.
+    public function __destruct() {
+        echo $this->name . " is being destroyed.<br>";
+    }
+}
+
+
+$animal1 = new Animal();
+
+// Calls the __set() magic method.
+$animal1->name = "Spot";
+$animal1->favorite_food = "Meat";
+$animal1->sound = "Woof";
+
+// Calls the __get() magic method.
+echo $animal1->name;
+
+// Calls a class method.
+echo $animal1->what_am_i();
+
+// Calls a static method.
+echo Animal::number_of_animals;
+
+// Calls the __toString() method.
+echo $animal1;
+?>
+```
+
+### Inheritance
+
+Child class sample:
+
+```php
+<?php
+class Dog extends Animal {
+
+    // Override parent class method.
+    function what_am_i() {
+        return "I'm a dog.<br>"
+    }
+}
+
+$animal2 = new Dog();
+$animal2->name = "Grover";
+$animal2->favorite_food = "Mushrooms";
+$animal2->sound = "Ruff";
+
+echo $animal2->name;
+echo $animal2->what_am_i();
+echo Dog::number_of_animals;
+echo $animal2;
+
+// Check inheritance.
+echo $animal2 instanceof Animal? "True" : "False";
+?>
+```
+
+### Interfaces
+
+Like other languages, you can't extend multiple classes, but you can implement multiple
+interfaces.
+
+Interface syntax:
+
+```php
+<?php
+interface Singable {
+    // MUST override this method.
+    public function sing();
+}
+
+class Bird extends Animal implements Singable {
+    
+    public function sing() {
+        echo "Tweet!<br>";
+    }
+
+}
+
+// Works for any animal who implements the Singable interface.
+function sing(Singable $singing_animal) {
+    $singing_animal->sing();
+}
+?>
+```
 
 ## Language Specifics
 
