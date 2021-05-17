@@ -1,7 +1,5 @@
 # PHP
 
-[Tutorial Stopping Point](https://youtu.be/NihZYkNpslE?t=3650)
-
 PHP is primarily used to handle server-side backend functionality, but it
 can be used wherever JavaScript is used.
 
