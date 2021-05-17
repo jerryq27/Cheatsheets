@@ -6,7 +6,7 @@
 
 Comments:
 
-```ruby
+```rb
 # Single line comment
 
 =begin
@@ -22,9 +22,9 @@ Comments:
 
 ## Conditionals
 
-Syntax: 
+Syntax:
 
-```ruby
+```rb
 if(condition)
     # Code
 elsif(condition) && (condition)
@@ -34,9 +34,14 @@ else
 end
 ```
 
+Conditional operators: `== != < > <= >= <=> && || ! and or not`
+
+> Note: <=> does a compareTo type of comparison: -1 if the first argument is less, 0
+if equal, 1 if the second argument is greater.
+
 Unless:
 
-```ruby
+```rb
 unless condition
     # Code
 else
@@ -45,15 +50,92 @@ end
     # Code
 ```
 
+Switch syntax:
+
+```rb
+case value
+    when "str1", "str2":
+        puts "string"
+        exit
+    when 1,2,3:
+        puts "number"
+        exit
+end
+
+```
+
+Ternary Operator:
+
+```rb
+puts (condidtion)? "true" : "false"
+```
+
 ## Collections
 
 ## Loops
+
+Loop:
+
+```rb
+x = 1
+loop do
+    x += 1
+    # next is like continue
+    next unless (x % 2) == 0
+    puts x
+    break if x >= 10
+end
+```
+
+While loop:
+
+```rb
+y = 1
+
+while y <= 10
+    y += 1
+    next unless (y % 2 == 0)
+    puts y
+end
+```
+
+Until loop:
+
+```rb
+a = 1
+
+until a >= 10
+    a += 1
+    next unless (a % 2 == 0)
+    puts a
+end
+```
+
+For loop:
+
+```rb
+numbers = [1, 2, 3, 4, 5]
+
+for number in numbers
+    puts "#{number}, "
+end
+
+# Other for loop
+numbers.each do |num|
+    puts "#{num}"
+end
+
+# Range for loop.
+(1..5).each do |i|
+    puts "#{i}"
+end
+```
 
 ## I/O
 
 Standard input/output
 
-```ruby
+```rb
 print "Hello world!"
 
 print "Enter your name":
@@ -63,6 +145,13 @@ puts "This print will have a new line"
 ```
 
 ## Functions
+
+Syntax:
+
+```rb
+def add_nums(num1, num2)
+    # code
+```
 
 ## Classes
 
