@@ -322,7 +322,6 @@ Working with HTML input:
 ?>
 ```
 
-
 ### Database I/O
 
 Connecting to a database:
