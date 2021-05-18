@@ -1,5 +1,7 @@
 # Ruby
 
+[Checkpoint](https://youtu.be/Dji9ALCgfpM?t=1367)
+
 ## Basics
 
 * Everything in Ruby is an object
@@ -50,6 +52,24 @@ Other supported operators: `+= -= *= /= %=`
 num_one = 1
 PI = 3.14
 ```
+
+### Strings
+
+String can be defined using both single and double quotes:
+
+```rb
+str1 = "String1"
+str2 = 'String2'
+```
+
+Multiline string:
+
+```rb
+long_string =
+```
+
+> Note: Special characters behave [differently](#String-Formatting) depending on the
+quotes used.
 
 ## Conditionals
 
@@ -188,11 +208,15 @@ puts "Puts will print with a new line"
 
 ### String Formatting
 
-Using variables in strings:
+String interpolation is only allowed within double quotes. Single quoted strings
+are treated as raw strings:
 
 ```rb
 name = "Jerry"
 puts "Hello #{name}"
+
+puts "2 + 2 = #{2 + 2}"
+puts '2 + 2 = #{2 + 2}' # Raw string.
 ```
 
 ### File Input & Output
