@@ -1,6 +1,6 @@
 # Ruby
 
-[Checkpoint](https://youtu.be/Dji9ALCgfpM?t=1367)
+[Checkpoint](https://youtu.be/Dji9ALCgfpM?t=1780)
 
 ## Basics
 
@@ -62,10 +62,77 @@ str1 = "String1"
 str2 = 'String2'
 ```
 
+String functions:
+
+```rb
+# Concatenation
+first_name = "Luke"
+last_name = "Skywalker"
+full_name = first_name + " " + last_name
+full_name = "#{first_name} #{last_name}"
+
+# Comparing strings
+puts "a == a? #{'a' == 'a'}"
+
+# Comparing string objects
+puts "'a' == 'a'? #{'a'.equal?('a')}" # false
+puts full_name.equals?(full_name) # true
+
+# String casting
+1.to_s
+
+# String length
+puts full_name.size
+
+# Check for substring
+puts full_name.include?("Luke") # true
+puts full_name.starts_with?("Skywalker") # false
+
+# Index
+puts full_name.index("Skywalker").to_s # 5
+
+# Count occurences (Regex?)
+puts "Vowels: #{full_name.count('aeiou').to_s}"
+puts "Consonants: #{full_name.count('^aeiou').to_s}"
+
+# Remove occurences
+puts full_name.delete('e')
+
+# Casing
+puts full_name.upcase
+puts full_name.downcase
+puts full_name.swapcase
+
+# Strip whitespace
+puts full_name.lstrip
+puts full_name.rstrip
+puts full_name.strip
+
+# Strip characters
+full_name.chomp # trailing whitespace
+full_name.chomp("er") # last two characters
+full_name.chop # last character
+
+# Padding strings?
+puts full_name.rjust(20, '.')
+puts full_name.ljust(20, '.')
+puts full_name.center(20, '.')
+
+# Split a string (Regex?)
+name_array = full_name.split(//) # Split each character. 
+name_array2 = full_name.split(/ /) # Split by space.
+```
+
 Multiline string:
 
 ```rb
-long_string =
+# EOM can be anything, the symbol is used to determine the end of the string.
+long_string = <<EOM
+This is a long string
+that allows the use of interpolation
+2 + 2 = #{2 + 2}
+EOM
+x = 2
 ```
 
 > Note: Special characters behave [differently](#String-Formatting) depending on the
