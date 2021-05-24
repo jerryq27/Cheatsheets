@@ -6,9 +6,9 @@ TODO:
 
 * [Formatting f strings](#String-Formatting)
 * [Unit Tests](#Unit-Tests)
-    * [patch & mocking](https://youtu.be/6tNS--WetLI?t=1843)
+  * [patch & mocking](https://youtu.be/6tNS--WetLI?t=1843)
 * [List Comprehension](#List-Comprehension)
-    * [dicts & sets](https://www.youtube.com/watch?v=3dt4OGnU5sM)
+  * [dicts & sets](https://www.youtube.com/watch?v=3dt4OGnU5sM)
 
 CHECK OUT:
 
@@ -65,6 +65,7 @@ CHECK OUT:
     1. [List Comprehension](#List-Comprehension)
     1. [Context Managers](#Context-Managers)
         1. [Custom Context Manager](#Custom-Context-Manager)
+1. [Tools](#Tools)
 1. [Libraries & Frameworks](#Libraries--Frameworks)
 
 ## Basics
@@ -82,35 +83,36 @@ if __name__ == '__main__':
 ```
 
 ### Keywords
-[`and`]()
-[`as`]()
-[`assert`]()
-[`break`]()
-[`class`]()
-[`continue`]()
-[`def`]()
-[`del`]()
-[`except`]()
-[`finally`]()
-[`for/while`]()
-[`from`]()
-[`global`]()
-[`if/elif/else`]()
-[`import`]()
-[`in`]()
-[`is`]()
-[`lambda`]()
-[`None`]()
-[`nonlocal`]()
-[`not`]()
-[`or`]()
-[`pass`]()
-[`raise`]()
-[`return`]()
-[`True/False`]()
-[`try`]()
-[`with`]()
-[`yield`]()
+
+[`and`](#null)
+[`as`](#null)
+[`assert`](#null)
+[`break`](#null)
+[`class`](#null)
+[`continue`](#null)
+[`def`](#null)
+[`del`](#null)
+[`except`](#null)
+[`finally`](#null)
+[`for/while`](#null)
+[`from`](#null)
+[`global`](#null)
+[`if/elif/else`](#null)
+[`import`](#null)
+[`in`](#null)
+[`is`](#null)
+[`lambda`](#null)
+[`None`](#null)
+[`nonlocal`](#null)
+[`not`](#null)
+[`or`](#null)
+[`pass`](#null)
+[`raise`](#null)
+[`return`](#null)
+[`True/False`](#null)
+[`try`](#null)
+[`with`](#null)
+[`yield`](#null)
 
 ### Operators
 
@@ -1874,7 +1876,6 @@ Best practices:
 * Tests should be isolated, as in they should be able to run by themselves without relying on other tests.
 * Test driven development means to write the test first then the code, so you know what the code's behavior should be.
 
-
 ## Language Specifics
 
 ### Underscores
@@ -1882,21 +1883,21 @@ Best practices:
 Underscores have various meanings and uses in Python:
 
 * `_private` - private member, meant for internal use
-    * Nothing prevents programmers from accessing private members
-    * However, private members are ignored by Python with `from example import *`
+  * Nothing prevents programmers from accessing private members
+  * However, private members are ignored by Python with `from example import *`
 * `class_` - used to avoid naming conflicts with Python keywords
 * `__example` - used to protect variables from being overridden in subclasses
-    * Using this triggers _name mangling_ with the Python interpreter
-    * `dir()` will show how the variable gets altered: (`_SubClass__member`)
-    * You will need to specify the altered name to access the correct value
-    * Within the class however, you can specify the member with `self.__member`
+  * Using this triggers _name mangling_ with the Python interpreter
+  * `dir()` will show how the variable gets altered: (`_SubClass__member`)
+  * You will need to specify the altered name to access the correct value
+  * Within the class however, you can specify the member with `self.__member`
 * `__example__` - functions reserved for special use in Python.
-    * These dunder functions are a convention used by the core Python team
-    * Avoid this naming scheme in your code
+  * These dunder functions are a convention used by the core Python team
+  * Avoid this naming scheme in your code
 * `_` - used to indicate a variable that is temporary, or insignificant.
-    * Has no special meaning, just a convention
-    * Interpreter session uses `_` to store the result of a previous calculation
-    * Also useful for unpacking tuples
+  * Has no special meaning, just a convention
+  * Interpreter session uses `_` to store the result of a previous calculation
+  * Also useful for unpacking tuples
 
 ```python
 # Loop
@@ -2088,6 +2089,17 @@ with change_dir('Dir1'):
 with change_dir('Dir2'):
     print(os.listdir())
 ```
+
+## Tools
+
+### Pipenv
+
+Pipenv isolates a project's environment so that specified
+Python versions and dependencies are used consistently within
+that project.
+
+`pipenv install` - Installs all dependencies in a Pipfile or
+creates a Pipfile which marks the directory as a Pipenv project.
 
 ## Libraries & Frameworks
 
