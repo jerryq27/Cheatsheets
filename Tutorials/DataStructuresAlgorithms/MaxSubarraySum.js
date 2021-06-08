@@ -1,3 +1,14 @@
+
+/** 
+ * Write a function called **maxSubarraySum** which accepts an
+ * array of integers and a number called n. The function should
+ * calculate the maximum sum of n consecutive elements in the array.
+ */
+
+// set pointer to the start and next value
+// define a max, and sum
+// loop and check if values are equal, if they are, increment next
+// if they arent, set start to new value and increment counter
 function maxSubarraySum(arr, num) {
     if(num > arr.length) {
         return null;
@@ -20,8 +31,3 @@ function maxSubarraySum(arr, num) {
     }
     return max;
 }
-
-// set pointer to the start and next value
-// define a max, and sum
-// loop and check if values are equal, if they are, increment next
-// if they arent, set start to new value and increment counter
