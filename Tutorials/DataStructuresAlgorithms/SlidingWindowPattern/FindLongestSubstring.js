@@ -23,7 +23,7 @@ function findLongestSubstring(str) {
 
         if(str[start] === str[end]) {
             start++;
-            substr = substr[1, substr.length];
+            substr = substr.slice(1, substr.length);
         }
     }
     return substr.length;
