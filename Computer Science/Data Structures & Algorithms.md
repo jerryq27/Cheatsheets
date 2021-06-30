@@ -624,3 +624,11 @@ Searching: O(n)
 Access: O(1)
 
 ## Recursion
+
+Recursion is a process (function) that calls itself.
+
+Behind the scenes, functions have to be called in a certain order, when the code
+is processed it uses a **Call Stack** data sctructure to track the order of
+function calls. When a function is called it's placed (pushed) on top of the call
+stack, and when the function ends or the **return** keyword is encountered, the
+function is removed (popped) from the call stack.
