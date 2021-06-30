@@ -632,3 +632,134 @@ is processed it uses a **Call Stack** data sctructure to track the order of
 function calls. When a function is called it's placed (pushed) on top of the call
 stack, and when the function ends or the **return** keyword is encountered, the
 function is removed (popped) from the call stack.
+
+Recursive functions have two essential parts:
+
+1. The base case, in other words, the condition when the recursion ends
+1. Different (reduced) input
+
+Mistakes when creating recursive functions:
+
+1. No base case (or it's wrong)
+1. The input isn't being reduced (or changed)
+
+These will usually result in a stack overflow!
+
+Simple Recursive function:
+
+```js
+function countDown(num) {
+    if(num <= 0) {
+        console.log('Done.')
+        return;
+    }
+    console.log(num);
+    num--;
+    countDown(num);
+}
+```
+
+Recursive function 2:
+
+```js
+/**
+ * num = 3
+ * return 3 + sumRange(2) // waiting on sumRange...
+ *      return 2 + sumRange(1) // Waiting on sumRange...
+ *          return 1 // Done!, sumRange(1) = 1, sumRange(2) = 3, answer = 3 + 3!
+ */
+function sumRange(num) {
+    if(num === 1) return 1;
+
+    return num + sumRange(num - 1);
+}
+```
+
+Factorial:
+
+```js
+// Iteratively
+function iterativeFactorial(num) {
+    let total = 1;
+    for(let i = num; i > 1; i--) {
+        total *= i;
+    }
+    return total;
+}
+
+// Recursively
+function recursiveFactorial(num) {
+    if(num === 1) {
+        return num;
+    }
+    return num * recursiveFactorial(num - 1); 
+}
+```
+
+### Helper Method Recursion
+
+Helper Method Recursion functions are recursive functions defined and called within
+another non-recursive function:
+
+```code
+outerFunc() {
+    recursiveFunc(input) {
+        recursiveFunc(input-1)
+    }
+
+    recursiveFunc(input)
+}
+```
+
+Example:
+
+```js
+// Helper Method Recursion
+function collectOdds(nums) {
+    let result = [];
+
+    function helper(input) {
+        if(input.length === 0) {
+            return;
+        }
+
+        if(input[0] % 2 !== 0) {
+            result.push(input[0]);
+        }
+
+        helper(input.slice(1));
+    }
+    helper(nums);
+
+    return result;
+}
+
+/** Pure Recursion
+ * collectOdds([1, 2, 3])
+ *      [1].concat(collectOdds([2, 3]))
+ *          [].concat(collectOdds([3]))
+ *              [3].concat(collectOdds([]))
+ *                  Done! answer: [1, 3]
+ * result array gets reassigned every time, it allows us to concatenate into
+ * nothing or an odd number.
+ */ 
+function collectOdds(nums) {
+    let result = [];
+
+    if(nums.length === 0) {
+        return result;
+    }
+
+    if(nums[0] % 2 !== 0) {
+        result.push(nums[0]);
+    }
+
+    result = result.concat(collectOdds(nums.slice(1)));
+    return result;
+}
+```
+
+> Note: If using arrays or strings in a pure recursive function, using methods
+like slice(), concat(), substr(), or the (...) spreader operator lets you create
+copies of the immutable type so you don't need to mutate it. To copy objects, use
+Object.assign() or (...).
