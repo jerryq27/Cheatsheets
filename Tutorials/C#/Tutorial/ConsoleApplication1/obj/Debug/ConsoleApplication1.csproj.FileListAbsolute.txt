@@ -1,0 +1,7 @@
+D:\KikoBrothers\Jerry\Documents\Dev\GitHub\Cheatsheets\Tutorials\C#\Tutorial\ConsoleApplication1\bin\Debug\ConsoleApplication1.exe.config
+D:\KikoBrothers\Jerry\Documents\Dev\GitHub\Cheatsheets\Tutorials\C#\Tutorial\ConsoleApplication1\bin\Debug\ConsoleApplication1.exe
+D:\KikoBrothers\Jerry\Documents\Dev\GitHub\Cheatsheets\Tutorials\C#\Tutorial\ConsoleApplication1\bin\Debug\ConsoleApplication1.pdb
+D:\KikoBrothers\Jerry\Documents\Dev\GitHub\Cheatsheets\Tutorials\C#\Tutorial\ConsoleApplication1\obj\Debug\ConsoleApplication1.csprojAssemblyReference.cache
+D:\KikoBrothers\Jerry\Documents\Dev\GitHub\Cheatsheets\Tutorials\C#\Tutorial\ConsoleApplication1\obj\Debug\ConsoleApplication1.csproj.CoreCompileInputs.cache
+D:\KikoBrothers\Jerry\Documents\Dev\GitHub\Cheatsheets\Tutorials\C#\Tutorial\ConsoleApplication1\obj\Debug\ConsoleApplication1.exe
+D:\KikoBrothers\Jerry\Documents\Dev\GitHub\Cheatsheets\Tutorials\C#\Tutorial\ConsoleApplication1\obj\Debug\ConsoleApplication1.pdb
