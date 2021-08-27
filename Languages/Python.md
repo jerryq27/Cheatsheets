@@ -789,6 +789,23 @@ name = "Jerry"
 print(f'num={num} flt={flt} name={name}')
 print(F'num={num} flt={flt} name={name}')
 print(f'expression={num * flt}')
+
+# Other f string use cases.
+print(f'{num=}') # num=2
+print(f'{num / 2 = }') # num / 2 = 1
+
+# Conversions.
+letter = 'a'
+print(f'{letter!a}') # 65 (ASCII value)
+print(f'{letter!r}') # Calls __repr__()
+pirnt(f'{letter!s}') # Calls the string conversion operator.
+
+# Special formatting.
+now = datetime.datetime.utcnow()
+print(f'{now=:%Y-%m-%d}') # Date formatting.
+print(f'{flt:.2f}') # 2 decimal places.
+# Calls the class's __format__() method passing in 'custom_format' as the format_spec argument.
+print(f'{MyClass():custom_format}')
 ```
 
 ### File Input & Output
