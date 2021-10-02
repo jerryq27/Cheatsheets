@@ -2118,6 +2118,21 @@ that project.
 `pipenv install` - Installs all dependencies in a Pipfile or
 creates a Pipfile which marks the directory as a Pipenv project.
 
+There are two ways of interacting with the virtual environment:
+
+1. Using `pipenv run $COMMAND`
+1. Using `pipenv shell` then `$COMMAND`
+
+Some other useful commands:
+
+* `pipenv --where` - shows the project homefolder
+* `pipenv --venv` - shows the location of the virtual environment folder linked to the project
+* `pipenv graph` - shows the dependency graph of the installed dependencies
+* `pipenv --rm` - removes the virtual environment folder associated with the project
+
+> Pipenv is a good solution for individual projects, however, it doesn't work well to have
+multiple subproject share the same Pipfile.
+
 ## Libraries & Frameworks
 
 [Django] - a high level web framework
