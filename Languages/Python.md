@@ -2131,7 +2131,8 @@ Some other useful commands:
 * `pipenv --rm` - removes the virtual environment folder associated with the project
 
 > Pipenv is a good solution for individual projects, however, it doesn't work well to have
-multiple subproject share the same Pipfile.
+multiple subproject share the same Pipfile. To resolve 'Module not found' errors in VSCode,
+make sure you're using the Python interpreter from the virtual environment.
 
 ## Libraries & Frameworks
 
