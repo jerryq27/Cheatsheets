@@ -1,23 +1,45 @@
-function isPalindrome(str) {
-    if(!str) return;
+// isPalindrome('awesome') // false
+// isPalindrome('foobar') // false
+// isPalindrome('tacocat') // true
+// isPalindrome('amanaplanacanalpanama') // true
+// isPalindrome('amanaplanacanalpandemonium') // false
 
-    console.log(str);
-    if(str[0] !== str[str.length - 1]) {
+function isPalindrome(str) {
+    // add whatever parameters you deem necessary - good luck!
+    if(str.length === 0) {
         return false;
     }
-    else if(str.length === 2 && str[0] === str[str.length - 1]) {
-        return true;
+
+    let start = 0;
+    let end = str.length - 1;
+
+    for(let i = 0; i < end; i++) {
+        // console.log("comparing '" + str[start] + "' and '" + str[end] + "'");
+        if(start >= end) break;
+        if(str[start] !== str[end]) return false;
+        
+        start++;
+        end--;
     }
-    else if(str.length === 1) {
-        return true;
+    return true;
+}
+
+function isPalindromeR(str) {
+    if(str.length === 0 || str.length === 1) return true;
+
+    let start = 0;
+    let end = str.length;
+    if(str[start] === str[end-1]) {
+        // console.log("comparing '" + str[start] + "' and '" + str[end-1] + "'");
+        return isPalindromeR(str.substring(start+1, end-1));
     }
     else {
-        isPalindrome(str.slice(1, str.length - 1));
+        return false;
     }
 }
 
-// console.log(isPalindrome('awesome')); // false
-// console.log(isPalindrome('foobar')); // false
-console.log(isPalindrome('tacocat')); // true
-// console.log(isPalindrome('amanaplanacanalpanama')); // true
-// console.log(isPalindrome('amanaplanacanalpandemonium')); // false
+console.log(isPalindromeR('awesome')); // false
+console.log(isPalindromeR('foobar')); // false
+console.log(isPalindromeR('tacocat')); // true
+console.log(isPalindromeR('amanaplanacanalpanama')); // true
+console.log(isPalindromeR('amanaplanacanalpandemonium')); // false
