@@ -33,6 +33,23 @@ mysite/
 
 ### Apps
 
+Apps are included into a project by first creating an app with `python manage.py startapp $APP_NAME`,
+and then modifying the project's `settings.py`:
+
+```py
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    # This points to the UsersConfig class in the app users/apps.py->UsersConfig class.
+    'users.apps.UsersConfig',
+]
+```
+
+
 App structure:
 
 ```code
