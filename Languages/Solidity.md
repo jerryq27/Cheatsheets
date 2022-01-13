@@ -4,7 +4,7 @@
 
 [Stopping Point: Chapter 3 Lesson 1](https://cryptozombies.io/en/lesson/3/chapter/1)
 
-[Free Code Camp Course: Lesson 6 - Brownie Fund Me](https://youtu.be/M576WGiDBdQ?t=18383)
+[Free Code Camp Course: Lesson 6 - Brownie Fund Me](https://youtu.be/M576WGiDBdQ?t=18941)
 [Issues Link](https://github.com/smartcontractkit/full-blockchain-solidity-course-py/blob/main/chronological-issues-from-video.md)
 
 ```code
@@ -939,6 +939,14 @@ Transaction sent: 0x1ff45e0f954f8736dcf6ce6287a1fa12b4e8ab3395b729cc8975c52f92cd
 >>> simple_storage
 <SimpleStorage Contract '0x3194cBDC3dbcd3E11a07892e7bA5c3394048Cc87'>
 ```
+
+#### Brownie Config
+
+The config file is a YAML file located in the root directory of the Brownie project.
+We can use this file (`brownie-config.yaml`) to tell Brownie about:
+
+* Where to get external libraries
+
 
 ### Tools
 
