@@ -11,15 +11,9 @@ Big O Notation is a system used to denote the efficiency of an algorithm based
 on the growth of inputs. This system allows for the discussion of code
 performance and trade-offs between various solutions to a problem.
 
-O(n)
+Notations from best to worst performance:
 
-```code
-loop(n) {
-    print(n)
-}
-```
-
-Constant: O(1)
+**O(1)** (Constant)
 
 ```code
 loop(n) {
@@ -27,7 +21,23 @@ loop(n) {
 }
 ```
 
-O(n^2)
+**O(log n)** (Logarithmic)
+
+**O(n)** (Linear)
+
+```code
+loop(n) {
+    print(n)
+}
+```
+
+**O(n log n)** ()
+
+**O(n^2)** (Quadratic)
+
+**O(2^n)** ()
+
+**O(n!)** ()
 
 #### Time Complexity
 
@@ -79,7 +89,7 @@ Notation: O(1)
 
 #### Logarithmic
 
-Notation O(log(n))
+Notation O(log n)
 
 To understand Logarithmic notation, we must definte logarithms. Logarithms are
 basically the inverse of exponents:
@@ -600,29 +610,6 @@ Refactored Solution (Divide and Conquer algorithm)
 
 Since it is sorted: [Binary Search]
 
-## Collections
-
-### Arrays
-
-Ordered collection of values. Best used when order matters.
-
-Insertion: O(1)/O(n) Constant if inserting at the end, insertion at the
-    beginning is linear since it requires re-indexing
-Removal: O(1)/O(n) Constant if removing at the end, removing at the
-    beginning is linear since it requires re-indexing
-Searching: O(n)
-Access: O(1)
-
-### Hashmaps
-
-Unordered collection of key-value pairs. Best used when order
-doesn't matter, very efficient storage.
-
-Insertion: O(1)
-Removal: O(1)
-Searching: O(n)
-Access: O(1)
-
 ## Recursion
 
 Recursion is a process (function) that calls itself.
@@ -763,3 +750,257 @@ function collectOdds(nums) {
 like slice(), concat(), substr(), or the (...) spreader operator lets you create
 copies of the immutable type so you don't need to mutate it. To copy objects, use
 Object.assign() or (...).
+
+## Searching Algorithms
+
+### Linear Search
+
+The simplest searching algorithm. It looks at every element in the
+array and checks if it's the value being searched for.
+
+JavaScript uses linear search with the following functions:
+
+* `indexOf()`
+* `includes()`
+* `find()`
+* `findIndex()`
+
+Steps:
+
+1. Loop through the array.
+1. Check each value if it's the one we're searching for.
+1. Return the value/index/boolean to represent if it's found or not found.
+
+```js
+function linearSearch(arr, val) {
+    for(let i  = 0; i < arr.length; i++) {
+        if(arr[i] === val) return i;
+    }
+    return -1;
+}
+```
+
+Time Complexity: Best Case - O(1), Worst Case - O(n)
+
+### Binary Search
+
+Binary search is much faster than Linear Search, best case scenario, it eliminates
+half of the remaining elements rather than one at a time. However, Binary Search
+only works on _sorted_ arrays!
+
+Steps:
+
+1. Note the start, end, and middle point of the array.
+1. Check if the value is greater than or less than the mid's index value.
+1. Update start or end point based on the previous condition.
+1. Recalculate the mid point based on the new start or end point.
+1. Repeat steps 2-4 until a value is found or if start is greater than the end.
+
+```js
+function binarySearch(arr, val) {
+    // let leftPtr = 0;
+    // let rightPtr = arr.length - 1;
+    // let midPtr = arr.length/2;
+
+    // while(true) {
+    //     if(arr[midPtr] === val) return midPtr;
+    //     else if(arr[midPtr] < val) {
+    //         leftPtr = midPtr;
+    //         midPtr = (leftPtr + rightPtr)/2;
+    //     }
+    //     else if(arr[midPtr] > val) {
+    //         rightPtr = midPtr;
+    //         midPtr = (leftPtr + rightPtr)/2;
+    //     }
+    //     else if(rightPtr === midPtr || leftPtr === midPtr) return -1;
+    // }
+
+    /* Solution */
+    
+    let start = 0;
+    let end = arr.length - 1;
+    let mid = Math.floor((start + end)/2);
+
+    while(arr[mid] !== val) {
+        if(val < arr[mid]) {
+            end = mid - 1; // We already checked mid, so adjust by 1
+        }
+        else start = mid + 1;
+        
+        mid = Math.floor((start + end)/2);
+        if(start > end) return -1;
+    }
+    return mid;
+}
+```
+
+Time Complexity: Best Case - O(1), Worst Case - O(log n)
+
+### Naive String Search
+
+Used for finding substrings within strings.
+
+```js
+// function naiveStringSearch(str, substr) {
+//     let counter = 0;
+    
+//     for(let i = 0; i < str.length; i++) {
+//         if(str[i] === substr[0]) {
+//             let j = 0;
+//             while(j < substr.length) {
+//                 if(str[i + j] === substr[j]) {
+//                     j++;
+//                     if(j === substr.length - 1) counter++;
+//                 }
+//                 else {
+//                     break;
+//                 }
+//             }
+//             counter++;
+//         }
+//     }
+//     return counter;
+// }
+
+/* Solution */
+
+function naiveStringSearch(long, short) {
+    let count = 0;
+
+    for(let i = 0; i < long.length; i++) {
+        for(let j = 0; j < short.length; j++) {
+            if(short[j] !== long[i + j]) break;
+            if(j === short.length - 1) count++;
+        }
+    }
+
+    return count;
+}
+naiveStringSearch("lorie loled", "lol")
+```
+
+### KMP String Search
+
+## Sorting Algorithms
+
+### Bubble Sort
+
+This algorithm goes through the array the same number of times
+as the ammount of elements in the array and sorting them one by one.
+
+Steps (Naive):
+
+1. Create a nested for loop.
+1. Compare the inner loop value with the next value in the inner loop.
+1. Swap if the first is less than the second.
+
+```js
+function bubbleSort(arr) {
+    for(let i = 0; i < arr.length; i++) {
+        for(let j = 0; j < arr.length; j++) {
+            if(arr[j] < arr[j+1]) {
+                let temp = arr[j];
+                arr[j] = arr[j+1];
+                arr[j+1] = temp;
+            }
+        }
+    }
+    return arr;
+}
+```
+
+This solution works, however, it makes too many unnecessary comparisons and goes
+beyond the end of the array. The array should 'shrink' as the values are sorted.
+
+Steps:
+
+1. Create a nested for loop.
+1. Set outer loop equal to the array length and decrement;
+1. Set inner loop equal to outer loop's variable minus 1.
+1. Compare the inner loop value with the next value in the inner loop.
+1. Swap if the first is less than the second.
+
+```js
+function bubbleSort(arr) {
+    for(let i = arr.length; i > 0; i--) {
+        for(let j = 0; j < i - 1; j++) {
+            if(arr[j] > arr[j+1]) {
+                let temp = arr[j];
+                arr[j] = arr[j+1];
+                arr[j+1] = temp;
+            }
+        }
+    }
+    return arr;
+}
+```
+
+This solution is better, however it still does too much checking, especially
+if an array has already been sorted. It keeps going until both loops complete,
+which is wasteful on an already sorted array.
+
+Steps (Optimized):
+
+1. Create a nested for loop.
+1. Create a boolean to track if array has been sorted.
+1. Set outer loop equal to the array length and decrement;
+1. Set boolean equal to true.
+1. Set inner loop equal to outer loop's variable minus 1.
+1. Compare the inner loop value with the next value in the inner loop.
+1. Swap if the first is less than the second.
+1. Set boolean equal to false since a swap was made.
+1. If a swap wasn't made in the inner loop, break out of the outer loop.
+
+```js
+function bubbleSort(arr) {
+    let sorted; // Optimization.
+    for(let i = arr.length; i > 0; i--) {
+        sorted = true;
+        for(let j = 0; j < i - 1; j++) {
+            if(arr[j] > arr[j+1]) {
+                let temp = arr[j];
+                arr[j] = arr[j+1];
+                arr[j+1] = temp;
+                sorted = false;
+            }
+        }
+        if(sorted) break;
+    }
+    return arr;
+}
+```
+
+### Selection Sort
+
+### Insertion Sort
+
+### Merge Sort
+
+### Quick Sort
+
+### Radix Sort
+
+## Data Structures
+
+### Collections
+
+#### Arrays
+
+Ordered collection of values. Best used when order matters.
+
+Insertion: O(1)/O(n) Constant if inserting at the end, insertion at the
+    beginning is linear since it requires re-indexing
+Removal: O(1)/O(n) Constant if removing at the end, removing at the
+    beginning is linear since it requires re-indexing
+Searching: O(n)
+Access: O(1)
+
+#### Hashmaps
+
+Unordered collection of key-value pairs. Best used when order
+doesn't matter, very efficient storage.
+
+Insertion: O(1)
+Removal: O(1)
+Searching: O(n)
+Access: O(1)
