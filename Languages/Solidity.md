@@ -947,7 +947,6 @@ We can use this file (`brownie-config.yaml`) to tell Brownie about:
 
 * Where to get external libraries
 
-
 ### Tools
 
 There are a variety of tools you can use for smart contract development:
