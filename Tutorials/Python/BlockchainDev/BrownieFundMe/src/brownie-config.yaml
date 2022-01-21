@@ -1,0 +1,20 @@
+dependencies:
+  # From Github: $ORGANIZATION/$REPO@$VERSION
+  - smartcontractkit/chainlink-brownie-contracts@1.1.1
+# Brownie now knows where the library is, but doesn't understand the '@chainlink' from the import.
+# Here we tell the compiler what the @chainlink means.
+compiler:
+  solc:
+    remappings:
+      - '@chainlink=smartcontractkit/chainlink-brownie-contracts@1.1.1'
+dotenv: .env
+networks:
+  rinkeby:
+    eth_usd_price_feed: '0x8A753747A1Fa494EC906cE90E9f37563A8AF630e'
+    verify_contract: True
+  development:
+    verify_contract: False
+  ganache-local:
+    verify_contract: False
+wallets:
+  from_key: ${PRIVATE_KEY}
