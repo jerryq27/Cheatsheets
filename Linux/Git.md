@@ -46,7 +46,7 @@ The commands commonly used for this process are:
 commits the file changes to the local commit history.
     * `-m $MESSAGE` - specify the message without opening the editor
     * `-m $MESSAGE -m $DESCRIPTION` - specify the message and a longer description.
-    * `-am $MESSAGE` - one liner to add, write a message, and commit.
+    * `-am $MESSAGE` - one liner to add, write a message, and commit. Only works for files already being tracked by git.
 
 To view the local commit history, you would use:
 
@@ -159,6 +159,12 @@ and other people might have those commits.
 * `--soft` - Uncommits changes, but leaves them in the staging area
 * `--mixed` - Uncommits changes and removes them from the staging area (Default)
 * `--hard` - Uncommits changes, removes them from the staging area, and deletes them from the working tree
+
+Uses:
+
+1. `git reset` - removes all files from staging (or certain files if specified)
+1. `git reset HEAD~1` - uncommits and unstages files from last commit. A hash can also be specified and all changes after
+the has will be uncommited and unstaged.
 
 #### Recommended Method
 
