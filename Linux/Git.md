@@ -130,13 +130,16 @@ respository and changes in one might not be reflected in the other.
 #### Upstream
 
 Setting the upstream turns a local branch into a _tracking branch_. In other words, it connects
-a local branch to a remote branch. Having this set removes the need of specifying where to send
+a local branch to a remote branch. Having this set removes the need to specify where to send
 commits whenever `git push` is ran.
 
 ```console
 $ git push origin master # Has to specify remote and branch every time.
+
 $ git push -u origin master # Sets upstream by connecting the current branch to the "master" branch from "origin"
-$ git push # Since the upstream is set, this will always push to the "master" branch from "origin".
+Branch 'master' set up to track remote branch 'master' from 'origin'.
+
+$ git push # Since the upstream is set for the current branch, this will always push to the "master" branch from "origin".
 ```
 
 ## Advance Use
