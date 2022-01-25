@@ -45,6 +45,7 @@ The commands commonly used for this process are:
 1. `git commit` - opens the default editor to write a commit message, then
 commits the file changes to the local commit history.
     * `-m $MESSAGE` - specify the message without opening the editor
+    * `-m $MESSAGE -m $DESCRIPTION` - specify the message and a longer description.
     * `-am $MESSAGE` - one liner to add, write a message, and commit.
 
 To view the local commit history, you would use:
@@ -121,9 +122,22 @@ GitLab.
 > Local working directory/staging area/commit history is copied to the remote
 respository and changes in one might not be reflected in the other.
 
-* `git push origin $BRANCH` - Pushes commits to the remote repository.
-* `git pull origin $BRANCH` - Pulls commits from the remote repository.
-* `git push origin --delete $BRANCH` - Deletes remote branch.
+* `git remote add $REMOTE` - Saves remote location under a name, "origin" is used by default on GitHub.
+* `git push $REMOTE $BRANCH` - Pushes commits to the remote repository.
+* `git pull $REMOTE $BRANCH` - Pulls commits from the remote repository.
+* `git push $REMOTE --delete $BRANCH` - Deletes remote branch.
+
+#### Upstream
+
+Setting the upstream turns a local branch into a _tracking branch_. In other words, it connects
+a local branch to a remote branch. Having this set removes the need of specifying where to send
+commits whenever `git push` is ran.
+
+```console
+$ git push origin master # Has to specify remote and branch every time.
+$ git push -u origin master # Sets upstream by connecting the current branch to the "master" branch from "origin"
+$ git push # Since the upstream is set, this will always push to the "master" branch from "origin".
+```
 
 ## Advance Use
 
