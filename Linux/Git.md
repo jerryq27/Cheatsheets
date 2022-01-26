@@ -45,7 +45,8 @@ The commands commonly used for this process are:
 1. `git commit` - opens the default editor to write a commit message, then
 commits the file changes to the local commit history.
     * `-m $MESSAGE` - specify the message without opening the editor
-    * `-am $MESSAGE` - one liner to add, write a message, and commit.
+    * `-m $MESSAGE -m $DESCRIPTION` - specify the message and a longer description.
+    * `-am $MESSAGE` - one liner to add, write a message, and commit. Only works for files already being tracked by git.
 
 To view the local commit history, you would use:
 
@@ -121,9 +122,25 @@ GitLab.
 > Local working directory/staging area/commit history is copied to the remote
 respository and changes in one might not be reflected in the other.
 
-* `git push origin $BRANCH` - Pushes commits to the remote repository.
-* `git pull origin $BRANCH` - Pulls commits from the remote repository.
-* `git push origin --delete $BRANCH` - Deletes remote branch.
+* `git remote add $REMOTE` - Saves remote location under a name, "origin" is used by default on GitHub.
+* `git push $REMOTE $BRANCH` - Pushes commits to the remote repository.
+* `git pull $REMOTE $BRANCH` - Pulls commits from the remote repository.
+* `git push $REMOTE --delete $BRANCH` - Deletes remote branch.
+
+#### Upstream
+
+Setting the upstream turns a local branch into a _tracking branch_. In other words, it connects
+a local branch to a remote branch. Having this set removes the need to specify where to send
+commits whenever `git push` is ran.
+
+```console
+$ git push origin master # Has to specify remote and branch every time.
+
+$ git push -u origin master # Sets upstream by connecting the current branch to the "master" branch from "origin"
+Branch 'master' set up to track remote branch 'master' from 'origin'.
+
+$ git push # Since the upstream is set for the current branch, this will always push to the "master" branch from "origin".
+```
 
 ## Advance Use
 
@@ -142,6 +159,12 @@ and other people might have those commits.
 * `--soft` - Uncommits changes, but leaves them in the staging area
 * `--mixed` - Uncommits changes and removes them from the staging area (Default)
 * `--hard` - Uncommits changes, removes them from the staging area, and deletes them from the working tree
+
+Uses:
+
+1. `git reset` - removes all files from staging (or certain files if specified)
+1. `git reset HEAD~1` - uncommits and unstages files from last commit. A hash can also be specified and all changes after
+the has will be uncommited and unstaged.
 
 #### Recommended Method
 
