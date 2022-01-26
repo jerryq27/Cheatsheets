@@ -300,6 +300,10 @@ Solidity has predefined global variables that are available to all functions:
 * `msg.sender` - refers to the address of the person/smart contract that called
 the function
 
+### Enums
+
+Solidity supports [enums](#).
+
 ## Arrays
 
 Soildity can define two types of arrays:
@@ -576,6 +580,10 @@ contract Husky is Dog {
 ```
 
 ## Events
+
+Events are similar to what logging is, but they are for the blockchain to log what a contract is doing.
+Events are stored and accessible on the blockchain as well. They are not accessible by any smart contract
+and are much more gas efficient than using a storage variable.
 
 Events are a way for the contract to notify your frontend that something happened
 to the blockchain (state).
