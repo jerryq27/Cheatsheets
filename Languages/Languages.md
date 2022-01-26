@@ -41,9 +41,11 @@ Common terms:
   * (0011 ^ 0101) = 0110
 * `~` - logical **NOT**, flips the bits of one number.
   * ~(0011) = 1100
-* `>>` - right shift, shifts bits to the right based on second argument. Bits shifted outside of range are discarded.
+* `>>` - right shift, shifts bits to the right based on second argument. This is equivalent to dividing by 2.
+Bits shifted outside of range are discarded.
   * (1100 >> 1) = 0110
-* `<<` - left shift, shifts bits to the left based on second argument. Bits shifted outside of range are discarded.
+* `<<` - left shift, shifts bits to the left based on second argument. This is equivalent to multiplying by 2.
+Bits shifted outside of range are discarded.
   * (0011 << 2) = 1100
 
 > Note: The shift bitwise operators `<<` and `>>` should **not** be used for
@@ -178,5 +180,18 @@ val = (lambda arg: arg * arg)(5);
 ```
 
 ## Exceptions
+
 ## Classes & Objects
-## Libraries & Frameworks
+
+## Testing
+
+Two common types of testing are:
+
+1. Unit Tests - a way of testing small pieces of code in isolation.
+1. Integration Tests - a way of testing across multiple complex systems.
+
+Unit Tests typically follow the 3 step process:
+
+1. Arrange - setup the test
+1. Act - run code being tested
+1. Assert - assert that the results meet expectations
