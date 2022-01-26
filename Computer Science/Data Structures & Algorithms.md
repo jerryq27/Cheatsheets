@@ -972,6 +972,11 @@ function bubbleSort(arr) {
 
 ### Selection Sort
 
+Selection sort works by selecting the first element and setting it as the
+"minimum". Then as you go through the list, you compare if the next element is
+smaller. If it is, you replace it as the smallest until you reach the end. Once
+the list has been traversed, you place the value lableed as smallest in the front.
+
 ### Insertion Sort
 
 ### Merge Sort
