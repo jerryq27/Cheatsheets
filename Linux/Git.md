@@ -4,10 +4,7 @@ Git is a version control tool used to track changes for project files.
 
 TODO:
 
-1. Research remotes
-    * Git push origin == connecting to remote?
-    * What are remotes??
-2. Research `git rebase` and `git cherry-pick` with use cases
+1. Research `git rebase` and `git cherry-pick` with use cases
 
 ## Basics
 
