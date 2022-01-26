@@ -1,6 +1,6 @@
 # Brownie
 
-[Checkpoint](https://youtu.be/M576WGiDBdQ?t=21796)
+[Checkpoint](https://youtu.be/M576WGiDBdQ?t=29437)
 
 Brownie is a smart contract development framework built on top of Web3.py. There's
 alot to manage with vanilla Web3.py from compiling the Solidity code into JSON
