@@ -1,6 +1,6 @@
 # Brownie
 
-[Checkpoint](https://youtu.be/M576WGiDBdQ?t=29437)
+[Checkpoint](https://youtu.be/M576WGiDBdQ?t=30479)
 
 Brownie is a smart contract development framework built on top of Web3.py. There's
 alot to manage with vanilla Web3.py from compiling the Solidity code into JSON
@@ -395,6 +395,24 @@ Brownie can also fork a mainnet blockchian to a local blockchain. This allows us
 with a simulated version of a mainnet without affecting the actual meinnet. You can fork
 a mainnet from services like Infura or Alchemy.
 
+### Brownie Mixes
+
+Brownie mixes are location on [GitHub](https://github.com/brownie-mix). These mixes are
+essentially templates that contain boiler plate code for various types of Brownie projects.
+
+Some example mixes are:
+
+* react-mix - Brownie project with React
+* token-mix - ERC20 token project
+* chainlink-mix - Brownie project with Chainlink
+* nft-mix - NFT project
+
+To use one of these mixes, you would use the `brownie bake $MIX` command:
+
+```console
+> brownie bake react-mix
+```
+
 ## Other
 
 ### Tools
@@ -403,3 +421,4 @@ There are a variety of tools you can use for smart contract development:
 
 * Ganache - simulates a local blockchain in which your computer is the only node (very fast).
 * Infura - Gives access to testnet and mainnet by providing blockchain URLs.
+* OpenZeppelin - Provides smart contracts to make developing other contracts easier and secure.
