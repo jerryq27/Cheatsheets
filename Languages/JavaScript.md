@@ -266,6 +266,28 @@ prompt('Enter your name: ');
 
 ## Functions
 
+### Closures
+
+A closure is a function defined inside another function and the inner function maintains
+the state of the outer function even though the outer function has finished its execution.
+
+```js
+function outer() {
+    let num = 7;
+
+    function inner() {
+        console.log(num);
+    }
+    return inner;
+}
+
+let closure = outer();
+// Outer function's state is maintained.
+closure(); // 7
+closure(); // 7
+```
+
+
 ### Arrow Functions
 
 Arrow functions were introduced in ES6 to simplify function definitions:
