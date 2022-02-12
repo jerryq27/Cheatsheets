@@ -1,6 +1,6 @@
 # Brownie
 
-[Checkpoint](https://youtu.be/M576WGiDBdQ?t=32530)
+[Checkpoint](https://youtu.be/M576WGiDBdQ?t=48362)
 
 Brownie is a smart contract development framework built on top of Web3.py. There's
 alot to manage with vanilla Web3.py from compiling the Solidity code into JSON
@@ -92,6 +92,20 @@ so `brownie test` is the same as running `brownie test --network development`.
 You can changed the default network by defining a `default:` key in the networks
 section of the `brownie-config.yaml` file.
 
+### Tests 2
+
+Tests are created in the **tests/** directory. Usually files in the directory are prepended
+with tests by convention, it also help Brownie locate the files with tests.
+
+Common testing commands:
+
+* `brownie test` - runs all the tests in the **tests/** folder
+* `brownie test -k $TEST_FUNCTION_NAME` - runs a specific test function
+* `brownie test -pdb` - opens the Python interpreter after a failed test (useful for debugging)
+* `brownie test -s` - more output information on test and it will show print lines if they exist in a test
+
+> Brownie test uses everything in the Pytest library, anything supported there is supported with Brownie testing as well.
+
 ### Testing Environment
 
 There's a recommended environment setup for running tests.
@@ -173,6 +187,10 @@ def main():
 
 This is much more manageable way to create and deploy contracts with Brownie than
 with Web3.
+
+> Some transactions take longer than others. It's usually a good idea to run `transaction.wait(1)` which
+waits for one block cycle before continuing, otherwise an error could be thrown if the next line tries
+to execute mid transaction.
 
 ### Test Network Deployment
 
@@ -277,20 +295,6 @@ from brownie import ExampleContract, accounts
 example_contract = ExampleContract.deploy({"from": accounts[0]}, publish_source=True)
 print("Contract has been deployed and verified!")
 ```
-
-### Tests
-
-Tests are created in the **tests/** directory. Usually files in the directory are prepended
-with tests by convention, it also help Brownie locate the files with tests.
-
-Common testing commands:
-
-* `brownie test` - runs all the tests in the **tests/** folder
-* `brownie test -k $TEST_FUNCTION_NAME` - runs a specific test function
-* `brownie test -pdb` - opens the Python interpreter after a failed test (useful for debugging)
-* `brownie test -s` - more output information on test and it will show print lines if they exist in a test
-
-> Brownie test uses everything in the Pytest library, anything supported there is supported with Brownie testing as well.
 
 ## Advance Use
 
@@ -422,3 +426,5 @@ There are a variety of tools you can use for smart contract development:
 * Ganache - simulates a local blockchain in which your computer is the only node (very fast).
 * Infura - Gives access to testnet and mainnet by providing blockchain URLs.
 * OpenZeppelin - Provides smart contracts to make developing other contracts easier and secure.
+* IPFS - decentralized file storage, however requires a self-ran node. Files in self node will go down with the node unless someone else "pins" those files as well.
+* Pinata Cloud - IPFS file management service. Alternative to running your own IPFS node, also offers a way to "pin" files.
