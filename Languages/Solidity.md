@@ -304,6 +304,14 @@ the function
 
 Solidity supports [enums](#).
 
+Example:
+
+```sol
+// No Semicolon needed
+// Each value has a numerical representation which it's its index, starting at 0.
+enum Dogs {HUSKY, BEAGLE, CORGI, SHIBA INU, PITBULL}
+```
+
 ## Arrays
 
 Soildity can define two types of arrays:
@@ -345,6 +353,8 @@ mapping(uint => string) public userIdToName;
 // Adding data to a map.
 userIdToName[key] = value;
 ```
+
+> It's considered best practice to emit and event whenever a mapping is updated.
 
 ## I/O
 
