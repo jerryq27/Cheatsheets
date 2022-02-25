@@ -1,227 +1,49 @@
 # Solidity
 
-[Zombie Course](https://cryptozombies.io/en/course)
-
-[Stopping Point: Chapter 3 Lesson 1](https://cryptozombies.io/en/lesson/3/chapter/1)
-
-[Free Code Camp Course: Lesson 6 - Brownie Fund Me](https://youtu.be/M576WGiDBdQ?t=18941)
 [Issues Link](https://github.com/smartcontractkit/full-blockchain-solidity-course-py/blob/main/chronological-issues-from-video.md)
+[Checkpoint](https://youtu.be/coQ5dg8wM2o?t=2355)
 
-```code
-pragma solidity >=0.6.0 <0.9.0;
-
-/*
-    Contracts can be thought of like a class.
-*/
-contract SimpleStorage {
-    
-    uint256 myNum; // In solidity, this will get initialized to a null value, in this case: 0.
-    
-    struct People {
-        uint256 favoriteNumber;
-        string name;
-    }
-    
-    People[] public people;
-    mapping(string => uint256) public nameToFavoriteNum;
-
-    function store(uint256 _myNum) public {
-        myNum = _myNum;
-    }
-    
-    /*
-        Two keywords that define functions:
-        view - view functions read some state off of the blockchain. In Remix, functions that don't alter state create a blue buttons (public variables are also view functions!)
-        pure - pure functions do some type of calculation, but pure functions also  don't alter the state.
-    */
-    function retreive() public view returns(uint256) {
-        return myNum;
-    }
-    
-    function addPerson(string memory _name, uint256 _favoriteNumber) public {
-        // Order matters when creating an object like this.
-        // people.push(People(_favoriteNumber, _name));
-        
-        // Order doesn't matter when specifying the names.
-        people.push(People({name: _name, favoriteNumber: _favoriteNumber}));
-        
-        nameToFavoriteNum[_name] = _favoriteNumber;
-        
-    }
-}
-```
-
-```sol
-// SPDX-License-Identifier: MIT
-pragma solidity >=0.6.6 <0.9.0;
-
-import "@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol";
-import "@chainlink/contracts/src/v0.6/vendor/SafeMathChainlink.sol";
-
-contract FundMe {
-    // This 'using A for B;' can be used to attach library functions(A) to any type(B) within a contract.
-    using SafeMathChainlink for uint256;
-    
-    mapping(address => uint256) public addressToAmountFunded;
-    address[] public funders;
-    address public owner;
-    
-    /*
-        Constructor - this function runs when a contract is deployed.
-    */
-    constructor() public {
-        // in this case, the owner is the person who deployed the contract.
-        owner = msg.sender;
-    }
-    
-    
-    function fund() public payable {
-        uint256 minUSD = 50 * (10**18); // Minimum of $50 in wei.
-        // if(msg.value < minUSD) {
-        //     revert?
-        // }
-        
-        // Solidity style would use 'require' which is a check before a function executes.
-        require(getConversionRate(msg.value) >= minUSD, "You need to spend more ETH!");
-        // 'revert' unspent gas and funds are returned to the user.
-        
-        /*
-            msg.sender & msg.value are predefined values in every contract.
-            1. msg.sender - the sender of funds
-            2. msg.value - the amount of funds
-        */
-        addressToAmountFunded[msg.sender] += msg.value;
-        
-        // Oracles are used to connect contracts to "outside world data".
-        // Find ETH -> USD conversion.
-        
-        
-        funders.push(msg.sender);
-    }
-    
-    function getVersion() public view returns(uint256) {
-        
-        // Addresss from https://docs.chain.link/docs/ethereum-addresses/ Rinkeby: ETH->USD
-        AggregatorV3Interface priceFeed = AggregatorV3Interface(0x8A753747A1Fa494EC906cE90E9f37563A8AF630e);
-        return priceFeed.version();
-    }
-    
-    function getPrice() public view returns(uint256) {
-        AggregatorV3Interface priceFeed = AggregatorV3Interface(0x8A753747A1Fa494EC906cE90E9f37563A8AF630e);
-        // This returns a Tuple of 5 values.
-        // priceFeed.latestRoundData()
-        
-        // (
-        //     uint80 roundId,
-        //     int256 answer,
-        //     uint256 startedAt,
-        //     uint256 updatedAt,
-        //     uint80 answeredInRound
-        // ) = priceFeed.latestRoundData();
-        
-        // To fix unused variables warning, use blanks.
-        (,int256 answer,,,) = priceFeed.latestRoundData();
-        
-        /* 
-            returns 320120819731 which is 3201.20819731
-            
-            Reason being that Solidity doesn't work with decimals,
-            and these values should be seen as having 8 decimals places
-        */
-        // return uint256(answer);
-        
-        // Returns the answer in wei (18 decimal places).
-        return uint256(answer * 10000000000);
-    }
-    
-    // 100000000 = 1 gwei
-    function getConversionRate(uint256 ethAmount) public view returns(uint256) {
-        uint256 ethPrice = getPrice();
-        
-        // 320801998386.000000000000000000
-        // uint256 ethAmountInUSD = (ethPrice * ethAmount);
-        
-        uint256 ethAmountInUSD = (ethPrice * ethAmount) / 1000000000000000000;
-        // 3208019983860 
-        // add 0s to get 18 decimal places
-        // 0.000003208019983860
-        
-        // 0.000003208019983860 * 1 Gwei = USD price.
-        return ethAmountInUSD;
-    }
-    
-    // Modifiers are used to change the behavior of a function in a declaritive way.
-    modifier onlyOwner {
-        require(msg.sender == owner);
-        // this underscore means 'rest of the function code.'
-        _;
-    }
-    
-    // function withdraw() payable public {
-    //     // Add a require to make sure only the contract owner/admin can withdraw funds.
-    //     require(msg.sender == owner);
-        
-        
-    //     // tansfer is a function that can be called on any address to send ETH from one address to another.
-    //     // 'this' refers to the current contract.
-    //     // 'balance' is the current value of funds at that address.
-    //     msg.sender.transfer(address(this).balance);
-    // }
-    
-    // withdraw function using a modifier.
-    function withdraw() payable onlyOwner public {
-        msg.sender.transfer(address(this).balance);
-        
-        // Reset all the funder's fund value to 0.
-        for(uint256 i = 0; i < funders.length; i++) {
-            address funder = funders[i];
-            addressToAmountFunded[funder] = 0;
-        }
-        // reset the funders array to a blank array.
-        funders = new address[](0);
-    }
-
-    
-}
-```
-
-Solidity is a language used to build DApps on the Ethereum network.
+Solidity is a language used to build decentralized applications (DApps) on the blockchain networks.
 
 ## Basics
 
-Solidity programs are compiled to the Ethereum Virtual Machine (EVM).
-Blockchains that are EVM compatable are able to deploy Solidity contract on their network.
+Solidity programs are compiled by the Ethereum Virtual Machine (EVM). Other blockchains
+that are EVM compatable are able to deploy Solidity contract on their network as well.
 
 Solidity programs always start with the `pragma solidity $VERSION` to specify
-which version the project's code runs on.
+which version the project's code runs on:
 
-```code
+```cpp
 pragma solidity 0.7.0  // Valid only for version 0.7.0.
 pragma solidity ^0.6.0; // Valid for any 0.6 versions, only in the 0.6.* range.
 pragma solidity >=0.6.0 <0.9.0; // Valid for the the version range 0.6.0 (inclusive) - 0.9.0 (exclusive).
 ```
 
-Above the pragma, there should also be a SPDX License Identifier, otherwise the compiler will throw a warning:
+Above the `pragma`, there should also be a _SPDX License Identifier_, otherwise the compiler will throw a warning:
 
-```code
+```cpp
 // SPDX-License-Identifier: MIT
 pragma >=0.6.0 <0.9.0;
 ```
 
-The language is [statically (strongly) typed](#) and uses the basic arithmetic
-operators with the addition of `**` "Power of" operator.
+The language is [statically](Languages#statically-typed) and [strongly typed](Languages#strongly-typed) and uses the
+[basic arithmetic operators](Languages#arithmetic) with the addition of `**` "Power of" operator.
 
 Transactions made on the network are measured using _ether_, _wei_, and _gwei_.
 
-* Ether - Base unit used in Ethereum.
-* Gwei - Unit of Ether with 9 decimal places.
-* Wei - The smallest unit of measure of Ether with 18 decimal places.
+* **Ether** - Base unit used in Ethereum.
+* **Gwei** - Unit of Ether with 9 decimal places.
+* **Wei** - The smallest unit of measure of Ether with 18 decimal places.
 
 ## Variables
 
+Variables in Solidity are **not** typically stored in memory unless [specified](#storage). A contract's global
+variables are permanently stored in the contract's storage i.e. they're written on the Ethereum blockchain (like writing to a database).
+These global variables are more commonly referred to as _state variables_.
+
 Variables can contain numerous data types:
 
-```code
+```cpp
 uint256 myNumber = 5; // unsigned integer of 256 bits (32 bytes).
 bool myBool = false; // boolean
 string myString = "String"; // Strings
@@ -234,8 +56,6 @@ uint256 myNumber2; // 0
 ```
 
 > These types are technically functions, when using something like `myNumber()` it just returns the value.
-
-### Casting
 
 ### Overflow
 
@@ -274,25 +94,6 @@ contract Overflow {
 
 > As of 0.8.0, Solidity now checks for overflow. Code is more readable at the slight increase in gas cost.
 
-State variables are permanently stored in the contract's storage i.e. they're
-written on the Ethereum blockchain (like writing to a database).
-
-### Visibility
-
-There are 4 types of visibility modifiers:
-
-1. `external` - Can't be used by the same contract, has to be an external contract.
-1. `public` - Any contract can use.
-1. `internal` - Can't be used by an external contract, has to be used by internally.
-1. `private` - Can only be used by the contract they are defined in.
-
-By default, a variable (or function) is internal:
-
-```sol
-uint256 myNumber; // internal
-uint256 public myPublicNumber; // public
-```
-
 ### Global Variables
 
 Solidity has predefined global variables that are available to all functions:
@@ -300,9 +101,11 @@ Solidity has predefined global variables that are available to all functions:
 * `msg.sender` - refers to the address of the person/smart contract that called
 the function
 
+### Casting
+
 ### Enums
 
-Solidity supports [enums](#).
+Solidity supports [enums](Languages/#variables).
 
 Example:
 
@@ -312,14 +115,29 @@ Example:
 enum Dogs {HUSKY, BEAGLE, CORGI, SHIBA INU, PITBULL}
 ```
 
-## Arrays
+### Visibility
 
-Soildity can define two types of arrays:
+There are 4 types of visibility modifiers:
 
-* Fixed arrays - array with a fixed size.
-* Dynamic arrays - array with no fixed size and can grow dynamically
+1. **external** - Can't be used by the same contract, has to be an external contract.
+1. **public** - Any contract can use and a getter is generated to access it.
+1. **internal** - Can't be used by an external contract, has to be used by internally and child contracts.
+1. **private** - Can only be used by the contract they are defined in.
 
-```code
+By default, a variable and functions are _internal_:
+
+```sol
+uint256 myNumber; // internal
+uint256 public myPublicNumber; // public
+```
+
+## Collections
+
+### Arrays
+
+Soildity arrays can either be _fixed_ (size pre-defined) or _dynamic_ (size not defined):
+
+```cpp
 // Fixed
 Animal[5] animals2;
 
@@ -331,10 +149,10 @@ animals.push(Animal('dog'));
 animals.push(Animal({name: 'cat"}));
 ```
 
-Arrays can be declared public and Solidity automatically creates a getter method
-for it.
+Arrays, like other variable types, can be declared public and Solidity automatically
+creates a getter method for it.
 
-```code
+```cpp
 // Other contracts can now read data from this, useful for storing public data
 // in a contract.
 string[] public names;
@@ -344,17 +162,17 @@ names.push("Jerry"); // Tom, Jerry
 
 ### Mappings
 
-Mappings are another way to store data as key-value pairs:
+Mappings are key-value pairs:
 
-```code
-// mapping(key type => value type)
+```cpp
+// mapping($KEY_TYPE => $VALUE_TYPE)
 mapping(uint => string) public userIdToName;
 
 // Adding data to a map.
 userIdToName[key] = value;
 ```
 
-> It's considered best practice to emit and event whenever a mapping is updated.
+> It's considered best practice to _emit_ an event whenever a mapping is updated.
 
 ## I/O
 
@@ -362,17 +180,12 @@ userIdToName[key] = value;
 
 Solidity offers two locations to store variables:
 
-1. `storage` - variables stored permanently on the blockchain
-1. `memory` - temporary variables which are erased between external function
-calls in a contract.
+1. **storage** - variables stored permanently on the blockchain. Default setting for variables defined outside of functions.
+1. **memory** - temporary variables. Default setting for variables defined inside functions and don't persist beyond the function scope.
 
-These keywords aren't commonly used, variables defined outside of a function
-(state variables) are `storage` variables by default. Variables defined within
-functions are `memory` variables and will dissapear when the function call ends.
+Although these keywords aren't commonly used, there is some use cases when dealing with structs and arrays:
 
-Use cases for these keywords are when dealing with structs and arrays:
-
-```code
+```cpp
 contract SandwichFactory {
   struct Sandwich {
     string name;
@@ -405,202 +218,19 @@ contract SandwichFactory {
 }
 ```
 
-## Functions
-
-You can pass values into a function by [value or by reference](#):
-
-* To pass a value by value, add `memory` after the type (this is required by
-all reference types like strings, structs, arrays, maps, etc.)
-* To pass by reference, nothing else needs to be added.
-
-By convention, function parameters are prepended with an `_` to differentiate
-them from the global variables.
-
-Functions are also `public` by default which means other contracts can call
-those functions. If this behavior is undesired, mark the function as `private`.
-By convention, private function names are prepended with an `_`.
-
-Syntax:
-
-```code
-function sayHello(string memory _name, uint _age) public {
-
-}
-
-// Can't be executed by other contracts.
-function _sayGoodbye(string _name, uint _age) private {
-
-}
-```
-
-Along with `public` and `private`, Solidity also has the `internal` and
-`external` access modifiers:
-
-```code
-// Similar to private, except child contacts can also execute this function (like 'protected'!)
-function hello() internal {
-
-}
-
-// Similar to public, except this function can ONLY be called from outside the contract.
-function bye() external {
-
-}
-```
-
-Functions with a return must specify it in the function signature:
-
-```code
-function sayHello() public returns (string memory) {
-    return "Hello";
-}
-```
-
-Functions in Solidity can also have multiple returns:
-
-```code
-function getVals() public returns(uint numA, uint numB, uint numC) {
-  return(1, 2, 3);
-}
-
-uint a;
-uint b;
-uint c;
-// Grab all return values
-(a, b, c) = getVals();
-// Grab specific return values
-(,,c) = getVals();
-```
-
-### Function Modifiers
-
-There are a few keyword function modifiers:
-
-1. `view` - view functions read some state off of the blockchain.
-1. `pure` - pure functions do some type of calculation, without altering the state of the blockchain.
-1. `payable` - payable functions gives us access to wallet and payment information in the form of the pre-defined `msg.sender` and `msg.value` variables.
-
-```code
-function sayHello() public view returns (string memory) {
-
-}
-
-// Pure functions are functions that don't access any data in the contract
-function twoPlusTwo public pure returns (uint) {
-    return 2 + 2;
-}
-```
-
-> A data type's function call is technically a view function!
-
-### Parameter Modifiers
-
-There are a few keyword modifiers to handle how parameter values (objects only?) are stored during the execution of a function:
-
-1. `memory` - the parameter value will only exist in memory during the execution of the function.
-1. `storage` - the parameter value will persist even after the function has finished executing.
-
-```code
-
-function sayHello(string memory _name) {
-  say("Hello " + _name);
-}
-
-function sayhello2(string storage _name) {
-  say("Hello " + _name);
-}
-```
-
-### Global Functions
-
-Solidity has predefined global functions that are available to all functions:
-
-* `require(condition)` - when used as the first line in a function, the function
-will only run if the condition is true.
-
-## Contracts
-
-Contracts are the fundamental building block for Ethereum applications.
-They can be thought of as classes and are the starting point to a project.
-
-```code
-pragma solidity >=0.5.0 <0.6.0;
-
-contract Example {
-    
-}
-```
-
-### Structs
-
-Like classes, structs are used to create new data types with properties and objects.
-
-```code
-contract Example {
-
-  struct Person {
-    string name;
-    string blockchain;
-  }
-
-  Person person1 = Person({name: "Jerry", blockchain: "Ethereum"});
-}
-```
-
-> Structs organize data the same way arrays do, as in 'name' would be at index 0, and 'blockchain' at index 1.
-
-### Importing Contracts
-
-You can import a contract to use with another contract:
-
-```sol
-import "/path/to/other/contract.sol"
-
-// Assuming the file has a contract called 'Example'.
-
-// Creating a contract object like this techinically deploys the contract to the blockchain.
-Example ex = new Example();
-address(ex); // Returns the address of the contract.
-```
-
-There are two things required to interact with the members/functions of an imported contract:
-
-1. Contract address
-1. ABI (Application Binary Interface) - ABIs is JSON that describes the contents of a Solidity file (contracts, functions, inputs, outputs, type of function, variables, variable types, etc.) this tells Solidity and other languages how they can interact with that contract. An ABI is always needed to interact with a contract.
-
-### Inheritance
-
-Contract inheritance allows the separation of code logic into multiple contracts
-for more organized, clean code.
-
-```code
-// Dog.sol
-contract Dog {
-
-}
-```
-
-```code
-// Husky.sol
-import "./Dog.sol";
-
-contract Husky is Dog {
-    // Husky has access to all functions defined in dog.
-}
-```
-
-## Events
+### Events
 
 Events are similar to what logging is, but they are for the blockchain to log what a contract is doing.
 Events are stored and accessible on the blockchain as well. They are not accessible by any smart contract
 and are much more gas efficient than using a storage variable.
 
-Events are a way for the contract to notify your frontend that something happened
-to the blockchain (state).
+Events are also a way for the contract to notify your frontend that something happened
+to the blockchain/state.
 
 Example:
 
-```code
+```cpp
+// A custom event needs to be defined.
 event NameAdded(string name);
 
 string[] public names;
@@ -617,10 +247,219 @@ Frontend:
 ```js
 ContractName.NameAdded(function(error, result) {
   // do something with result
-})
+});
 ```
 
-## Python & Solidity
+## Functions
+
+Functions are _public_ by default which means other contracts can call those functions.
+If this behavior is undesired, mark the function as _private_.
+Private function names are also prepended with an underscore by convention.
+
+By convention, function parameters are also prepended with an underscore to differentiate
+them from global variables.
+
+Solidity also uses the _internal_ and _external_ access modifiers:
+
+```cpp
+// Similar to private, except child contacts can also execute this function (like 'protected'!)
+function hello() internal {
+
+}
+
+// Similar to public, except this function can ONLY be called from outside the contract.
+function bye() external {
+
+}
+```
+
+Functions with a return must specify it in the function signature:
+
+```cpp
+function sayHello() public returns (string memory) {
+    return "Hello";
+}
+```
+
+Solidity functions can also have multiple returns:
+
+```cpp
+function getVals() public returns(uint numA, uint numB, uint numC) {
+  return(1, 2, 3);
+}
+
+uint a;
+uint b;
+uint c;
+// Grab all return values
+(a, b, c) = getVals();
+
+// Grab specific return values
+(,,c) = getVals();
+```
+
+### Function Modifiers
+
+With functions, alongside access modifiers, there are also function modifiers:
+
+1. **view** - view functions read some state off of the blockchain.
+1. **pure** - pure functions do some type of calculation, without needing to alter or access the contract's state on the blockchain.
+1. **payable** - payable functions gives us access to wallet and payment information in the form of the pre-defined `msg.sender` and `msg.value` variables.
+
+```cpp
+// View functions read the contract's state on the blockchain.
+function sayHello() public view returns (string memory) {
+
+}
+
+// Pure functions are functions that don't access any data in the contract's state.
+function twoPlusTwo public pure returns (uint) {
+    return 2 + 2;
+}
+```
+
+> A data type's default function call is technically a view function!
+
+### Parameter Modifiers
+
+The storage modifiers handle how parameter values (objects only?) are stored during the execution of a function:
+
+1. **memory** - the parameter value will only exist in memory during the execution of the function.
+1. **storage** - the parameter value will persist even after the function has finished executing.
+
+```cpp
+
+function sayHello(string memory _name) {
+  say("Hello " + _name);
+}
+
+function sayhello2(string storage _name) {
+  say("Hello " + _name);
+}
+```
+
+You use also use these modifiers to pass values into a function by [value](Languages/#functions) or by [reference](Languages/#functions):
+
+* To pass a value by value, add _memory_ after the type (required by all reference types like strings, structs, arrays, maps, etc.)
+* To pass by reference, nothing else needs to be added.
+
+Syntax:
+
+```cpp
+function sayHello(string memory _name, uint _age) public {
+
+}
+
+// Can't be executed by other contracts.
+function _sayGoodbye(string _name, uint _age) private {
+
+}
+```
+
+### Custom Modifiers
+
+Custom modifiers are used to change the behavior of a function in a declaritive way:
+
+```cpp
+modifier onlyOwner {
+    require(msg.sender == owner);
+    // this underscore means 'rest of the function code.'
+    _;
+}
+
+// Withdraw function using the onlyOwner modifier.
+function withdraw() payable onlyOwner public {
+    msg.sender.transfer(address(this).balance);
+    ...
+}
+```
+
+### Global Functions
+
+Solidity provides some predefined functions that are available to all functions:
+
+* `require(condition)` - when used as the first line in a function, the function
+will only run if the condition is true.
+
+## Contracts
+
+Contracts are the fundamental building block for decentralized applications.
+They can be thought of as [classes](Languages/#classes--objects) and are the starting point to a project.
+
+```cpp
+pragma solidity >=0.5.0 <0.6.0;
+
+contract Example {
+    // Constructor - this function runs when a contract is deployed.
+    constructor() public {
+        // in this case, the owner is the person who deployed the contract.
+        owner = msg.sender;
+    }
+}
+```
+
+### Structs
+
+Like classes, structs are used to create new data types with properties and objects.
+
+```cpp
+contract Example {
+
+    struct Person {
+        string name;
+        string blockchain;
+    }
+
+    // Order matters when creating an object like this.
+    Person person1 = Person("Jerry", "Ethereum")
+    // Order doesn't matter when specifying the names.
+    Person person2 = Person({blockchain: "Solana", name: "Tom"});
+}
+```
+
+> Structs organize data the same way arrays do, as in 'name' would be at index 0, and 'blockchain' at index 1.
+
+### Importing Contracts
+
+You can import a contract to use with another contract:
+
+```cpp
+import "/path/to/other/contract.sol"
+
+// Assuming the file has a contract called 'Example'.
+
+// Creating a contract object like this techinically deploys the contract to the blockchain.
+Example ex = new Example();
+address(ex); // Returns the address of the contract.
+```
+
+There are two things required to interact with the members/functions of an imported contract:
+
+1. **Contract address**
+1. **ABI (Application Binary Interface)** - ABIs is JSON that describes the contents of a Solidity file (contracts, functions, inputs, outputs, type of function, variables, variable types, etc.) this tells Solidity and other languages how they can interact with that contract. An ABI is always needed to interact with a contract.
+
+### Inheritance
+
+Contract inheritance allows the separation of code logic into multiple contracts
+for more organized, clean code.
+
+```cpp
+// Dog.sol
+contract Dog {
+
+}
+```
+
+```cpp
+// Husky.sol
+import "./Dog.sol";
+
+contract Husky is Dog {
+    // Husky has access to all functions defined in dog.
+}
+```
+
+## Libraries & Frameworks
 
 ### Web3.py
 
@@ -717,8 +556,8 @@ Working with any contract requires two things:
 
 Once we have those, we can invoke the members in a couple ways:
 
-1. call - simulates the function call and generates a value, but doesn't make a state change on the network.
-1. transaction - actually makes a state change to the network.
+1. **call** - simulates the function call and generates a value, but doesn't make a state change on the network.
+1. **transaction** - actually makes a state change to the network.
 
 ```py
 simple_storage = w3.eth.contract(address=transaction_receipt.contractAddress, abi=abi)
@@ -741,48 +580,24 @@ print(simple_storage.functions.retrieve().call())  # 27
 
 ### Brownie
 
-Brownie is a smart contract development framework built on top of Web3.py. There's alot to manage
-with vanilla Web3.py from compiling the Solidity code into JSON with `solcx`, keeping track of addresses,
-and deployment.
+Brownie is a Python library built on top of the Web3.py library and simplifies working with and deploying
+smart contracts.
 
-To create a Brownie project, first install the `eth-brownie` package then run `brownie init` inside
-and empty directory. This will generate the following folder structure:
+#### Brownie Deployments
 
-* build/ - holds the low level files generated with `brownie compile`
-  * contracts/ - where the compiled JSON for Solidity code is.
-  * deployments/ - tracks deployments across all networks.
-  * interfaces/
-* contracts/ - holds the Solidity contract source files.
-* interfaces/ - holds interfaces (interfaces makes it easy to interact with blockchain applications)
-* reports/ - holds any type of report you want to save
-* scripts/ - holds scripts to automates tasks
-* tests/ - holds tests for the contracts
-* .gitattributes
-* .gitignore
+This section details how the above code for Web3 deployment can be done the Brownie way. The
+[Brownie cheatsheet](../Libraries,%20Tools,%20&%20Frameworks/BlockchainDev/Brownie#brownie) has
+more details with using the library.
 
-Some common Brownie commands:
+Compiling contracts defined in **contracts/**:
 
-* `brownie init` - creates a Brownie project in the current folder (must be an empty directory)
-* `brownie compile` - compiles Solidity code from projects folders into **build/**
-* `brownie run $SCRIPT` - runs the script located in **scripts/**
-
-#### Brownie Local Network Deployment
-
-The following steps are how to deploy to a local network with Brownie:
-
-1. Compile the contract's Solidity code
-1. Create a transaction for the contract's creation
-1. Connect to the network
-
-To compile the contracts in **contracts/**, the `brownie compile` command is used.
-Doing this will also place the contract object definition in Brownie so we can
-use it:
-
-```py
-from brownie import ExampleContract
+```sh
+> brownie compile
 ```
 
-To deploy this, it's as simple as writing a script and running it with `brownie run scripts/deploy_example.py`:
+The compiled contract is now populating the **build/** folder.
+
+To deploy compile contracts locally, create a deploy script in **scripts/**:
 
 ```py
 from brownie import ExampleContract, accounts
@@ -791,10 +606,9 @@ example_contract = ExampleContract.deploy({"from": accounts[0]})
 print("Contract has been deployed!")
 ```
 
-The contract has been deployed to a local network!
-Notice that when running a script, Brownie displays the following output:
+Run with `brownie run scripts/deploy_example.py`:
 
-```console
+```sh
 > brownie run .\scripts\example_deploy.py
 Brownie v1.16.4 - Python development framework for Ethereum
 
@@ -807,97 +621,11 @@ Contract has been deployed!
 Terminating local RPC client...
 ```
 
-Also notice that if we don't provide a network or testnet, Brownie launches a Ganache instance by default.
-Using the following code, we can access the addresses generated by Ganache:
+The contract has been deployed to a local network!
+If a network isn't specified in the run command, Brownie launches a local Ganache instance by default.
 
-```py
-from brownie import accounts
-
-# This only works for a local network
-def deploy():
-    account = accounts[0]
-    print(account)
-
-
-def main():
-    deploy()
-```
-
-This is much more manageable to create and deploy contracts with Brownie than Web3.
-
-#### Brownie Test Network Deployment
-
-To work with a testnet, you would first add an account from Metamask, for example,
-Using `brownie accounts new $ACCOUNT_NAME`, this will prompt you for a private key
-Of the account (make sure to prepend `0x` to it!):
-
-```console
-> brownie accounts new jerry-test-account
-Brownie v1.16.4 - Python development framework for Ethereum
-
-Enter the private key you wish to add: 0x**********
-Enter the password to encrypt this account with:
-SUCCESS: A new account '0x3B67C3700632B63086FD2CCA2Ce918cBC19a4900' has been generated with the id 'jerry-test-account'
-
-> brownie accounts list
-Brownie v1.16.4 - Python development framework for Ethereum
-
-Found 1 account:
- └─jerry-test-account: 0x3B67C3700632B63086FD2CCA2Ce918cBC19a4900
-```
-
-Once the account has been added (you will need the password you used when adding the account):
-
-```py
-from brownie import accounts
-
-
-def deploy():
-    account = accounts.load("jerry-test-account")
-    print(account)
-
-
-def main():
-    deploy()
-```
-
-This is a great way to store account keys, it's not hard coded, won't be pushed up with git, and it's password protected.
-Using Environment variables would be a bit less secure, but more developer friendly since you won't be inputting a password
-everytime you run the script.
-
-To load a private key with Environment variables, you would first need to tell Brownie to load in the variables in the `.env` file.
-This is accomplished by creating a `brownie-config.yaml` file and adding the followin line:
-
-```yaml
-dotenv: .env
-```
-
-Then you update the script:
-
-```py
-import os
-from brownie import accounts
-
-
-def deploy():
-    account = accounts.add(os.getenv("PRIVATE_KEY"))
-    print(account)
-
-
-def main():
-    deploy()
-```
-
-> Rule of thumb: Use the password protected method for accounts with real money and the environment variable method for test
-accounts.
-
-Useful commands with accounts:
-
-* brownie accounts new $ACCOUNT_NAME - adds an account to Brownie's accounts
-* brownie accounts delete $ACCOUNT_NAME - deletes an account from Brownie's accounts
-* brownie accounts list - list the created accounts in Brownie
-
-Deploying to a testnet, Brownie comes with predefined testnets already. To view them, use `brownie networks list`:
+Deploying to a testnet, use the `--network` flag with a Brownie predefined testnets.
+To view them, use `brownie networks list`:
 
 ```console
 > brownie networks list
@@ -912,62 +640,6 @@ Ethereum
   ...
 ```
 
-> Anything listed under development, those networks delete any blockchain changes after the script terminates. Other testnets,
-those values will persist.
-
-#### Tests
-
-Tests are created in the **tests/** directory. Usually files in the directory are prepended
-with tests by convention, it also help Brownie locate the files with tests.
-
-Common testing commands:
-
-* `brownie test` - runs all the tests in the **tests/** folder
-* `brownie test -k $TEST_FUNCTION_NAME` - runs a specific test function
-* `brownie test -pdb` - opens the Python interpreter after a failed test (useful for debugging)
-* `brownie test -s` - more output information on test and it will show print lines if they exist in a test
-
-> Brownie test uses everything in the Pytest library, anything supported there is supported with Brownie testing as well.
-
-#### Console
-
-The Brownie console opens the  Python interpreter and allows us to run code normally ran in script.
-This is useful for code that doesn't necessarily need a file for reuseability, `brownie console`:
-
-```console
-> brownie console
-
-Brownie v1.16.4 - Python development framework for Ethereum
-
-SrcProject is the active project.
-
-Launching 'ganache-cli.cmd --port 8545 --gasLimit 12000000 --accounts 10 --hardfork istanbul --mnemonic brownie'...
-Brownie environment is ready.
->>> SimpleStorage
-[]
->>> account = accounts[0]
->>> account
-<Account '0x66aB6D9362d4F35596279692F0251Db635165871'>
->>> simple_storage = SimpleStorage.deploy({"from": account})
-Transaction sent: 0x1ff45e0f954f8736dcf6ce6287a1fa12b4e8ab3395b729cc8975c52f92cdf5cf
-  Gas price: 0.0 gwei   Gas limit: 12000000   Nonce: 0
-  SimpleStorage.constructor confirmed   Block: 1   Gas used: 335476 (2.80%)
-  SimpleStorage deployed at: 0x3194cBDC3dbcd3E11a07892e7bA5c3394048Cc87    
-
->>> simple_storage
-<SimpleStorage Contract '0x3194cBDC3dbcd3E11a07892e7bA5c3394048Cc87'>
-```
-
-#### Brownie Config
-
-The config file is a YAML file located in the root directory of the Brownie project.
-We can use this file (`brownie-config.yaml`) to tell Brownie about:
-
-* Where to get external libraries
-
-### Tools
-
-There are a variety of tools you can use for smart contract development:
-
-* Ganache - simulates a local blockchain in which your computer is the only node (very fast).
-* Infura - Gives access to testnet and mainnet by providing blockchain URLs.
+You will also need an account's private key to use for the testnet deployment, then just
+run `brownie run scripts\example_deploy.py --network ropsten` and the contract had been
+deployed to a test network!
