@@ -31,7 +31,7 @@ contract TokenFarm is Ownable {
         dappToken = IERC20(_dappTokenAddress);
     }
 
-    function setPriceFeedAddress(address _token, address _priceFeed)
+    function setPriceFeedContract(address _token, address _priceFeed)
         public
         onlyOwner
     {
@@ -70,6 +70,18 @@ contract TokenFarm is Ownable {
         if (stakingBalance[_token][_user] <= 0) {
             uniqueTokensStaked[_user] = uniqueTokensStaked[_user] + 1;
         }
+    }
+
+    /** Function 2 - Unstakes tokens sent in by users.
+        _token - the address of the ERC-20 token being staked
+     */
+    function unstakeTokens(address _token) public {
+        uint256 balance = stakingBalance[_token][msg.sender];
+        require(balance > 0, "Staking balance cannot be 0.");
+        IERC20(_token).transfer(msg.sender, balance);
+        stakingBalance[_token][msg.sender] = 0;
+        // Counters Re-entrancy attack?
+        uniqueTokensStaked[msg.sender] = uniqueTokensStaked[msg.sender] - 1;
     }
 
     /** Function 3 - Issues tokens to all stakers based on the value of tokens staked.
