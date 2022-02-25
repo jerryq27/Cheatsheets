@@ -1,6 +1,8 @@
 # Brownie
 
-[Checkpoint](https://youtu.be/M576WGiDBdQ?t=48362)
+[Checkpoint - DONE!](https://youtu.be/M576WGiDBdQ?t=58775)
+Checkout the Ethernaut & DamnVulnerableDefi games to learn about vulnerabilities and
+exploits to look out for with developing smart contracts.
 
 Brownie is a smart contract development framework built on top of Web3.py. There's
 alot to manage with vanilla Web3.py from compiling the Solidity code into JSON
@@ -423,6 +425,7 @@ To use one of these mixes, you would use the `brownie bake $MIX` command:
 
 There are a variety of tools you can use for smart contract development:
 
+* Truffle - suit of developer tools for working with smart contracts and blockchain networks.
 * Ganache - simulates a local blockchain in which your computer is the only node (very fast).
 * Infura - Gives access to testnet and mainnet by providing blockchain URLs.
 * OpenZeppelin - Provides smart contracts to make developing other contracts easier and secure.
