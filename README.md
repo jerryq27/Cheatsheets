@@ -6,7 +6,7 @@ a quick reference whenever I need to revisit one of these technologies. This
 repository is using the following directory structure:
 
 1. Languages - programming languages.
-1. Libraries, Tools, & Frameworks - contains tools and which type of development
+1. Libraries-Tools-Frameworks - contains tools and which type of development
 they are usually used in.
 1. Topics - general topics with concepts that are shared between multiple files.
 1. Tutorials - contains projects, source code from tutorials and books. and follows
@@ -50,4 +50,3 @@ use the following templates:
 ## Workflow
 ## Other
 ```
-
