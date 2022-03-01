@@ -1,7 +1,8 @@
 # Solidity
 
 [Issues Link](https://github.com/smartcontractkit/full-blockchain-solidity-course-py/blob/main/chronological-issues-from-video.md)
-[Checkpoint](https://youtu.be/coQ5dg8wM2o?t=3129)
+[Todo - Checkpoint](https://youtu.be/coQ5dg8wM2o?t=3129)
+[Solidity - Checkpoint](https://youtu.be/ipwxYa-F1uY?t=4231)
 
 Solidity is a language used to build decentralized applications (DApps) on blockchain networks.
 
@@ -44,13 +45,15 @@ These global variables are more commonly referred to as _state variables_.
 Variables can contain numerous data types:
 
 ```cpp
-uint256 myNumber = 5; // unsigned integer of 256 bits (32 bytes).
 bool myBool = false; // boolean
 string myString = "String"; // Strings
-int256 myint = -5; // Signed integer of 256 bits (32 bytes).
+string constant SOME_CONSTANT = "constant"; // Constant value.
 address myAddress = 0x3B67C3700632B63086FD2CCA2Ce918cBC19a4900; // Ethereum wallet address value.
-bytes32 myBytes = "cat"; // byte value of 32 bytes.
-
+int normalInt = 35;
+// You can specify the number of bits, 256 bits = 32 bytes.
+uint256 myNumber = 5;
+// byte value of 32 bytes.
+bytes32 myBytes = "cat";
 // If a value isn't specified, it will automatically be initialized to the null value of that type, in this case '0'.
 uint256 myNumber2; // 0
 ```
@@ -100,6 +103,8 @@ Solidity has predefined global variables that are available to all functions:
 
 * `msg.sender` - refers to the address of the person/smart contract that called
 the function
+* `tx.sender` - refers to the address of the person/smart contract that initiated
+the transaction (useful when working with multiple contracts)
 
 ### Casting
 
@@ -115,7 +120,7 @@ Example:
 enum Dogs {HUSKY, BEAGLE, CORGI, SHIBA INU, PITBULL}
 ```
 
-### Visibility
+### Visibility Modifers
 
 There are 4 types of visibility modifiers:
 
@@ -133,36 +138,37 @@ uint256 public myPublicNumber; // public
 
 ## Collections
 
+Collections can also use the [visibility modifiers](#visibility-modifers).
+
 ### Arrays
 
 Soildity arrays can either be _fixed_ (size pre-defined) or _dynamic_ (size not defined):
 
 ```cpp
+struct Person {
+  string name;
+}
+
 // Fixed
-Animal[5] animals2;
-
+string[2] public group1;
 // Dynamic
-Animal[] animals;
+string[] public group2;
 
-// Adding data to arrays.
-animals.push(Animal('dog'));
-animals.push(Animal({name: 'cat"}));
-```
+group1.push(Person("Tom"));
+group1.push(Person({name: "Jerry"}));
 
-Arrays, like other variable types, can be declared public and Solidity automatically
-creates a getter method for it.
+group2.push(Person("Luffy"));
+group2.push(Person({name: "Sanji"}));
+group2.push(Person("Usopp"));
 
-```cpp
-// Other contracts can now read data from this, useful for storing public data
-// in a contract.
-string[] public names;
-names.push("Tom");
-names.push("Jerry"); // Tom, Jerry
+group1.length; // 2
+group2.length; // 3
 ```
 
 ### Mappings
 
-Mappings are key-value pairs:
+Mappings are key-value pairs. Mappings don't have properties like `.length`. So it's
+a common practice to keep a counter state variable to keep track of the number of elements.
 
 ```cpp
 // mapping($KEY_TYPE => $VALUE_TYPE)
@@ -173,6 +179,12 @@ userIdToName[key] = value;
 ```
 
 > It's considered best practice to _emit_ an event whenever a mapping is updated.
+
+## Loops
+
+Loops are best avoided when dealing with values on the blockchain. Since reading and writing
+to a blockchain is equivalent to reading and writing to a database, those calls can get expensive.
+It would be like reading a row in a database table making a separate call for each row.
 
 ## I/O
 
@@ -380,6 +392,19 @@ Solidity provides some predefined functions that are available to all functions:
 
 * `require(condition)` - when used as the first line in a function, the function
 will only run if the condition is true.
+
+## Exceptions
+
+Error handling is done through the internal `require()` function. This takes a boolean expression
+as the first arguments and a message as the second. It usually appears as the first statement in
+a function:
+
+```cpp
+function checkBalance(uint _value) public {
+    require(_value > 0, "Balance has to be greater than 0!");
+    // CODE
+}
+```
 
 ## Contracts
 
