@@ -1,9 +1,9 @@
 # Solidity
 
 [Issues Link](https://github.com/smartcontractkit/full-blockchain-solidity-course-py/blob/main/chronological-issues-from-video.md)
-[Checkpoint](https://youtu.be/coQ5dg8wM2o?t=2355)
+[Checkpoint](https://youtu.be/coQ5dg8wM2o?t=3129)
 
-Solidity is a language used to build decentralized applications (DApps) on the blockchain networks.
+Solidity is a language used to build decentralized applications (DApps) on blockchain networks.
 
 ## Basics
 
@@ -460,6 +460,15 @@ contract Husky is Dog {
 ```
 
 ## Libraries & Frameworks
+
+There are a variety of tools you can use for smart contract development:
+
+* Truffle - suit of developer tools for working with smart contracts and blockchain networks.
+* Ganache - simulates a local blockchain in which your computer is the only node (very fast).
+* Infura - Gives access to testnet and mainnet by providing blockchain URLs.
+* OpenZeppelin - Provides smart contracts to make developing other contracts easier and secure.
+* IPFS - decentralized file storage, however requires a self-ran node. Files in self node will go down with the node unless someone else "pins" those files as well.
+* Pinata Cloud - IPFS file management service. Alternative to running your own IPFS node, also offers a way to "pin" files.
 
 ### Web3.py
 
