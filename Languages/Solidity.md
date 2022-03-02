@@ -2,7 +2,6 @@
 
 [Issues Link](https://github.com/smartcontractkit/full-blockchain-solidity-course-py/blob/main/chronological-issues-from-video.md)
 [Todo - Checkpoint](https://youtu.be/coQ5dg8wM2o?t=3129)
-[Solidity - Checkpoint](https://youtu.be/ipwxYa-F1uY?t=4231)
 
 Solidity is a language used to build decentralized applications (DApps) on blockchain networks.
 
@@ -103,7 +102,7 @@ Solidity has predefined global variables that are available to all functions:
 
 * `msg.sender` - refers to the address of the person/smart contract that called
 the function
-* `tx.sender` - refers to the address of the person/smart contract that initiated
+* `tx.origin` - refers to the address of the person/smart contract that initiated
 the transaction (useful when working with multiple contracts)
 
 ### Casting
@@ -471,7 +470,15 @@ for more organized, clean code.
 ```cpp
 // Dog.sol
 contract Dog {
+    string public name;
 
+    constructor(string memory _name) public {
+        name = _name;
+    }
+
+    function bark() public {
+        emit("woof!");
+    }
 }
 ```
 
@@ -480,8 +487,69 @@ contract Dog {
 import "./Dog.sol";
 
 contract Husky is Dog {
+    // Override Dog's constructor.
+    constructor(string memory _name, string memory _color) Dog(_name) public {
+        color = _color;
+    }
+
     // Husky has access to all functions defined in dog.
+    function huskyBark() public {
+        super.bark();
+    }
 }
+```
+
+### Solidity Libraries
+
+Libraries are meant to be used inside of smart contracts. By themselves, they don't
+behave like a smart contracts. They also cannot store any state variables or storage
+and they can't be inherited from.
+
+```cpp
+// Math.sol
+library Math {
+    function divide(uint256 a, uint256 b) internal pure returns(uint256) {
+        // Checks for division by 0;
+        require(b > 0);
+
+        uint256 c = a / b;
+        return c;
+    }
+}
+```
+
+```cpp
+// MyContract.sol
+import "./Math.sol";
+
+contract MyContract {
+    uint256 public value;
+
+    function calculate(uint _value1, uint _value2) public {
+        // value = _value1 / _value2;
+        value = Math.divide(_value1, _value2);
+    }
+}
+```
+
+Additionally, you can use libraries in a `using $LIBRARY for $TYPE` statement which
+adds the library's functionality to that data type:
+
+```cpp
+import "./Math.sol";
+
+contract MyContract {
+    using Math for uint256;
+    
+    uint256 public value;
+
+    function calculate(uint _value1, uint _value2) public {
+        // value = _value1 / _value2;
+        // value = Math.divide(_value1, _value2);
+        value = _value1.divide(_value2);
+    }
+}
+
 ```
 
 ## Libraries & Frameworks
