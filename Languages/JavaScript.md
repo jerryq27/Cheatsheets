@@ -503,7 +503,7 @@ doWork();
 
 * jQuery
 * CoffeeScript
-* TypeScript
-* Vue.js
+* [TypeScript](../Libraries-Tools-Frameworks/WebDev/TypeScript.md)
+* [Vue.js](../Libraries-Tools-Frameworks/WebDev/Vue.md)
 * React.js
 * NativeScript
