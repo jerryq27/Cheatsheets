@@ -35,13 +35,15 @@ Defining variables is done much the same way as JavaScript, however, unlike
 JavaScript, the variable cannot be reassigned to a value of a different type.
 
 ```ts
-// Declaring a variable with/without a value to infer the type.
+// Declaring a variable implicitly AKA with/without a value to infer the type.
 let age = 20;
+// Declaring a variable explicitly by inferring a type.
 let name: string;
 // Using a 'Union Type' to infer two possible types.
 let age2: number|string;
-// Using the 'Any Type' to infer any type.
+// Using the 'Any Type' to infer any type (not recommended).
 let age3: any;
+
 // Ok.
 age = 25;
 age = true;
@@ -49,10 +51,17 @@ age = 'hello';
 age = {}
 
 age = '20'; // Type Error.
+```
 
+> Types are inferred based on the value upon initialization.
+
+#### Arrays
+
+```ts
 /**** Arrays ****/
-
+// Implicit definition.
 let names = ['luigi', 'mario'];
+// Explicit definition
 let nums: number[];
 // To use array methods.
 let nums2: number[] = [];
@@ -74,7 +83,24 @@ let mix3: any[] = [];
 
 mix.push('ganon'); // Ok
 mix[0] = 10; // Ok
+```
 
+#### Tuples
+
+TypeScript allows for the definition of tuples, which isn't a data structure in JavaScript:
+
+```ts
+type MyTuple [number, string, boolean];
+const tuple: MyTuple = [1, 'value', false];
+
+// Make tuple values optional.
+type OtherTuple [number?, string?, boolean];
+const tuple2: OtherTuple = [true]; // Ok.
+```
+
+#### Objects
+
+```ts
 /**** Objects ****/
 
 let ninja = {
@@ -82,20 +108,6 @@ let ninja = {
     age: 14,
     rank: 'genin',
 };
-let ninja2: object;
-ninja2 = {
-    name: 'sasuke',
-    age: 14,
-    rank: 'genin',
-};
-let ninja3: {
-    name: string,
-    age: number,
-    name: string,
-};
-// Type Error, doesn't match object structure.
-ninja3 = { name: 'sakura' };
-
 // Ok
 ninja.age = 16;
 ninja.name = 'sasuke';
@@ -117,34 +129,111 @@ ninja = {
 
 // Can't add properties that weren't defined.
 ninja.skills = ['fire', 'lightning'];
-```
 
-> Types are inferred based on the value upon initialization.
+let ninja2: object;
+ninja2 = {
+    name: 'sasuke',
+    age: 14,
+    rank: 'genin',
+};
+
+let ninja3: {
+    name: string,
+    age: number,
+    name: string,
+};
+// Type Error, doesn't match object structure.
+ninja3 = { name: 'sakura' };
+```
 
 #### Functions
 
-Functions can be defined with parameters specifying a type.
+Functions can also restrict their parameters and return values to a type.
 
 ```ts
-const circle = (diameter) => {
-    return diameter * Math.PI;
-};
+function pow(x: number, y: number) {
+    return Math.pow(x, y);
+}
 
-console.log(circle('hello')); // Runtime NaN error.
+pow('1', 2); // Type error.
+pow(1, 2); // Ok
 
-const tsCircle = (diameter: number) => {
-    return diameter * Math.PI;
-};
+// Type checking the return value
+function sqr(x: number): string {
+    // return x*x; // Type error.
+    return (x*x).toString(); // Ok.
+}
 
-console.log(tsCircle('hello')); // Compiler Error.
+// Function with an optional parameter and no return.
+function sayHello(name: string?): void {
+    if(name) {
+        console.log(`Hello ${name}!`)!
+    }
+    else {
+        console.log('Hello!');
+    }
+}
 ```
 
 ## Advance Use
 
+### Custom Types
+
+You can define your own types:
+
+```ts
+// Simple and redundant example.
+type MyType = string;
+let value: MyType; 
+
+// Union Type with only two possible values.
+type FontStyle = 'bold' | 'italic';
+let font: FontStyle; // Can only be assigned to bold or italic.
+font = 'neither'; // Type Error.
+```
+
+Custom typing is usually used on strong defining an object's 'shape'
+with an _interface_:
+
+```ts
+interface Person {
+    first: string,
+    last: string,
+    // You can add this to make it possible to add other object attributes with a key of the string type.
+    // [key: string]: any,
+}
+
+// ok
+const person: Person = {
+    first: 'Frodo',
+    last: 'Baggins',
+};
+
+const person2: Person = {
+    first: 'Pippin',
+    last: 'Took',
+    race: 'Hobbit', // Type error.
+}
+```
+
+### Generics
+
+TypeScript also allows for [Generics](../../Languages/Languages.md):
+
+```ts
+class GenericValue<T> {
+    constructor(public value: T) {}
+}
+
+let val: Generic<number>;
+let obj: Generic<Person>;
+let str = new GenericValue("String");
+```
+
 ### Config file
 
-The TypeScript config file allows us to configure the behavior of the `tsc`
-program.
+The TypeScript config file allows us to configure the behavior of the TypeScript
+compiler.
 
 ```console
 tsc --init # Generates a tsconfig.json file in a project.
@@ -154,5 +243,19 @@ Changing the properties here alters `tsc` defaults.
 You can specify a root directory for TypeScript files and an output
 directory for the compiled JavaScript files by using the `rootDir` and `outDir`
 properties.
+
+```json
+{
+    "compilerOptions": {
+        // Which version of JavaScript to compile to.
+        "target": "esnext",
+        // Recompile TypeScript on save.
+        "watch": true,
+        // Include typings for certain environments (we can use URL class which is part of DOM and get linting for this)
+        "lib": ["dom", "es2017"]
+    }
+}
+
+```
 
 ## Other
