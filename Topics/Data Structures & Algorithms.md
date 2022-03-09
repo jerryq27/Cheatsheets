@@ -883,10 +883,17 @@ naiveStringSearch("lorie loled", "lol")
 
 ## Sorting Algorithms
 
-### Bubble Sort
+### Elementary Sorting Algorithms
+
+Also known as _quadratic sorting algorithms_ since their time complexity is
+quadratic, or O(n^2).
+
+#### Bubble Sort
 
 This algorithm goes through the array the same number of times
 as the ammount of elements in the array and sorting them one by one.
+
+Time Complexity: **O(n^2)**
 
 Steps (Naive):
 
@@ -899,6 +906,7 @@ function bubbleSort(arr) {
     for(let i = 0; i < arr.length; i++) {
         for(let j = 0; j < arr.length; j++) {
             if(arr[j] < arr[j+1]) {
+                // Swap
                 let temp = arr[j];
                 arr[j] = arr[j+1];
                 arr[j+1] = temp;
@@ -925,6 +933,7 @@ function bubbleSort(arr) {
     for(let i = arr.length; i > 0; i--) {
         for(let j = 0; j < i - 1; j++) {
             if(arr[j] > arr[j+1]) {
+                // Swap
                 let temp = arr[j];
                 arr[j] = arr[j+1];
                 arr[j+1] = temp;
@@ -958,6 +967,7 @@ function bubbleSort(arr) {
         sorted = true;
         for(let j = 0; j < i - 1; j++) {
             if(arr[j] > arr[j+1]) {
+                // Swap
                 let temp = arr[j];
                 arr[j] = arr[j+1];
                 arr[j+1] = temp;
@@ -970,20 +980,60 @@ function bubbleSort(arr) {
 }
 ```
 
-### Selection Sort
+#### Selection Sort
 
 Selection sort works by selecting the first element and setting it as the
 "minimum". Then as you go through the list, you compare if the next element is
 smaller. If it is, you replace it as the smallest until you reach the end. Once
 the list has been traversed, you place the value lableed as smallest in the front.
 
-### Insertion Sort
+Time Complexity: **O(n^2)**
 
-### Merge Sort
+Steps:
 
-### Quick Sort
+1. Mark first value as the minimum and save the index
+1. Compare it to next value, is a new one the minimum? Replace saved index, otherwise move to the next value.
+1. Keep repeating step 2 until the entire array has been traversed.
+1. Swap the min value at the saved index with the first element in the array.
+1. The first value can now be ignored since it's sorted. Mark the next value as the minimum and save the index
+1. Repeat steps 2-4 until the entire array has been traversed and the array is sorted!
 
-### Radix Sort
+```js
+function selectionSort(arr) {
+    for(let i = 0; i < arr.length; i++) {
+        let lowest = i;
+        for(let j = (i+1); j < arr.length; j++) {
+            if(arr[j] < arr[lowest]) {
+                lowest = j;
+            }
+        }
+        if(i !== lowest) {
+            // Swap
+            let temp = arr[i];
+            arr[i] = arr[lowest];
+            arr[lowest] = temp;
+        }
+    }
+    return arr;
+}
+```
+
+#### Insertion Sort
+
+Insertion sort works by keeping track of a list and adding elements from
+an unsorted list. When these lists are added to the tracked list, they are
+placed in the appropriate sorted position until all elements in the unsorted
+list have been added.
+
+Time Complexity: **O(n^2)**
+
+### Advance Sorting Algorithms
+
+#### Merge Sort
+
+#### Quick Sort
+
+#### Radix Sort
 
 ## Data Structures
 
