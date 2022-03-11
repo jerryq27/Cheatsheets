@@ -630,7 +630,7 @@ Mistakes when creating recursive functions:
 1. No base case (or it's wrong)
 1. The input isn't being reduced (or changed)
 
-These will usually result in a stack overflow!
+These will usually result in a _stack overflow_!
 
 Simple Recursive function:
 
@@ -1030,6 +1030,95 @@ Time Complexity: **O(n^2)**
 ### Advance Sorting Algorithms
 
 #### Merge Sort
+
+Merge sort takes a divide and conquer approach to sorting. It takes advantage
+of the fact the arrays of size 0 or 1 are already sorted. Merge sort takes a
+list of items and divides in into two lists, and keeps on dividing until there
+are only _sorted_ lists with just one item. Then, each single item list is merged
+into another single item list, and sorted in the process using one comparison. This
+is repeated with the new sorted 2 item lists. Since they are already sorted,
+only **2** comparisons are needed to merge those 4 items into a sorted list.
+This process continues until the whole list is sorted.
+
+Time Complexity: **O(n log n)**
+
+Steps:
+
+1. Break array into halves until you have arrays that are empty or one element.
+1. Merge those smaller arrays until the array is back to a full array.
+1. Once it's been merged together, return the merged array.
+
+```js
+function merge(arr1, arr2) {
+    let results = [];
+    let i = 0;
+    let j = 0;
+
+    while(i < arr1.length && j < arr2.length) {
+        if(arr2[j] > arr1[i]) {
+            results.push(arr1[i]);
+            i++;
+        }
+        else {
+            results.push(arr2[j]);
+            j++;
+        }
+    }
+    // Add the remainder;
+    while(i < arr1.length) {
+        results.push(arr1[i]);
+        i++;
+    }
+    while(j < arr2.length) {
+        results.push(arr2[j]);
+        j++;
+    }
+    console.log(results);
+}
+
+/** How this code works:
+ * mergeSort(10,24,76,73)@1
+ * 'left' is first, it needs to be resolved to a value.
+ *   mergeSort([10,24])@2
+ *   mergeSort([10])@3 return [10].
+ *   Now that we have a value, we pop off back into mergeSort()@2 with @3 resolved.
+ *   'right' has to be resolved now
+ *   mergeSort([24])@3 return [24]
+ *   Now that we have a value, we pop off back into mergeSort()@2 with @3 resolved.
+ *   return merge([10], [24])
+ *   Merge both the left and right.
+ * 
+ * Now we pop off of mergeSort()@2 with the 'left' value resolved: [10, 24]
+ * 'right' is second, it needs to be resolved to a value.
+ *   mergeSort([76,73])@2
+ *   mergeSort([76])@3 return [76]
+ *   We have a value for 'left' pop off back into mergeSort()@2 with @3 resolved.
+ *   mergeSort([73])@3
+ *   We have a value for 'right' pop off back into mergeSort()@2 with @3 resolved.
+ *   return merge([76], [73])
+ *   Merge both left and right
+ * 
+ * Now that the recursive stack trace has been resolved, we pop off back into mergeSort()@1
+ * return merge([10, 24], [73, 76]);
+ * Merge and return the sorted array.
+ * @param {*} arr 
+ * @returns 
+ */
+function mergeSort(arr) {
+    // Base Case
+    if(arr.length <= 1) return arr;
+    let midpoint = Math.floor(arr.length/2);
+    // This will keep reducing the left into one element by adding mergeSort() onto the call stack with reduced left.
+    let left = mergeSort(arr.slice(0, midpoint));
+    // This has to wait for left to reach one element, then it does the same for the right side.
+    let right = mergeSort(arr.slice(midpoint)); // Not specifying an endpoint assumes the end of the array.
+
+    // This return has to wait until the call stacks have been resolved (First call, left and right have 1 element).
+    return merge(left, right);
+}
+
+mergeSort([10,34,15,5,8,100,27]);
+```
 
 #### Quick Sort
 
