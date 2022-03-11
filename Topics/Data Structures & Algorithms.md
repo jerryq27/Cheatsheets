@@ -1122,6 +1122,57 @@ mergeSort([10,34,15,5,8,100,27]);
 
 #### Quick Sort
 
+Like Merge Sort, Quick Sort takes advantage of the fact the arrays
+of size 0 or 1 are already sorted. With Quick Sort a value is selected as
+the _pivot_, then all the values less than the pivot are moved to the left
+and all the values greater are moved to the right. It can then be assumed
+that the pivot is in the right spot. This process is then repeated by using
+Quick Sort on a pivot for the left and right sides.
+
+Time Complexity: **O(n log n)**
+
+Steps:
+
+1. Pick a value to be the pivot (It doesn't matter which one)
+1. Place all the values less than the pivot on the left, and values greater on the right.
+1. The pivot is now in the correct spot.
+1. Repeat this process by selecting a pivot on the right and left until the list is sorted.
+
+```js
+function pivot(arr, start=0, end=arr.length + 1) {
+    let pivot = arr[start];
+    let swapIndex = start;
+
+    for(let i = start + 1; i < arr.length; i++) {
+        if(pivot > arr[i]) {
+            swapIndex++;
+            // Swap
+            let temp = arr[swapIndex];
+            arr[swapIndex] = arr[i];
+            arr[i] = temp;
+        }
+    }
+    let temp = arr[swapIndex];
+    arr[swapIndex] = arr[start];
+    arr[start] = temp;
+    // console.log(arr);
+    return swapIndex;
+}
+
+function quickSort(arr, left=0, right=arr.length - 1) {
+    // Base case for recursion.
+    if(left < right) {
+        let pivotIndex = pivot(arr, left, right);
+    
+        // Left side
+        quickSort(arr, left, pivotIndex - 1)
+        // Right side
+        quickSort(arr, pivotIndex + 1, right);
+    }
+    return arr;
+}
+```
+
 #### Radix Sort
 
 ## Data Structures
