@@ -132,6 +132,9 @@ function mergeSort(arr) {
 }
 
 
+// console.time("first");
+// console.timeEnd("first");
+
 // console.time("myMerge");
 // myMerge([1,10,50], [2,14,99,100]);
 // console.timeEnd("myMerge");
