@@ -60,3 +60,38 @@ More detailed CSS notes [here](CSS.md)
 ## JavaScript
 
 Allows for sites to have functionality.
+
+## REST
+
+REST (_Representational State Transfer_) are a set of rules and constraints
+that most APIs (_Application Programming Interfaces_) implement. An API is said
+to be RESTful if uses these rules and constraints.
+
+RESTful APIs organize their data entities with unique URIs (_Uniform Resource Indetifiers_),
+which are commonly reffered to as endpoints. Clients make requests to these endpoints via HTTP.
+
+> With RESTful APIs, clients and servers don't need to store data about one another making them stateless.
+They are also very predictable which makes them popular.
+
+### Requests
+
+The request message contains the endpoint URI, an HTTP verb, some headers, and the body which contains
+a custom payload of data.
+
+HTTP Verbs:
+
+* GET - read data from the endpoint
+* POST - create data at the endpoint
+* PATCH - update data at the endpoint
+* DELETE - delete data at the endpoint
+
+### Responses
+
+The response will contain a _status code_, response headers, and the response body
+with the data payload (usually in JSON format).
+
+Status Codes:
+
+* 2** - Good
+* 4** - Client-side error
+* 5** - Server-side error
