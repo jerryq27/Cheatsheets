@@ -1175,6 +1175,96 @@ function quickSort(arr, left=0, right=arr.length - 1) {
 
 #### Radix Sort
 
+Radix sort is a unique type of sorting algorithm that doesn't use comparisons to sort.
+Instead of comparing values, it takes advantage of the fact that numbers with more digits
+are bigger than numbers with less digits. It starts by looking the the right most number of
+every value in the list. Values that are the same are grouped together (1's in the 1's group,
+2's in the 2's group, etc.) and then the values are reordered together based on their spot in
+a 1-9 grouping chart.
+
+This process is then repeated for the next number to the left. If a number only started with one digit,
+the next left most number is considered to be a 0. Group them again based on the digit, and reorder
+the list based on how they appear on the grouping chart. This process is continued until the list is sorted.
+
+> The numbers are indirectly sorted when they are placed on the grouping chart instead of a direct comparison
+with one another.
+
+Time Complexity: **O(n log n) - O(nk)** (n = number of values, k = longest number of digits in a value)
+
+Steps:
+
+1. Find the most digits that appear in a single value within a list.
+1. Loop from 0, to the largest number of digits.
+1. For each iteration, create a group for each digit (0-9).
+1. Place each number in the corresponding group based on it's current digit.
+1. Replace current list with values in the groups from 0 through 9.
+1. Repeat until the list is sorted.
+
+```js
+/**
+ * This function grabs the digit specified.
+ * @param {*} num 
+ * @param {*} place 
+ * @returns the specified digit.
+ */
+function getDigit(num, place) {
+    // return Math.floor(num / Math.pow(10, place)) % 10;
+
+    // Works with negative numbers using Math.abs().
+    return Math.floor(Math.abs(num) / Math.pow(10, place)) % 10;
+}
+
+/**
+ * Returns the number of digits in a number.
+ * @param {*} num 
+ */
+function digitCount(num) {
+    if(num === 0) return 1;
+
+    // Log10 = 10 to what power gives us "num"?
+    return Math.floor(Math.log10(Math.abs(num))) + 1;
+}
+
+/**
+ * Finds the number with the most digits and returns that count.
+ * @param {*} nums 
+ * @returns the number of digits in the largest number literal.
+ */
+function mostDigits(nums) {
+    let largest = 0;
+    for(let i = 0; i < nums.length; i++) {
+        let dCount = digitCount(nums[i]);
+        largest = largest < dCount? dCount : largest;
+    }
+    return largest;
+}
+
+function radixSort(arr) {
+    let iterations = mostDigits(arr);
+    
+    for(let k = 0; k < iterations; k++) {
+        // Place numbers into groups.
+        let group = Array(10).fill(null);
+
+        for(let i = 0; i < arr.length; i++) {
+            let digit = getDigit(arr[i], k); // 1004
+            if(!group[digit]) {
+                group[digit] = Array();
+            }
+            group[digit].push(arr[i]);
+        }
+        // Reset array.
+        arr = [];
+        for(let i = 0; i < group.length; i++) {
+            if(group[i]) {
+                arr = arr.concat(group[i])
+            }
+        }
+    }
+    return arr;
+}
+```
+
 ## Data Structures
 
 ### Collections
