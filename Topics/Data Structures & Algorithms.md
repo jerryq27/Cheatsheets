@@ -610,7 +610,34 @@ Refactored Solution (Divide and Conquer algorithm)
 
 Since it is sorted: [Binary Search]
 
-## Recursion
+## Data Structures
+
+### Collections
+
+#### Arrays
+
+Ordered collection of values. Best used when order matters.
+
+Insertion: O(1)/O(n) Constant if inserting at the end, insertion at the
+    beginning is linear since it requires re-indexing
+Removal: O(1)/O(n) Constant if removing at the end, removing at the
+    beginning is linear since it requires re-indexing
+Searching: O(n)
+Access: O(1)
+
+#### Hashmaps
+
+Unordered collection of key-value pairs. Best used when order
+doesn't matter, very efficient storage.
+
+Insertion: O(1)
+Removal: O(1)
+Searching: O(n)
+Access: O(1)
+
+## Algorithms
+
+### Recursion
 
 Recursion is a process (function) that calls itself.
 
@@ -683,7 +710,7 @@ function recursiveFactorial(num) {
 }
 ```
 
-### Helper Method Recursion
+#### Helper Method Recursion
 
 Helper Method Recursion functions are recursive functions defined and called within
 another non-recursive function:
@@ -751,9 +778,9 @@ like slice(), concat(), substr(), or the (...) spreader operator lets you create
 copies of the immutable type so you don't need to mutate it. To copy objects, use
 Object.assign() or (...).
 
-## Searching Algorithms
+### Searching Algorithms
 
-### Linear Search
+#### Linear Search
 
 The simplest searching algorithm. It looks at every element in the
 array and checks if it's the value being searched for.
@@ -782,7 +809,7 @@ function linearSearch(arr, val) {
 
 Time Complexity: Best Case - O(1), Worst Case - O(n)
 
-### Binary Search
+#### Binary Search
 
 Binary search is much faster than Linear Search, best case scenario, it eliminates
 half of the remaining elements rather than one at a time. However, Binary Search
@@ -836,7 +863,7 @@ function binarySearch(arr, val) {
 
 Time Complexity: Best Case - O(1), Worst Case - O(log n)
 
-### Naive String Search
+#### Naive String Search
 
 Used for finding substrings within strings.
 
@@ -879,16 +906,16 @@ function naiveStringSearch(long, short) {
 naiveStringSearch("lorie loled", "lol")
 ```
 
-### KMP String Search
+#### KMP String Search
 
-## Sorting Algorithms
+### Sorting Algorithms
 
-### Elementary Sorting Algorithms
+#### Elementary Sorting Algorithms
 
 Also known as _quadratic sorting algorithms_ since their time complexity is
 quadratic, or O(n^2).
 
-#### Bubble Sort
+##### Bubble Sort
 
 This algorithm goes through the array the same number of times
 as the ammount of elements in the array and sorting them one by one.
@@ -980,7 +1007,7 @@ function bubbleSort(arr) {
 }
 ```
 
-#### Selection Sort
+##### Selection Sort
 
 Selection sort works by selecting the first element and setting it as the
 "minimum". Then as you go through the list, you compare if the next element is
@@ -1018,7 +1045,7 @@ function selectionSort(arr) {
 }
 ```
 
-#### Insertion Sort
+##### Insertion Sort
 
 Insertion sort works by keeping track of a list and adding elements from
 an unsorted list. When these lists are added to the tracked list, they are
@@ -1027,9 +1054,9 @@ list have been added.
 
 Time Complexity: **O(n^2)**
 
-### Advance Sorting Algorithms
+#### Advance Sorting Algorithms
 
-#### Merge Sort
+##### Merge Sort
 
 Merge sort takes a divide and conquer approach to sorting. It takes advantage
 of the fact the arrays of size 0 or 1 are already sorted. Merge sort takes a
@@ -1120,7 +1147,7 @@ function mergeSort(arr) {
 mergeSort([10,34,15,5,8,100,27]);
 ```
 
-#### Quick Sort
+##### Quick Sort
 
 Like Merge Sort, Quick Sort takes advantage of the fact the arrays
 of size 0 or 1 are already sorted. With Quick Sort a value is selected as
@@ -1173,7 +1200,7 @@ function quickSort(arr, left=0, right=arr.length - 1) {
 }
 ```
 
-#### Radix Sort
+##### Radix Sort
 
 Radix sort is a unique type of sorting algorithm that doesn't use comparisons to sort.
 Instead of comparing values, it takes advantage of the fact that numbers with more digits
@@ -1264,28 +1291,3 @@ function radixSort(arr) {
     return arr;
 }
 ```
-
-## Data Structures
-
-### Collections
-
-#### Arrays
-
-Ordered collection of values. Best used when order matters.
-
-Insertion: O(1)/O(n) Constant if inserting at the end, insertion at the
-    beginning is linear since it requires re-indexing
-Removal: O(1)/O(n) Constant if removing at the end, removing at the
-    beginning is linear since it requires re-indexing
-Searching: O(n)
-Access: O(1)
-
-#### Hashmaps
-
-Unordered collection of key-value pairs. Best used when order
-doesn't matter, very efficient storage.
-
-Insertion: O(1)
-Removal: O(1)
-Searching: O(n)
-Access: O(1)
