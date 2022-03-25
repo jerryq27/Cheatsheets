@@ -616,14 +616,252 @@ Since it is sorted: [Binary Search]
 
 #### Arrays
 
-Ordered collection of values. Best used when order matters.
+A data structure that contains an indexed collection of values.
 
-Insertion: O(1)/O(n) Constant if inserting at the end, insertion at the
-    beginning is linear since it requires re-indexing
-Removal: O(1)/O(n) Constant if removing at the end, removing at the
-    beginning is linear since it requires re-indexing
-Searching: O(n)
-Access: O(1)
+Pros:
+
+* Can randomly access values by index.
+
+Cons:
+
+* Insertion and deletion operations are costly since they require all items to be re-indexed.
+
+Time Complexity:
+
+* Insertion: **O(1)** or **O(n)**
+  * _Constant_ if inserting at the end, insertion at the beginning is _linear_ since it requires re-indexing.
+* Removal: **O(1)** or **O(n)**
+  * _Constant_ if removing at the end, removing at the beginning is _linear_ since it requires re-indexing.
+* Searching: **O(n)**
+* Access: **O(1)**
+
+#### Singly Linked List
+
+A data structure that contains a head, tail, and length. Singly Linked Lists consist of
+nodes with a single pointer value to another node or null value.
+
+Pros:
+
+* Faster insertion and deletion of data since items don't need to be re-indexed.
+
+Cons:
+
+* Can't randomly access values without going through the nodes.
+
+Time Complexity:
+
+* Insertion: **O(1)**
+* Removal:  **O(1)** or **O(n)**
+  * _Constant_ if shifting or popping a value, otherwise _linear_ since it requires navigating the list.
+* Searching: **O(n)**
+* Access: **O(n)**
+
+Implementation:
+
+```js
+class Node {
+    constructor(val) {
+        this.val = val;
+        this.next = null;
+    }
+}
+
+class SinglyLinkedList {
+    constructor() {
+        this.head = null;
+        this.tail = null;
+        this.length = 0;
+    }
+    /**
+     * Adds a value to the end of the list.
+     * @param {*} val 
+     * @returns the list.
+     */
+    push(val) {
+        let newNode = new Node(val);
+        if(!this.head) {
+            this.head = newNode;
+            this.tail = newNode;
+        }
+        else {
+            this.tail.next = newNode;
+            this.tail = newNode;
+        }
+        this.length++;
+
+        return this;
+    }
+    /**
+     * This methods removes the last value, resets the tail, and returns the value removed.
+     * @returns the value that was removed.
+     */
+    pop() {
+        if(!this.head) return undefined;
+
+        let curr = this.head;
+        let prev = null;
+        // while(curr) {
+        //     if(curr.next) {
+        //         prev = curr;
+        //         curr = curr.next;
+        //     }
+        //     else {
+        //         prev.next = null;
+        //         this.tail = prev;
+        //         this.length--;
+        //         return curr.val;
+        //     }
+        // }
+        while(curr.next) {
+            prev = curr;
+            curr = curr.next;
+        }
+        prev.next = null;
+        this.tail = prev;
+        this.length--;
+        if(this.length === 0) {
+            this.head = null;
+            this.tail = null;
+        }
+        return curr.val;
+    }
+    /**
+     * This method removes the value at the head of the list and sets the next value as the head.
+     * @returns The removed previous head value.
+     */
+    shift() {
+        if(!this.head) return undefined;
+        
+        let curr = this.head;
+        this.head = curr.next;
+        this.length--;
+        if(this.length === 0) {
+            this.tail = null;
+        }
+        return curr.val;
+    }
+    /**
+     * This method adds a new value to the beginning of the list.
+     * @param {*} val 
+     * @returns the list.
+     */
+    unshift(val) {
+        let newNode = new Node(val);
+        if(!this.head) {
+            this.head = newNode;
+            this.tail = newNode;
+        }
+        else {
+            newNode.next = this.head;
+            this.head = newNode;
+        }
+        this.length++;
+        return this;
+    }
+    /**
+     * Takes an index and returns the value at that position.
+     * @param {*} index
+     * @returns the value at the position.
+     */
+    get(index) {
+        if(index < 0 || index >= this.length) return undefined;
+
+        let curr = this.head;
+
+        for(let i = 0; i <= index; i++) {
+            if(i === index) {
+                return curr;
+            }
+            curr = curr.next;
+        }
+    }
+
+    /**
+     * Replaces the value at the index with the new value.
+     * @param {*} index 
+     * @param {*} val
+     * @returns whether the value was replaced or not.
+     */
+    set(index, val) {
+        let node = get(index);
+        if(node) {
+            node.val = val;
+            return true;
+        }
+        return false;
+    }
+    /**
+     * Adds the value at the specified index.
+     * @param {*} index 
+     * @param {*} val 
+     */
+    insert(index, val) {
+        if(index < 0 || index > this.length) return false;
+        if(index === 0) {
+            this.unshift(val);
+        }
+        else if(index === this.length) {
+            this.push(val);
+        }
+        else {
+            let newNode = new Node(val);
+            let prev = this.get(index - 1);
+
+            newNode.next = prev.next;
+            prev.next = newNode;
+            this.length++;
+        }
+        return true;
+    }
+    /**
+     * Removes the value at the specified index.
+     * @param {*} index 
+     */
+    remove(index) {
+        if(index < 0 || index >= this.length) return undefined;
+        if(index === this.length - 1) return this.pop();
+        if(index === 0) return this.shift();
+
+        let prevNode = this.get(index - 1);
+        let removedNode = prevNode.next;
+        prevNode.next = removedNode.next;
+        this.length--;
+        return removedNode;
+    }
+    /**
+     * COMMON INTERVIEW QUESTION: Can you reverse a linked list in place?
+     * Thie method reverses the list in place (doesn't make a copy).
+     * 
+     * 1. Track prev, next, and curr nodes. Prev is null, Curr starts at the head, and next at the head's next.
+     * 2. Swap head and tail
+     * 3. Loop through the list.
+     * 4. Set next to the next node from curr.
+     * 5. Update curr's next to prev.
+     * 6. Set prev to curr.
+     * 7. Set curr to next.
+     * 8. Repeat until list is reversed.
+     */
+    reverse() {
+        let prev = null;
+        let curr = this.head;
+        let next = this.head.next;
+
+        // Swap head and tail.
+        this.head = this.tail;
+        this.tail = curr;
+
+        while(curr) {
+            next = curr.next;
+            curr.next = prev;
+            
+            prev = curr;
+            curr = next;
+        }
+    }
+}
+```
+
+#### Doubly Linked List
 
 #### Hashmaps
 
