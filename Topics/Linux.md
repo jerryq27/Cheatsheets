@@ -1,5 +1,32 @@
 # Linux
 
+## File System
+
+In Linux, everything is file. The Linux file system organizes these files
+in some key directories by convention (depending on the flavor of Linux):
+
+1. **/bin** - contains executable programs and core operating system commands. It is symbolically linked to `/usr/bin`.
+1. **/boot** - contains the files needed by the boot loader. The initial RAM file system and kernel also live here.
+1. **/dev** - contains device files that are dynamically created based on the various physical (and virtual) devices connected to the system.
+1. **/etc** - contains critical configuration files and startup scripts.
+1. **/home** - contians each user's home directory and user specific configuration files.
+1. **/lib** - contains the shared libraries the system's programs will need. It is symbolically linked to `/usr/lib`. (lib32/ & lib64/ are also common, which are libraries for 32 and 64-bit systems).
+1. **/lost+found** - contains chunks of broken files after a system crash.
+1. **/media** - contians the mount points for file systems stored on removeable media.
+1. **/mnt** - contains temporarily mounted devices like network storage. Some systems do permanently mount devices here.
+1. **/opt** - containes optional software added on to the system, usually from some vendor. Rarely used with current systems.
+1. **/proc** - contains pseudo files systems. Pseudo file systems are created on startup and destroyed on shutdown. This file system contains information about every running process with subdirectories for each.
+1. **/root** - the root user's home directory.
+1. **/run** - contains information about the system since boot time (like who's logged in and running daemons).
+1. **/sbin** - contains files similar to /bin. Little practical difference between bin/ and sbin/ in most systems. Usually symbolically linked to `/usr/sbin`.
+1. **/srv** - can be used as a folder for files served by servers such as a web server or file server. Depends on the flavor whether this is used or not.
+1. **/sys** - contains informaiton about the devices, drivers, and kernel featurs running on the system. Often described as a better structured `/proc`.
+1. **/tmp** - contians temporary files that won't be kept on the next reboot.
+1. **/usr** - contians most programs and utilities the system will be running. Hence why `/bin`, `/sbin`, and `/lib` are usually symbolically linked here. Since this is where most programs and utilities live, it is shared between all users and read only except for root.
+1. **/var** - contains system specific variable files, like logs, temporary message files, and spool files. May sometimes contain configuration files, or web server files.
+
+> Running `man hier` also gives information about the Linux file system.
+
 ## Basic Navigation
 
 * `CTRL + -> | <-` - Navigate by word.
