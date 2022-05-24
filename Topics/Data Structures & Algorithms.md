@@ -863,6 +863,19 @@ class SinglyLinkedList {
 
 #### Doubly Linked List
 
+A data structure similar to a Singly Linked List, but alongside storing the
+next node, it stores the previous node as well.
+
+Pros:
+
+* Faster insertion and deletion of data since items don't need to be re-indexed.
+* Easier to go through the list than a singly linked list since it stores the previous node as well.
+
+Cons:
+
+* Can't randomly access values without going through the nodes.
+* Takes up more memory than a singly linked list.
+
 #### Hashmaps
 
 Unordered collection of key-value pairs. Best used when order
