@@ -1,7 +1,7 @@
 # JavaScript
 
 JavaScript is a language developed by Brendan Eich and is mainly used to
-add functionality to websites.
+add develop both client and server side applications.
 
 ## Basics
 
@@ -28,6 +28,20 @@ document.getElementsByTagName("p"); // Returns an array of <p> elements.
 document.getElementsByClassName("btn"); // Returns an array of elements with the .btn class.
 
 // Manipulating properties.
+```
+
+### NodeJs
+
+JavaScript can also be executed through Node. With Node installed, the `node`
+program brings up a prompt that reads, executes, prints, and loops (REPL) when you
+type JavaScript instructions.
+
+```js
+> console.log('Hello, world!');
+Hello, world
+> let x = 5;
+> x
+5
 ```
 
 ## Variables
@@ -153,9 +167,9 @@ const foundItem = items.find(item => item.name === 'Book');
 console.log(foundItem);
 ```
 
-#### foreach
+#### forEach
 
-Foreach applies a function to every single item in the array:
+forEach applies a function to every single item in the array:
 
 ```js
 const items = [
@@ -169,7 +183,7 @@ const items = [
 ];
 
 // Less clunky than the for loop.
-items.foreach(item => console.log(item));
+items.forEach(item => console.log(item));
 ```
 
 #### some
@@ -250,8 +264,10 @@ console.log(hasBook); // true
 
 ### Standard Input & Output
 
-Standard input and output in JavaScript is handled through the console or
-the website:
+Standard input and output in JavaScript is handled through the browser or
+Node:
+
+Browser:
 
 ```js
 // Message is displayed through the console.
@@ -262,6 +278,91 @@ alert('Hello, world!');
 
 // Prompt message with an input field is displayed through the browser.
 prompt('Enter your name: ');
+```
+
+Node:
+
+```js
+// output
+console.log('Hello, world!');
+
+//input
+const readline = require('readline');
+const reader = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+});
+
+reader.question('Enter something: ', input => {
+    console.log(`You entered '${input}'`);
+})
+```
+
+### File Input & Output
+
+In the browser, there is a different form of storage:
+
+* the browser's local storage
+* cookies
+
+Node is able to work with files.
+
+Raeding a file:
+
+```js
+import { readFile, readFileSync } from 'fs';
+
+readFile('example.txt', 'utf8', (err, data) => {
+    if(err) {
+        console.error(err);
+        return;
+    }
+
+    console.log(`Sample.txt: '${data}'`);
+})
+
+// Synchronous read
+try {
+    const data = readFileSync('Sample.txt', 'utf8');
+    console.log(data);
+} catch (err) {
+    console.error(err);
+}
+```
+
+Writing a file:
+
+```js
+import { writeFile, writeFileSync } from 'fs';
+
+const content = 'Sample data';
+
+writeFile('Sample.txt', content, err => {
+    if(err) {
+        console.error(err);
+    }
+    console.log('File written successfully');
+})
+
+// Synchronous write.
+try {
+    writeFileSync('Sample.txt', content);
+    // file written successfully
+} catch (err) {
+    console.error(err);
+}
+```
+
+Other useful operations:
+
+```js
+import fs from 'fs';
+
+fs.access(); // Checks if folder exists.
+fs.mkdir(); // Creates a folder.
+fs.rmdir(); // Deletes a folder.
+fs.readdir(); // Reads a folder' contents.
+fs.rename(); // Renames a folder.
 ```
 
 ## Functions
