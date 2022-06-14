@@ -17,17 +17,17 @@ and _adverbs_ (modifiers) that it uses to construct _sentences_ (commands).
 Vim operates by using various modes:
 
 * **Command** - Keys are interpreted as commands
-    * `:w` - write changes to the file (save)
-    * `:q!` - quit vim without saving changes
-    * `:wq`/`ZZ` - write changes and quit
-    * `:saveas $PATH` - save file to $PATH
+  * `:w` - write changes to the file (save)
+  * `:q!` - quit vim without saving changes
+  * `:wq`/`ZZ` - write changes and quit
+  * `:saveas $PATH` - save file to $PATH
 * **Insert** - Allows for normal text input
-    * `i`/`a` - switch to insert mode at/after the cursor's position
-    * `I`/`A` - switch to insert mode at the beginning/end of the line ([more](#Modifying%20Text))
+  * `i`/`a` - switch to insert mode at/after the cursor's position
+  * `I`/`A` - switch to insert mode at the beginning/end of the line ([more](#Modifying%20Text))
 * **Visual** - Allows you to select text and apply commands to them
-    * `v` - switch to visual mode with character highlighting (can be used with targeted [Text Objects](#Text%20Objects)
-    * `V` - switch to visual mode with line highlighting
-    * `ctrl+v` - switch to visual mode with verticle block highlighting
+  * `v` - switch to visual mode with character highlighting (can be used with targeted [Text Objects](#Text%20Objects)
+  * `V` - switch to visual mode with line highlighting
+  * `ctrl+v` - switch to visual mode with verticle block highlighting
 
 ### Navigation
 
@@ -141,7 +141,7 @@ Common deletion commands:
 ### Find & Replace
 
 * `/$SEARCH` - searchs for the given search string
-    * `n`/`N` - goes to the next/previous matching pattern
+  * `n`/`N` - goes to the next/previous matching pattern
 * `:%s /$SEARCH/$REPLACE/g` - change searched text to replace text on every line
 * `:s /$SEARCH/$REPLACE/g` - change searched text to replace text on the current line
 * `*` - jump cursor to other instances of the word under the cursor
