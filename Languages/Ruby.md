@@ -131,6 +131,19 @@ that allows the use of interpolation
 2 + 2 = #{2 + 2}
 EOM
 x = 2
+
+# Within indentation, a "-" is needed, otherwise the symbol must be be unindented.
+def make_string()
+    no_hyphen_str = <<EOM
+    This is a long string
+    that allows the use of interpolation
+EOM
+
+    hyphen_str = <<-EOM
+        This is a long string
+        that allows the use of interpolation
+    EOM
+end
 ```
 
 > Note: Special characters behave [differently](#String-Formatting) depending on the
@@ -275,10 +288,23 @@ hash1 = {
     "Golden" => 1.618,
     "e" => 2.718
 }
-hash2 = Hash["Dog", "Spot", "Cat", "Mr. Grumpypants"]
+hash2 = Hash[
+    "Dog", "Spot",
+    "Cat", "Mr. Grumpypants"
+]
+hash3 = {
+    name: "Jerry",
+    major: "Computer Science"
+}
+hash4 = {
+    :first => "Hello, ",
+    :second => "world!"
+}
 
 puts hash1["PI"] # 3.14
 puts hash2["Cat"] # Mr. Grumpypants
+puts hash3["name"] # Jerry
+puts hash4["second"] # world!
 ```
 
 Hash methods:
@@ -451,6 +477,18 @@ def add_nums(num1, num2)
     return num1 + num2
 
 puts add_nums(1, 2) # 3
+```
+
+Ruby function calls can omit the `()`:
+
+```rb
+def say_hello(s)
+    puts "Hello " + s + "!"
+end
+
+# Both are ok.
+say_hello "Jerry"
+say_hello("Jerry")
 ```
 
 ## Exceptions
