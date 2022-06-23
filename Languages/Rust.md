@@ -78,6 +78,10 @@ differences between constants and varibales:
 const HOURS_IN_A_WEEK: u32 = 24 * 7;
 ```
 
+### Operators
+
+Rust uses the [basic arithmetic operators](../Languages/Languages.md#arithmetic).
+
 ## Command Line
 
 [Rust Installation](https://doc.rust-lang.org/book/ch01-01-installation.html)
@@ -143,15 +147,185 @@ Common cargo commands:
 
 ## Variables
 
+Rust has two different data types, _scaler_ and _compount_ types.
+
+Scaler type represents a single value, and there are four primary scaler types:
+
+* integers
+* floating points
+* booleans
+* characters
+
+```rs
+let num: u32 = 25;
+let flt: f64 = 3.14;
+let isBool: bool = true;
+let letter: char = 'c';
+```
+
+Compound types group multiple values together into one type, and Rust has two primitive compound types:
+
+* tuples
+* arrays
+
+See [collections](#collections).
+
+### Numbers
+
+Length|Signed|Unsigned
+---|---|---
+8-bit|`i8`|`u8`
+16-bit|`i16`|`u16`
+32-bit|`i32` (default)|`u32`
+64-bit|`i64`|`u64`
+128-bit|`i128`|`u128`
+archeticture|`isize`|`usize`\
+
+The _archeticture_ size means it depends on the computer's architecture.
+
+> These values will experience [integer overflow](../Languages/Languages.md#integer-overflow) If 
+a number is changed to value outside it's range.
+
+The following number letters are also allowed by Rust:
+
+Example|Value
+---|---
+`3_14`|Decimal
+`0xff`|Hex
+`0o77`|Octal
+`0b1010`|Binary
+`b'A'`|Byte (`u8` only)
+
+Floating Points:
+
+Length|Type
+---|---
+32-bit|`f32`
+64-bit|`f64` (default)
+
+> 64-bit floating points are the default due to their precision and little noticeable difference
+in performance between `f32` and `f64` on modern CPUs.
+
 ## Conditionals
 
 ## Collections
+
+Rust has two primitive collection types, tuples and arrays. In Rust these are known as _compound types_.
+
+### Tuple
+
+Rust tuples are a general way of grouping values of various types together into one compound type. Tuples
+have a fixed size and cannot grow or shrink once declared.
+
+```rs
+let tup: (i32, f64, u8) = (500, 6.4, 1);
+
+// Get values from tuple (destructuring).
+let (a, b, c) = tup;
+
+// Second way of accessing values.
+println!(tup.0); // 500
+println!(tup.1); // 6.4
+println!(tup.2); // 1
+
+// Special type of tuple known as a "unit type" which returns a "unit value"?
+let unit_type = ();
+```
+
+### Arrays
+
+Arrays are a collection of values with the same type, and uniquely to Rust, have a fixed size
+once declared.
+
+```rs
+let arr = [1, 2, 3, 4, 5];
+
+let size_declared_arr[i32; 3] = ['a', 'b', 'c'] // [type; size]
+
+let values_declared_arr [10; 5]; // [value; size] [10, 10, 10, 10, 10]
+```
+
+> Arrays are stored in the [stack](../Languages/Languages.md#stack).
 
 ## Loops
 
 ## I/O
 
 ## Functions
+
+Functions can be defined in any order, it doesn't matter to Rust. The program
+will run in order of how the code appears in the main function. Function parameters
+**must** declare a type.
+
+Syntax:
+
+```rs
+fn main() {
+    println!("Hello, world!");
+
+    some_other_function();
+}
+
+fn some_other_function() {
+    println!("From another function.");
+}
+
+fn function_with_param(x: i32, y: char) {
+    println!("The parameter's value is {} and {}", x, y);
+}
+```
+
+There is a distinction between _statements_ and _expressions_ in Rust.
+
+* Statements - instructions that perform an action, but don't return a value.
+* Expressions - instructions that evaluate into a resulting value.
+
+```rs
+// Statements
+fn sample() {
+    // Function definitions are statements.
+}
+
+let x = 5;
+
+
+// Expressions
+sample();
+```
+
+```rs
+// Compiler error: (expected expression, found statement)
+// let statements don't return values, so x can't bind to anything.
+let x = (let y = 4);
+
+// This is ok
+let a = {
+    let b = 10;
+    10 + 1
+};
+```
+
+Unlike languages like Ruby, assignments don't return values in Rust.
+
+> Adding a **;** turns a expression into an statement.
+
+Functions that return a value must declare the return type in the function signature:
+
+```rs
+// Valid functions, the 11 with no semicolon is an expression.
+fn returnNum() -> i32 {
+    11
+}
+
+let num = returnNum();
+println!("num = {}", num); // 11
+
+fn addOne(x: i32) -> i32 {
+    x + 1 //; Would throw a compiler error if there was a semicolon here.
+}
+let x = addOne(20);
+println!("x = {}", x); // 21
+```
 
 ## Exceptions
 
