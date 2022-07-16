@@ -10,6 +10,8 @@ are typically used with more complex components that have their own state
 or define multiple functions. Functions are used with simple components
 that just return an element.
 
+Example components:
+
 ```jsx
 class Box extends React.Component {
     render() {
@@ -26,6 +28,39 @@ function Box() {
         <div id="box">React Component</div>
     )
 }
+```
+
+Barebones React Component: 
+
+```html
+<div id="react-container"></div>
+
+<script>
+    class LikeButton extends React.Component {
+        
+        constructor(props) {
+            super(props);
+            this.state = { liked: false };
+        }
+
+        render() {
+            if(this.state.liked) {
+                return "You liked this!";
+            }
+
+            return React.createElement(
+                "button",
+                { onClick: () => this.setState({ liked: true }) },
+                "Like"
+            );
+        }
+    }
+
+    const reactContainer = document.querySelector("#react-container");
+    const root = ReactDOM.createRoot(reactContainer);
+
+    root.render(React.createElement(LikeButton));
+</script>
 ```
 
 ### Props
