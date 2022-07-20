@@ -207,8 +207,27 @@ hr {
 }
 ```
 
-### Centering
+### CSS Tricks
+
+#### Centering
 
 1. `text-align: center` - works as long as it's inline-block/block elements with full widths (doesn't work if the width is changed to less than full width)
 1. `margin: 0 auto` - centers vertically
 1. `margin: auto 0 auto` - centers horizontally
+
+#### Verticle Line
+
+[background properties](https://css-tricks.com/almanac/properties/b/background/)
+
+```css
+#one-liner {
+    background: linear-gradient(#000, #000) no-repeat center/2px 100%;
+}
+
+#extended {
+    background-image: linear-gradient(#000, #000);
+    background-size: 2px 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+```
