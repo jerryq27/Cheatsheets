@@ -259,3 +259,381 @@ properties.
 ```
 
 ## Other
+
+---
+# TypeScript
+
+Superset of the JavaScript language that was created by Microsoft.
+It enchances JavaScript with extra features and a type system to make
+development safer and easier:
+
+* Enforces the use of types which helps reduce errors.
+* Supports modern JavaScript features (Arrow functions, let, const).
+* Includes other included features (generics, interfaces, tuples).
+
+## Basics
+
+All the JavaScript [primitive types] are recognized by TypeScript:
+
+Type|Example
+---|---
+`number`|3, 4.2
+`string`|"hello, world"
+`boolean`|true, false
+`null`|nothing value
+`undefined`|uninitialized value
+`any`|anything (not recommended)
+
+## Workflow
+
+TypeScript's system uses [type inference](../../Languages/Languages.md#type-inference) to determine a variable's type based on the value it's assigned.
+The type system also supports type annotations to set a variables type without initializing it. If a value
+isn't assigned to a variable, nor is it annotated with a type, it is assigned the `any` type:
+
+```ts
+let x = 12; // Type inferred to 'number'.
+let name: string; // Type annotation sets name's type to 'string'.
+let noType; // Set to the 'any' type.
+
+// TypeScript errors.
+x = "some string";
+name = 3.14;
+```
+
+### Collections
+
+JavaScript offers a lot of flexibility when it comes to storign value sin an array.
+This is prone to errors since it can be difficult to determine what kind of values are
+being processed. TypeScript allows typing for arrays and still provides ways to keep
+the flexibility vanilla JavaScript offers in a safer typed system.
+
+Simple array typing:
+
+```ts
+// Type can be annotated for arrays like this:
+let animes: string[] = ['Naruto', 'One Piece', 'Demon Slayer', 'Attack On Titan'];
+// or like this:
+let episodes: Array<number> = [300, 1000, 30, 50];
+
+// Setting to an empty array is ok.
+let anyFiller: boolean[] = [];
+```
+
+Multi-dimensional array typing:
+
+```ts
+let narutoCharacter: string[] = ['Naruto', 'Sasuke', 'Sakura'];
+let onePieceCharacters : string[] = ['Luffy', 'Zoro', 'Nami'];
+
+// An additional '[]' is added for every dimension. This case, a string array of string arrays.
+let animeCharacters: string[][] = [narutoCharacters, onePieceCharacters];
+
+// Setting to an empty array is ok.
+let episodeCounts: number[][] = [];
+```
+
+#### Tuples
+
+TypeScript introduces [tuples](../../Languages/Languages.md#tuple) to JavaScript. Through tuples,
+TypeScript can defined arrays that are as flexible and type safe:
+
+```ts
+// Tuple definition.
+let character: [string, number, boolean, string] = ['Kakashi', 30, true, 'Jonin'];
+
+// Array
+let twoNums: number[] = [1, 2];
+// Tuple
+let twoOtherNums: [number, number] = [11, 12];
+
+// Error, incompatable types: number[] and [number, number]
+// Arrays can increase in size, tuples cannot.
+twoNums = twoOtherNums;
+
+// Tuples can use .concat(), the return will be an Array.
+let allNums = twoOtherNums.concat(twoNums);
+// Returns an array, so this is ok.
+allNums[4] = 21;
+
+// Inferred to be an array and NOT a tuple.
+let randomVals = [1, 'two', 3.14, false];
+// This is ok.
+randomVals[4] = null;
+```
+
+> Tuples are strict in ordering and size. The order of types is enforced by TypeScript and a tuple
+cannot be assigned to another tuple if the ordering and size are not the same.
+
+
+### Functions
+
+Type annotating function parameters ensures that those parameters will be of the correct type:
+
+```ts
+function logValues(num: number, name: string, isTypeSafe: boolean) {
+    console.log(`number=${num} string${name} boolean${isTypeSafe}`);
+}
+
+logValues(5, "Luffy", true);
+
+// Error
+logValues("5", false, 1234);
+```
+
+TypeScript also supports both default and optional parameters:
+
+```ts
+// Default parameters
+function addTwoNums(x = 1, y = 2) {
+    console.log(x + y);
+}
+
+// Optional parameters.
+function(name?: string, age?: number) {
+    let greeting = `Hello, my name is ${name || 'John'}`;
+
+    if(number) {
+        greeting += ` and I'm ${age} years old`;
+    }
+    console.log(greeting);
+}
+```
+
+The [rest parameter](../../Languages/JavaScript.md#rest-parameter) is inferred to be of type `any` unless
+it is annoted:
+
+```ts
+// names is of type 'any[]'
+function printNames(...names) {
+    console.log(names);
+}
+
+// nams is of type 'string[]'
+function safePrintNames(...names: string[]) {
+    console.log(names);
+}
+```
+
+The [spreader](../../Languages/JavaScript.md#spreader) syntax can also be used with [tuples](#tuples) as long as the number of parameters and their types
+matches that of the tuple:
+
+```ts
+function printPirate(name: string, age: number, crew: string, fruitUser: boolean): void {
+    console.log(`The pirate ${name} of the ${crew} is ${age} years old and ${hasPowers? 'has' : 'doesn\'t have'} powers.`);
+}
+
+let pirate1: [string, number, string, boolean] = ['Luffy', 'Straw Hat crew', 17, true];
+let pirate2: [string, number, string, boolean] = ['Sanji', 'Straw Hat crew', 20, false];
+let pirate3: [string, string, boolean] = ['Buggy', 'Buggy pirates', true];
+
+// Ok, tuple matches parameter listing in arguments and argument types.
+printPirate(...pirate1);
+printPirate(...pirate2);
+
+// Error, tuple doesn't match parameter listing, missing a value.
+printPirate(...pirate3);
+```
+
+Return types can also be inferred by the value being returned, or by annotating the function. A function
+can also specify that it returns nothing by annotating it with `void`:
+
+```ts
+// return type inferred to 'string'.
+function isValid(val: any) {
+    return val? 'true' : 'false';
+}
+
+// return type annotated to 'number'.
+function square(num: number): number {
+    return num * num;
+}
+
+// No return type with the function annotated with 'void'.
+function sayHello(): void {
+    console.log('Hello!');
+}
+```
+
+### Enums
+
+TypeScript introduces [enums](../../Languages/Languages.md#enum) to JavaScript. TypeScript enums
+have a number associated with them by default, starting at 0 and incrementing the rest. Enums
+can be either numeric, or string based enums.
+
+```ts
+// Ax = 0, Bow = 1, Sword = 2
+enum Weapon {
+    Ax,
+    Bow,
+    Sword
+}
+
+let warrior1: [string, number, Weapon] = ['Legolas', 5000, Weapon.Bow];
+
+// Customizing the number associated with the enum value.
+enum Grade {
+    A = 90,
+    B = 80,
+    C = 70,
+    D = 60,
+    F = 0
+}
+let myGrade = Grade.F;
+// This is ok
+myGrade = 90;
+
+// Taking advantage of the TypeScript auto increment feature by setting a starting value.
+enum Numbers {
+    One = 1,
+    Two,
+    Three,
+    Four
+}
+
+// String based enum
+enum DogBreed {
+    Beagle = 'BEAGLE',
+    Corgi = 'CORGI',
+    Husky = 'HUSKY',
+    Shiba = 'SHIBA',
+    Aussie = 'AUSSIE'
+}
+
+let myDog = DogBreed.BEAGLE;
+// Error!
+myDog = 'HUSKY';
+```
+
+> String enums offer more safety and restrictions since string enums can only be changed using the enum value and not another string.
+Numeric enums can be changed by using regular numbers. 
+
+### Objects
+
+#### Object Shape
+
+Object shape refers to what member properties and object does or doesn't have. TypeScript knows
+what an object's shape is, and will throw errors if the code attempst to access members that don't
+exist within the object:
+
+```ts
+let sample = "Hello, world!";
+
+// Throws an error, touppercase doesn't exist on type string. 
+// TypeScript will even suggest to use toUpperCase() with this error.
+sample.touppercase();
+```
+
+#### Typing Objects
+
+Object literals consist of key-value pairs, TypeScript's typing system enforces these
+properties and their associated types by creating _object types_:
+
+```ts
+// Custom object type.
+let ninja: { name: string, rank: string, isOverPowered: boolean };
+
+// Ok
+ninja = { name: 'Rock Lee', rank: 'Chunin', isOverPowered: false };
+
+// Error: isOverPowered can't be a string, and age isn't a propert in the object type!
+ninja = { name: 'Sasuke', rank 'Genin', isOverPowered: 'YES', age: 16 };
+```
+
+Creating these object types can be very reppitive, so TypeScript provides a way to
+reuse an object type by creating an alias with `type`:
+
+```ts
+// Bad and repititive.
+let ninja1: { name: string, rank: string, isOverPowered: boolean };
+let ninja2: { name: string, rank: string, isOverPowered: boolean };
+let ninja3: { name: string, rank: string, isOverPowered: boolean };
+
+// Alias the object type.
+type Ninja = {
+    name: string,
+    rank: string,
+    isOverPowered: boolean,
+};
+let ninja4: Ninja;
+```
+
+If two defined object types share the same properties, variables can be assigned to a variable of the another:
+
+```ts
+type ShounenCharacter = {
+    name: string,
+    isLoud: boolean,
+};
+
+type NarutoCharacter = {
+    name: string,
+    isLoud: boolean,
+};
+
+let naruto: NarutoCharacter = { name: 'Naruto', isLoud: true };
+// This is ok
+let animeCharacter: ShounenCharacter = naruto;
+
+console.log(naruto === animeCharacter); // true
+```
+
+Since functions are [first class citizens](../../Languages/Languages.md#first-class-citizen), they can also
+have their parameters and return type specified as in an object type:
+
+```ts
+type Accumulator = (arr: number[]) => number;
+
+// Parameter names don't have to be the name, only the type needs to match!
+const addAll: Accumulator = function(numbers: number[]) {
+    let sum = 0;
+    for(let i = 0; i < numbers.length; i++) {
+        sum += numbers[i];
+    }
+
+    return sum;
+}
+```
+
+## Advance Use
+
+### Generics
+
+When creating object types, TypeScript allows the use of [generics](../../Languages/Languages.md#generics) type aliases.
+
+```ts
+type Collection<T> = {
+    name: string,
+    quantitiy: number,
+    content: T[],
+}
+
+let books: Collection<string> = {
+    name: 'The Stormlight Archives',
+    quantity: 3,
+    content: [
+        'The Way of Kings',
+        'Words of Radiance',
+        'Oathbringer',
+    ],
+};
+let funNumbers: Collection<number> = {
+    name: "Fun numbers",
+    quantity: 2,
+    content: [
+        3.14,
+        55318008,
+    ]
+};
+```
+
+A function can also use generic typing:
+
+```ts
+function getLastItem<T>(arr: T[]): T {
+    return arr[arr.length - 1];
+}
+
+console.log(getLastItem<number>([1, 2, 3, 4, 5])); // 5
+```
+
+## Other
