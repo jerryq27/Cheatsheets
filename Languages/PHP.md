@@ -59,7 +59,7 @@ Mathematical Functions:
 
 ## Variables
 
-Variables in PHP are loosely typed and always start with a `$` sign. The next
+Variables in PHP are [dynamically typed](../Languages/Languages.md#dynamically-typed) and always start with a `$` sign. The next
 character must be a letter, then you can use other characters.
 
 ```php
@@ -178,6 +178,7 @@ Array syntax:
 
 ```php
 $names = array('Jim', 'Sally', 'Fred');
+$letters = ['a', 'b', 'c', 'd'];
 
 echo $names[1]; // Sally
 
@@ -207,6 +208,8 @@ Array functions:
 
 ```php
 <?php
+    // Get the size of the array.
+    count($arr);
     // Create array based on a number range.
     range($num1, $num2); 
     // Sorting an array.
