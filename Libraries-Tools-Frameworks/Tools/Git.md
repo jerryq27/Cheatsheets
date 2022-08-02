@@ -30,18 +30,18 @@ which uniquely identifies the commit.
 
 The basic Git workflow is: **Working directory -> Staging Area -> Commit History**
 
-1. **Working directory** - Local folder git is tracking.
-1. **Staging Area** - File snapshots that are ready to be committed.
-1. **Commit History** - File snapshots that have been committed.
+1. **Working directory** - local folder git is tracking.
+1. **Staging Area** - file snapshots that are ready to be committed.
+1. **Commit History** - file snapshots that have been committed.
 
 The commands commonly used for this process are:
 
 1. `git status` - shows file changes and fils in the staging area.
-1. `git add` - adds files to the staging area
-    * `-A/--all/.` - adds all files to staging
+1. `git add` - adds files to the staging area.
+    * `-A/--all/.` - adds all files to staging.
 1. `git commit` - opens the default editor to write a commit message, then
 commits the file changes to the local commit history.
-    * `-m $MESSAGE` - specify the message without opening the editor
+    * `-m $MESSAGE` - specify the message without opening the editor.
     * `-m $MESSAGE -m $DESCRIPTION` - specify the message and a longer description.
     * `-am $MESSAGE` - one liner to add, write a message, and commit. Only works for files already being tracked by git.
 
@@ -104,12 +104,13 @@ Some basic branching commands:
 
 * `git branch $BRANCH` - Creates a branch (shows local branches if $BRANCH isn't
 specified)
-  * `-m $NEW_NAME` - Renames current branch.
-  * `-d $BRANCH` - Deletes a _merged_ local branch.
-  * `-D $BRANCH` - Deletes an _unmerged_ local branch.
-* `git checkout $BRANCH` - Switches branches.
-  * `-b $BRANCH` - Creates a branch and switches to it.
-* `git merge $BRANCH` - Merges a branch into the current one.
+  * `-m $NEW_NAME` - renames current branch.
+  * `-d $BRANCH` - deletes a _merged_ local branch.
+  * `-D $BRANCH` - deletes an _unmerged_ local branch.
+* `git push -d $REMOTE $BRANCH` - deletes a remote branch.
+* `git checkout $BRANCH` - switches branches.
+  * `-b $BRANCH` - creates a branch and switches to it.
+* `git merge $BRANCH` - merges a branch into the current one.
 
 ### Remote
 
@@ -119,10 +120,10 @@ GitLab.
 > Local working directory/staging area/commit history is copied to the remote
 respository and changes in one might not be reflected in the other.
 
-* `git remote add $REMOTE` - Saves remote location under a name, "origin" is used by default on GitHub.
-* `git push $REMOTE $BRANCH` - Pushes commits to the remote repository.
-* `git pull $REMOTE $BRANCH` - Pulls commits from the remote repository.
-* `git push $REMOTE --delete $BRANCH` - Deletes remote branch.
+* `git remote add $REMOTE` - saves remote location under a name, "origin" is used by default on GitHub.
+* `git push $REMOTE $BRANCH` - pushes commits to the remote repository.
+* `git pull $REMOTE $BRANCH` - pulls commits from the remote repository.
+* `git push $REMOTE --delete $BRANCH` - deletes remote branch.
 
 #### Upstream
 
@@ -153,13 +154,13 @@ and other people might have those commits.
 
 `git reset`
 
-* `--soft` - Uncommits changes, but leaves them in the staging area
-* `--mixed` - Uncommits changes and removes them from the staging area (Default)
-* `--hard` - Uncommits changes, removes them from the staging area, and deletes them from the working tree
+* `--soft` - uncommits changes, but leaves them in the staging area.
+* `--mixed` - uncommits changes and removes them from the staging area (Default).
+* `--hard` - uncommits changes, removes them from the staging area, and deletes them from the working tree.
 
 Uses:
 
-1. `git reset` - removes all files from staging (or certain files if specified)
+1. `git reset` - removes all files from staging (or certain files if specified).
 1. `git reset HEAD~1` - uncommits and unstages files from last commit. A hash can also be specified and all changes after
 the has will be uncommited and unstaged.
 
@@ -176,9 +177,40 @@ commit and then you can commit those reverted changes.
 
 ### Error Handling
 
-**--amend** - Modifies the most recent commit message.
+`git commit --amend` - Modifies the most recent commit message.
+`git add $FILE && git commit --amend --no-edit` - Adds file to previous commit.
 
 ### .gitignore
+
+### Tags
+
+Git tags are bookmarks to branches of development. They are usually used to make versions
+Since they mark a commit as the fixed state of the project for that tag.
+
+Git supports two types of tags _lightweight_ and _annotated_. Lightweight tags are just
+
+1. Lightweight - just a pointer to a specific commit.
+1. Annotated - full object with more information (checksum, tagger name, email, date, and a message)
+
+* `git tag` - list the tags.
+* `git show $TAG` - shows the information stored with a tag.
+* `git tag $TAG` - creates a lightweight tag.
+* `git tag -a $TAG -m $MSG $HASH` - creates an annotated tag with a message at a certain commit (if hash is specified).
+* `git tag -d $TAG` - deletes a tag locally.
+* `git push origin --delete $TAG` - deletes a tag from a remote repository.
+* `git push origin $TAG` - pushes the tag to a remote repositiory.
+* `git push origin --tags` - pushes all local tags to a remote repository.
+
+#### Recreate Tag
+
+Steps to recreate a tag that has been pushed to a remote repository:
+
+```sh
+git tag -d <tagname>                  # delete the old tag locally
+git push origin :refs/tags/<tagname>  # delete the old tag remotely
+git tag <tagname> <commitId>          # make a new tag locally
+git push origin <tagname>             # push the new local tag to the remote
+```
 
 ### SSH
 
