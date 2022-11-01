@@ -160,6 +160,41 @@ Bind|Effect
 ---|---
 `bind:value`|links values and provides updates
 `bind:checked`|links checkboxes and provides updates
+`bind:group`|links values to an array
+
+#### Group Bind
+
+The group bind works well with options that can be grouped into an array:
+
+```html
+<script>
+    let team = ["Luffy"];
+
+
+    let options = [
+        "Luffy",
+        "Naruto",
+        "Deku",
+        "Goku",
+        "Yusuke",
+    ];
+</script>
+
+<h2>Choose your fighters:</h2>
+{#each options as fighter}
+    <label>
+        <input type=checkbox bind:group={team} value={fighter}>
+        {fighter}
+    </label>
+{/each}
+
+{#if team.length === 0}
+    <p>Please select your fighters.</p>
+{:else}
+    <p>Team: {JSON.stringify(team)}</p>
+{/if}
+```
+
 
 ### Conditionals
 
