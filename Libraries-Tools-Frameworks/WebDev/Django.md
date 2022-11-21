@@ -5,7 +5,7 @@ written in Python.
 
 TODO:
 
-* [Checkpoint](https://www.youtube.com/watch?v=3aVqWaLjqS4)
+* [Checkpoint](https://www.youtube.com/watch?v=-s7e_Fy6NRU)
 
 ## Basics
 
@@ -84,6 +84,7 @@ than two `base.html` files.
 ## Admin
 
 The admin user is created with the `python manage.py createsuperuser` command.
+The admin user's password can be rest with `python manage.py changepassword $USER`
 
 > Make sure the database has been created by running [migrations](#Migrations)!
 
@@ -117,7 +118,18 @@ urlpatterns = [
     path('', views.home, name='blog-home'),
     path('about/', views.about, name='blog-about')
 ]
+```
 
+> Django first tried to match a pattern in the project's `urls.py`, when it finds
+one, (with the use of `include()`) it sends only the remaining string to the app's
+`urls.py` for further pattern matching.
+
+### Views
+
+Views contain the Python functions that handles what happens and what gets rendered
+when a request is sent to a route:
+
+```py
 # project/blog/views.py
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -130,9 +142,23 @@ def about(request):
     return HttpResponse('<h1>Blog About</h1>')
 ```
 
-> Django first tried to match a pattern in the project's `urls.py`, when it finds
-one, (with the use of `include()`) it sends only the remaining string to the app's
-`urls.py` for further pattern matching.
+Django also provides some pre-defined views for some commone use cases such as login/logout
+views:
+
+```py
+# <project>/urls.py
+from django.contrib import admin
+from django.contrib.auth import views as auth_views
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('login/', auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(template_name='users/logout.html'), name='logout'),
+]
+```
+
+> Omitting the `template='some_template.html'` will cause Django to use the admin templates
+for the login and logout pages by default.
 
 ### Templates
 
@@ -146,10 +172,7 @@ There are a number of ways to display a template, the easiest way to do so is wi
 
 ```python
 def home(request):
-    context = {
-        'posts': {...}
-    }
-    return render(request, 'blog/home.html', data)
+    return render(request, 'blog/home.html', { 'posts': {...} })
 ```
 
 ```html
@@ -202,7 +225,86 @@ by a child template:
     {% endfor %}
 
 {% endblock content %}
+```
 
+### Forms
+
+Django has some built-in forms located in the `django.contrib.auth.forms`
+package that can be used within templates:
+
+```py
+# app/views.py
+from django.shortcuts import render, redirect
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
+
+# Create your views here.
+def register(request):
+    # Create form to pass to the template.
+    if request.method  == 'POST':
+        user_form = UserCreationForm(request.POST)
+        if(user_form.is_valid()):
+            # Handles saving to database and hashing password
+            user_form.save()
+            username = user_form.cleaned_data.get('username')
+            messages.success(request, f'Account created for {username}')
+            return redirect('site-home') # blog/urls.py name parameter
+    else:
+        user_form = UserCreationForm()
+    return render(request, 'users/register.html', { 'form': user_form })
+```
+
+Template:
+
+```html
+<!-- templates/app/register_user.html -->
+{% extends "blog/base.html" %}
+
+{% block content %}
+    <div class="content-section">
+        <form method="POST">
+            <!-- Required for HTML forms for security. Django requires this token for forms. -->
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Join Today</legend>
+                <!-- as_p() renders the form in <p> tags. -->
+                {{ form.as_p }}
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">
+                    Sign Up
+                </button>
+            </div>
+        </form>
+        <div class="border-top pt-3">
+            <small class="text-muted">
+                Already Have An Account? <a class="ml-2" href="#">Sign In</a>
+            </small>
+        </div>
+    </div>
+{% endblock content %}
+```
+
+These built-in Django forms can be customized by inheriting them:
+
+```py
+# app/forms.py
+from django import forms
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
+
+class UserRegisterForm(UserCreationForm):
+    email = forms.EmailField()
+
+    # What model is this form going to interact with, what fields will be used?
+    class Meta:
+        model = User
+        fields = [
+            'username',
+            'email',
+            'password1',
+            'password2'
+        ]
 ```
 
 ### Static Files
