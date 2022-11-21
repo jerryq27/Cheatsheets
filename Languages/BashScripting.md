@@ -2,6 +2,10 @@
 
 Bash Scripting is a way to write scripts used in a Linux environment.
 
+TODO:
+
+1. [Killing process on a port](https://codippa.com/how-to-kill-a-process-listening-on-a-port-in-linux/)
+
 ## Basics
 
 All scripts should begin with `#!/bin/bash`, this tells the system which program will execute the script.

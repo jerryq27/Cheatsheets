@@ -5,6 +5,7 @@ Git is a version control tool used to track changes for project files.
 TODO:
 
 1. Research `git rebase` and `git cherry-pick` with use cases
+1. [git stash/pop](https://stackoverflow.com/a/2945904)
 
 ## Basics
 
